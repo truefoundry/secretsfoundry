@@ -1,0 +1,35 @@
+{
+  "name": "secretsfoundry",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./lib/index.js",
+  "scripts": {
+    "build": "jsii",
+    "build:watch": "jsii --watch",
+    "package": "jsii-pacmak"
+  },
+  "keywords": [],
+  "author": "AUTHOR",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^16.10.2",
+    "jsii": "^1.35.0",
+    "jsii-pacmak": "^1.35.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/innoavator/secretsfoundry.git"
+  },
+  "stability": "stable",
+  "types": "./lib/index.d.ts",
+  "jsii": {
+    "outdir": "dist",
+    "targets": {
+      "python": {
+        "distName": "servicefoundry.secretsfoundry",
+        "module": "servicefoundry.secretsfoundry"
+      }
+    }
+  },
+  "homepage": "https://github.com/innoavator/secretsfoundry.git"
+}
