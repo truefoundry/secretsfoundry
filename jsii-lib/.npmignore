@@ -12,3 +12,10 @@ dist
 
 # Include .jsii
 !.jsii
+
+
+# Exclude jsii outdir
+dist
+
+# Include .jsii
+!.jsii

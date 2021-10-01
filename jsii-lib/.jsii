@@ -22,7 +22,7 @@
   },
   "name": "secretsfoundry",
   "readme": {
-    "markdown": "aasf"
+    "markdown": "Folder containing jsii library files for secretsfoundry\n\n# Steps to use\n\n- `npm install --production=false`\n- `npm run build`\n- `npm run package`\n"
   },
   "repository": {
     "type": "git",
@@ -53,7 +53,7 @@
       "kind": "class",
       "locationInModule": {
         "filename": "lib\\index.ts",
-        "line": 32
+        "line": 41
       },
       "methods": [
         {
@@ -62,7 +62,7 @@
           },
           "locationInModule": {
             "filename": "lib\\index.ts",
-            "line": 33
+            "line": 42
           },
           "name": "readFile",
           "parameters": [
@@ -89,5 +89,5 @@
     }
   },
   "version": "1.0.0",
-  "fingerprint": "Eu+WGW6YOd0vhD+2x8rakVIZF4JXv5IounJwVFyGsvA="
+  "fingerprint": "C3/TLTdCDxuA+DVRMRl+45DW9WV7Cv3kuRYPJzmmnyI="
 }
