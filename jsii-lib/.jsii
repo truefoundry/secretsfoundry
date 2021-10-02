@@ -5,6 +5,15 @@
       "author"
     ]
   },
+  "bin": {
+    "secretsfoundry": "./cli/index.js"
+  },
+  "bundled": {
+    "chalk": "^4.1.2",
+    "commander": "^8.2.0",
+    "dotenv-flow": "^3.2.0",
+    "figlet": "^1.5.2"
+  },
   "description": "",
   "docs": {
     "stability": "stable"
@@ -52,8 +61,8 @@
       },
       "kind": "class",
       "locationInModule": {
-        "filename": "lib\\index.ts",
-        "line": 41
+        "filename": "lib/index.ts",
+        "line": 48
       },
       "methods": [
         {
@@ -61,8 +70,8 @@
             "stability": "stable"
           },
           "locationInModule": {
-            "filename": "lib\\index.ts",
-            "line": 42
+            "filename": "lib/index.ts",
+            "line": 49
           },
           "name": "readFile",
           "parameters": [
@@ -89,5 +98,5 @@
     }
   },
   "version": "1.0.0",
-  "fingerprint": "C3/TLTdCDxuA+DVRMRl+45DW9WV7Cv3kuRYPJzmmnyI="
+  "fingerprint": "2FrWvfbgaO/MkxKrteYZucG62LsuvpiQ3MVPG6ELFXQ="
 }
