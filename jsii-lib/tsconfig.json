@@ -19,6 +19,7 @@
     "noImplicitThis": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
+    "outDir": "./build",
     "resolveJsonModule": true,
     "strict": true,
     "strictNullChecks": true,
@@ -29,7 +30,7 @@
     "tsBuildInfoFile": "tsconfig.tsbuildinfo"
   },
   "include": [
-    "**\\*.ts"
+    "**/*.ts"
   ],
   "exclude": [
     "node_modules"
