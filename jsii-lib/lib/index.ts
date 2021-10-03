@@ -1,9 +1,11 @@
 import fs = require('fs');
+import Loader from './loader';
 
 const NEWLINE = '\n';
 const RE_INI_KEY_VAL = /^\s*([\w.-]+)\s*=\s*(.*)?\s*$/;
 const RE_NEWLINES = /\\n/g;
 const NEWLINES_MATCH = /\r\n|\n|\r/;
+const VARIABLES_MATCH = /\${[\w]+?:.+?}/g;
 
 export function parse(inputBuffer: fs.PathLike) {
   let obj: { [key: string]: string } = {};
@@ -16,12 +18,22 @@ export function parse(inputBuffer: fs.PathLike) {
       // matching "KEY' and 'VAL' in 'KEY=VAL'
       const keyValueArr = line.match(RE_INI_KEY_VAL);
       if (keyValueArr != null) {
-        let key = keyValueArr[1];
+        const key = keyValueArr[1];
         // default undefined or missing values to empty string
         let val = keyValueArr[2] || '';
-        let end = val.length - 1;
-        let isDoubleQuoted = val[0] === '"' && val[end] === '"';
-        let isSingleQuoted = val[0] === "'" && val[end] === "'";
+        const end = val.length - 1;
+        const isDoubleQuoted = val[0] === '"' && val[end] === '"';
+        const isSingleQuoted = val[0] === "'" && val[end] === "'";
+        let variables;
+        do {
+          variables = VARIABLES_MATCH.exec(val);
+          if (variables) {
+            // a variable value looks like ${<key>:<value>}
+            const varExp = variables[0].substring(2, variables[0].length - 1);
+            const [refKey, refValue] = varExp.split(':', 2);
+            val = new Loader().loadData(refKey, refValue);
+          }
+        } while (variables);
 
         // if single or double quoted, remove quotes
         if (isSingleQuoted || isDoubleQuoted) {
