@@ -2,7 +2,6 @@
   "dependencies": {
     "chalk": "^4.1.2",
     "commander": "^8.2.0",
-    "dotenv-flow": "^3.2.0",
     "figlet": "^1.5.2"
   },
   "devDependencies": {
@@ -24,7 +23,7 @@
     "start": "nodemon --watch 'cli/**/*.ts' --exec 'ts-node' cli/index.ts",
     "create": "npm run build",
     "build": "tsc -p .",
-    "local": "sudo npm i -g",
+    "local": "npm i -g",
     "refresh": "rm -rf ./node_modules ./package-lock.json && npm install"
   },
   "keywords": [],
