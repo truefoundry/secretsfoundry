@@ -1,0 +1,34 @@
+{
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "commander": "^8.2.0",
+    "dotenv-flow": "^3.2.0",
+    "figlet": "^1.5.2"
+  },
+  "devDependencies": {
+    "@types/node": "^16.10.2",
+    "nodemon": "^2.0.13",
+    "ts-node": "^10.2.1",
+    "typescript": "^4.4.3"
+  },
+  "name": "js-lib",
+  "version": "1.0.0",
+  "main": "./cli/index.ts",
+  "bin": {
+    "secretsfoundry": "./lib/index.js"
+  },
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "start": "nodemon --watch 'cli/**/*.ts' --exec 'ts-node' cli/index.ts",
+    "create": "npm run build",
+    "build": "tsc -p .",
+    "local": "sudo npm i -g",
+    "refresh": "rm -rf ./node_modules ./package-lock.json && npm install"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}
