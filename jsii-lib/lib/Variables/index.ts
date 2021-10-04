@@ -1,4 +1,4 @@
-import { AWSLoader, EnvLoader, SecretsLoader } from "./loaders";
+import { AWSLoader, EnvLoader, SecretsLoader, SSMLoader } from "./loaders";
 
 export default class Variables {
   VARIABLES_MATCH = /\${[\w]+?:.+?}/g;
@@ -16,10 +16,11 @@ export default class Variables {
           const awsLoader = new AWSLoader();
           return awsLoader.loadData(refValue);
 
-        case "s3":
-          return "hello";
-
         case "ssm":
+          const ssmLoader = new SSMLoader();
+          return await ssmLoader.loadData(refValue);
+
+        case "sec":
           const secretLoader = new SecretsLoader();
           return await secretLoader.loadData(refValue);
 
