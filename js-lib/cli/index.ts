@@ -10,7 +10,7 @@ const program = new Command();
 const CUSTOM_STAGE_NAME = "STAGE_CHOSEN_USER";
 
 const errorLogger = (message: string): void => {
-  console.log(chalk.red(message));
+  console.log(chalk.red(`ERROR: ${message}`));
 };
 
 const spawnChild = (
@@ -48,19 +48,17 @@ program
   .description("Runs a process injecting the environment variables")
   .action((options: Options) => {
     if (!options.stage.trim()) {
-      errorLogger("ERROR: Missing stage option. Empty string passed");
+      errorLogger("Missing stage option. Empty string passed");
       process.exit();
     }
     if (!options.script && !options.command) {
       errorLogger(
-        "ERROR: Either --script or --command is required, but none was found"
+        "Either --script or --command is required, but none was found"
       );
       process.exit();
     }
     if (options.script && options.command) {
-      errorLogger(
-        "ERROR: Cannot use both --script and --command at the same time"
-      );
+      errorLogger("Cannot use both --script and --command at the same time");
       process.exit();
     }
 
@@ -70,7 +68,7 @@ program
 
     if (options.command) {
       if (!options.command?.trim()) {
-        errorLogger("ERROR: Empty command passed");
+        errorLogger("Empty command passed");
         process.exit();
       }
       if (process.platform === "win32") {
@@ -95,7 +93,7 @@ program
       }
     } else {
       if (!options.script?.trim()) {
-        errorLogger("ERROR: Empty script passed");
+        errorLogger("Empty script passed");
         process.exit();
       }
       args = [...options.script?.split(" ")];
