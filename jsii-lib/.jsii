@@ -62,7 +62,7 @@
       "kind": "class",
       "locationInModule": {
         "filename": "lib/index.ts",
-        "line": 60
+        "line": 76
       },
       "methods": [
         {
@@ -71,7 +71,7 @@
           },
           "locationInModule": {
             "filename": "lib/index.ts",
-            "line": 61
+            "line": 77
           },
           "name": "readFile",
           "parameters": [
@@ -98,5 +98,5 @@
     }
   },
   "version": "1.0.0",
-  "fingerprint": "Ja/UbKv5pd9/fZ30WkcZMgzo+ade+LuaJf7CDvTF3Zs="
+  "fingerprint": "KTcmQXxiihFBcCGUchGUb8lGazSjuW8lMuQpKBs6dIg="
 }

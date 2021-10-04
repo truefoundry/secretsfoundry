@@ -1,5 +1,5 @@
 import fs = require('fs');
-import Loader from './loader';
+import { AWSLoader, EnvLoader } from './loaders';
 
 const NEWLINE = '\n';
 const RE_INI_KEY_VAL = /^\s*([\w.-]+)\s*=\s*(.*)?\s*$/;
@@ -31,7 +31,23 @@ export function parse(inputBuffer: fs.PathLike) {
             // a variable value looks like ${<key>:<value>}
             const varExp = variables[0].substring(2, variables[0].length - 1);
             const [refKey, refValue] = varExp.split(':', 2);
-            val = new Loader().loadData(refKey, refValue);
+            switch (refKey) {
+              case 'env':
+                val = new EnvLoader().loadData(refValue);
+                break;
+              case 'aws':
+                val = new AWSLoader().loadData(refValue);
+                break;
+              case 's3':
+                val = 'hello';
+                break;
+              case 'ssm':
+                val = 'hello';
+                break;
+              default:
+                val = 'hello';
+                break;
+            }
           }
         } while (variables);
 

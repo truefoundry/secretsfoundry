@@ -1,0 +1,9 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+class EnvLoader {
+    loadData(env_variable) {
+        return process.env[env_variable];
+    }
+}
+exports.default = EnvLoader;
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiRW52TG9hZGVyLmpzIiwic291cmNlUm9vdCI6IiIsInNvdXJjZXMiOlsiRW52TG9hZGVyLnRzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiI7O0FBRUEsTUFBcUIsU0FBUztJQUNyQixRQUFRLENBQUMsWUFBb0I7UUFDbEMsT0FBTyxPQUFPLENBQUMsR0FBRyxDQUFDLFlBQVksQ0FBVyxDQUFDO0lBQzdDLENBQUM7Q0FDRjtBQUpELDRCQUlDIiwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IEJhc2VMb2FkZXIgZnJvbSAnLi9CYXNlTG9hZGVyJztcblxuZXhwb3J0IGRlZmF1bHQgY2xhc3MgRW52TG9hZGVyIGltcGxlbWVudHMgQmFzZUxvYWRlciB7XG4gIHB1YmxpYyBsb2FkRGF0YShlbnZfdmFyaWFibGU6IHN0cmluZyk6IHN0cmluZyB7XG4gICAgcmV0dXJuIHByb2Nlc3MuZW52W2Vudl92YXJpYWJsZV0gYXMgc3RyaW5nO1xuICB9XG59XG4iXX0=
