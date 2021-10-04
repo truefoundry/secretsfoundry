@@ -9,6 +9,26 @@ const program = new Command();
 
 const CUSTOM_STAGE_NAME = "STAGE_CHOSEN_USER";
 
+const errorLogger = (message: string): void => {
+  console.log(chalk.red(message));
+};
+
+const spawnChild = (
+  args: string[],
+  opts: {
+    [key: string]: (
+      | string
+      | (NodeJS.WriteStream & { fd: 1 })
+      | (NodeJS.ReadStream & { fd: 0 })
+      | (NodeJS.WriteStream & { fd: 2 })
+    )[];
+  }
+) => {
+  const child = spawn(args[0], args.splice(1), opts);
+
+  child.stdio[4].pipe(process.stdout);
+};
+
 console.log(
   chalk.red(figlet.textSync("secrets-foundry", { horizontalLayout: "full" }))
 );
@@ -27,61 +47,64 @@ program
   .option("-C, --command <string>", "Multiple Commands to run")
   .description("Runs a process injecting the environment variables")
   .action((options: Options) => {
-    if (!options.stage) {
-      console.error("ERROR: Missing stage option. Empty string passed");
+    if (!options.stage.trim()) {
+      errorLogger("ERROR: Missing stage option. Empty string passed");
       process.exit();
     }
     if (!options.script && !options.command) {
-      console.error(
-        "Either --script or --command is required, but none was found"
+      errorLogger(
+        "ERROR: Either --script or --command is required, but none was found"
       );
-    } else if (options.script && options.command) {
-      [
-        console.error(
-          "Cannot use both --script and --command at the same time"
-        ),
-      ];
-    } else {
-      process.env[CUSTOM_STAGE_NAME] = options.stage;
+      process.exit();
+    }
+    if (options.script && options.command) {
+      errorLogger(
+        "ERROR: Cannot use both --script and --command at the same time"
+      );
+      process.exit();
+    }
 
-      let args: string[] = [];
+    process.env[CUSTOM_STAGE_NAME] = options.stage;
 
-      if (options.command?.length) {
-        if (process.platform === "win32") {
-          args = ["cmd", "/C", options.command];
-        } else {
-          const shells: string[] = [
-            "/bash",
-            "/dash",
-            "/fish",
-            "/zsh",
-            "/ksh",
-            "/csh",
-            "/tcsh",
-          ];
-          args = ["sh", "-c", options.command];
-          const envShell = process.env.SHELL as string;
-          for (const shell of shells) {
-            if (shell.endsWith(envShell)) {
-              args[0] = envShell;
-            }
+    let args: string[] = [];
+
+    if (options.command) {
+      if (!options.command?.trim()) {
+        errorLogger("ERROR: Empty command passed");
+        process.exit();
+      }
+      if (process.platform === "win32") {
+        args = ["cmd", "/C", options.command];
+      } else {
+        const shells: string[] = [
+          "/bash",
+          "/dash",
+          "/fish",
+          "/zsh",
+          "/ksh",
+          "/csh",
+          "/tcsh",
+        ];
+        args = ["sh", "-c", options.command];
+        const envShell = process.env.SHELL as string;
+        for (const shell of shells) {
+          if (shell.endsWith(envShell)) {
+            args[0] = envShell;
           }
         }
-      } else {
-        if (!options.script || !options.script.length) {
-          console.error("No Script found to execute.");
-          process.exit();
-        }
-        args = [...options.script?.split(" ")];
       }
-
-      const opts = {
-        stdio: [process.stdin, process.stdout, process.stderr, "pipe", "pipe"], // one pipe for writing, one for reading
-      };
-      const child = spawn(args[0], args.splice(1), opts);
-
-      child.stdio[4].pipe(process.stdout);
+    } else {
+      if (!options.script?.trim()) {
+        errorLogger("ERROR: Empty script passed");
+        process.exit();
+      }
+      args = [...options.script?.split(" ")];
     }
+
+    const opts = {
+      stdio: [process.stdin, process.stdout, process.stderr, "pipe", "pipe"], // one pipe for writing, one for reading
+    };
+    spawnChild(args, opts);
   });
 
 program.parse(process.argv);
