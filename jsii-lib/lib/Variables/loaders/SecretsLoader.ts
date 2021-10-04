@@ -1,14 +1,14 @@
-import BaseLoader from "./index";
+import BaseLoader, { SEPARATOR } from ".";
 
 const AWS = require("aws-sdk");
-// const Buffer = require('buffer');
+const Buffer = require("buffer");
 
 export default class SecretsLoader implements BaseLoader {
   public async loadData(secrets_variable: string): Promise<string> {
     const REGION_REGEX =
       /^(us(-gov)?|ap|ca|cn|eu|sa)-(central|(north|south)?(east|west)?)-\d?/;
     const NAME_REGEX = /^[\w\-]+$/;
-    const [region, secretName] = secrets_variable.split("/");
+    const [region, secretName] = secrets_variable.split(SEPARATOR);
 
     if (!REGION_REGEX.test(region)) {
       throw new Error("Invalid Region provided");
@@ -21,7 +21,12 @@ export default class SecretsLoader implements BaseLoader {
         region,
         secretName
       );
-      return data.SecretString;
+      if ("SecretString" in data) {
+        return data.SecretString;
+      } else {
+        const buff = new Buffer(data.SecretBinary, "base64");
+        return buff.toString("ascii");
+      }
     } catch (error) {
       //@ts-ignore
       throw new Error(`${error.code}: ${error.message}`);
