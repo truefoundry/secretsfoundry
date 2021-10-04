@@ -12,7 +12,8 @@
     "package": "jsii-pacmak",
     "start:cli": "nodemon --watch 'cli/**/*.ts' --exec 'ts-node' cli/index.ts",
     "build:cli": "tsc -p .",
-    "local": "npm i -g"
+    "local": "npm i -g",
+    "test": "npx ts-node./index.ts"
   },
   "keywords": [],
   "author": "AUTHOR",
@@ -41,6 +42,7 @@
   },
   "homepage": "https://github.com/innoavator/secretsfoundry.git",
   "dependencies": {
+    "aws-sdk": "^2.999.0",
     "chalk": "^4.1.2",
     "commander": "^8.2.0",
     "dotenv-flow": "^3.2.0",
@@ -50,6 +52,7 @@
     "chalk",
     "commander",
     "dotenv-flow",
-    "figlet"
+    "figlet",
+    "aws-sdk"
   ]
 }

@@ -9,6 +9,7 @@
     "secretsfoundry": "./cli/index.js"
   },
   "bundled": {
+    "aws-sdk": "^2.999.0",
     "chalk": "^4.1.2",
     "commander": "^8.2.0",
     "dotenv-flow": "^3.2.0",
@@ -62,7 +63,7 @@
       "kind": "class",
       "locationInModule": {
         "filename": "lib/index.ts",
-        "line": 76
+        "line": 79
       },
       "methods": [
         {
@@ -71,7 +72,7 @@
           },
           "locationInModule": {
             "filename": "lib/index.ts",
-            "line": 77
+            "line": 80
           },
           "name": "readFile",
           "parameters": [
@@ -98,5 +99,5 @@
     }
   },
   "version": "1.0.0",
-  "fingerprint": "KTcmQXxiihFBcCGUchGUb8lGazSjuW8lMuQpKBs6dIg="
+  "fingerprint": "nZxqgqReHNjIbUl1y2vcKSvo5DZLOLGAlUJaINzV+Js="
 }
