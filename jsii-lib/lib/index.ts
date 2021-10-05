@@ -1,5 +1,5 @@
 import fs = require("fs");
-import Variables from "./Variables";
+import variables from "./variables";
 
 const NEWLINE = "\n";
 const RE_INI_KEY_VAL = /^\s*([\w.-]+)\s*=\s*(.*)?\s*$/;
@@ -38,24 +38,23 @@ export async function parse(inputBuffer: fs.PathLike) {
         val = val.trim();
       }
       keys.push(key);
-      values.push(new Variables().populate(val));
+      values.push(new variables().populate(val));
     } else {
       console.log(
         `did not match key and value when parsing line ${idx + 1}: ${line}`
       );
     }
   }
-  return Promise.all(values)
-    .then(function (results) {
-      keys.forEach((key, idx) => {
-        // assign the key-value pair
-        obj[key] = results[idx];
-      });
-      return obj;
-    })
-    .catch(err => {
-      throw new Error(err);
+  try {
+    const results = await Promise.all(values);
+    keys.forEach((key, idx) => {
+      // assign the key-value pair
+      obj[key] = results[idx];
     });
+    return obj;
+  } catch (error) {
+    throw new Error(error as string);
+  }
 }
 export class SecretsFoundry {
   public async readFile(filePath: string) {
@@ -63,14 +62,3 @@ export class SecretsFoundry {
     return await parse(fs.readFileSync(filePath, "utf8"));
   }
 }
-
-const getData = async () => {
-  try {
-    const w = new SecretsFoundry();
-    console.log(await w.readFile("./test.txt"));
-  } catch (error) {
-    console.log(error);
-  }
-};
-
-getData();
