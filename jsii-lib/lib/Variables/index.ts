@@ -42,6 +42,6 @@ export default class Variables {
     }
 
     // a default return for no variable
-    return "";
+    return value;
   }
 }
