@@ -6,7 +6,9 @@ export default class Variables {
     const variables = this.VARIABLES_MATCH.exec(value);
     if (variables) {
       const varExp = variables[0].substring(2, variables[0].length - 1);
-      const [refKey, refValue] = varExp.split(":", 2);
+      const firstColonIndex = varExp.indexOf(":");
+      const refKey = varExp.substr(0, firstColonIndex);
+      const refValue = varExp.substr(firstColonIndex + 1);
       switch (refKey) {
         case "env":
           const envLoader = new EnvLoader();
