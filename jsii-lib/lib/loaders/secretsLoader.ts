@@ -3,12 +3,12 @@ import Loader, { SEPARATOR } from ".";
 const AWS = require("aws-sdk");
 const Buffer = require("buffer");
 
-export default class SecretsLoader implements Loader {
-  public async loadData(secrets_variable: string): Promise<string> {
+export default class secretsLoader implements Loader {
+  public async loadData(secretsVariable: string): Promise<string> {
     const REGION_REGEX =
       /^(us(-gov)?|ap|ca|cn|eu|sa)-(central|(north|south)?(east|west)?)-\d?/;
     const NAME_REGEX = /^[\w\-]+$/;
-    const [region, secretName] = secrets_variable.split(SEPARATOR);
+    const [region, secretName] = secretsVariable.split(SEPARATOR);
 
     if (!REGION_REGEX.test(region)) {
       throw new Error("Invalid Region provided");

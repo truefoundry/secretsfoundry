@@ -1,13 +1,13 @@
 import Loader, { SEPARATOR } from ".";
 const AWS = require("aws-sdk");
 
-export default class SSMLoader implements Loader {
-  public async loadData(ssm_variable: string): Promise<string> {
+export default class ssmLoader implements Loader {
+  public async loadData(ssmVariable: string): Promise<string> {
     const REGION_REGEX =
       /^(us(-gov)?|ap|ca|cn|eu|sa)-(central|(north|south)?(east|west)?)-\d?/;
     const NAME_REGEX = /^[\w\/\-._]+$/;
     const DECRYPTION_REGEX = /^(true|false)$/;
-    const [region, secretName, withDecryption] = ssm_variable.split(SEPARATOR);
+    const [region, secretName, withDecryption] = ssmVariable.split(SEPARATOR);
 
     if (!REGION_REGEX.test(region) || !region) {
       throw new Error("Invalid Region provided");

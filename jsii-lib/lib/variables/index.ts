@@ -1,4 +1,4 @@
-import { Loaders } from "./loaders";
+import { Loaders } from "../loaders";
 
 export default class Variables {
   VARIABLES_MATCH = /\${[\w]+?:.+?}/g;
