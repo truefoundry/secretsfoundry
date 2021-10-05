@@ -7,12 +7,32 @@ const commander = require("commander");
 const { spawn } = require("child_process");
 const program = new Command();
 
-const CUSTOM_STAGE_NAME = "STAGE_CHOSEN_USER";
+/**
+ * Checks for the condition, if true logs error.
+ * @param condition condition to be checked
+ * @param message   message to be logged in case of error
+ */
+const errorHandler = (condition: boolean, message: string): void => {
+  if (condition) {
+    errorLogger(message);
+    process.exit();
+  }
+};
 
+/**
+ * Logs error to console.
+ *
+ * @param message message to be logged
+ */
 const errorLogger = (message: string): void => {
   console.log(chalk.red(`ERROR: ${message}`));
 };
 
+/**
+ * Spawns a child process.
+ * @param args arguments to the child process
+ * @param opts options for child process
+ */
 const spawnChild = (
   args: string[],
   opts: {
@@ -27,6 +47,50 @@ const spawnChild = (
   const child = spawn(args[0], args.splice(1), opts);
 
   child.stdio[4].pipe(process.stdout);
+};
+
+/**
+ * Executes a multi-command using shell.
+ * @param command command to be executed
+ * @returns arguments array to be passed to child process
+ */
+const handleCommandInput = (command: string): string[] => {
+  errorHandler(!command.trim(), "Empty command passed");
+
+  let args: string[] = [];
+
+  if (process.platform === "win32") {
+    args = ["cmd", "/C", command];
+  } else {
+    const shells: string[] = [
+      "/bash",
+      "/dash",
+      "/fish",
+      "/zsh",
+      "/ksh",
+      "/csh",
+      "/tcsh",
+    ];
+    args = ["sh", "-c", command];
+    const envShell = process.env.SHELL as string;
+    for (const shell of shells) {
+      if (shell.endsWith(envShell)) {
+        args[0] = envShell;
+      }
+    }
+  }
+
+  return args;
+};
+
+/**
+ * Executes a script(single-command).
+ * @param script script to be executed
+ * @returns arguments array to be passed to child process
+ */
+const handleScriptInput = (script: string): string[] => {
+  errorHandler(!script.trim(), "Empty script passed");
+  return [...script.split(" ")];
 };
 
 console.log(
@@ -47,62 +111,32 @@ program
   .option("-C, --command <string>", "Multiple Commands to run")
   .description("Runs a process injecting the environment variables")
   .action((options: Options) => {
-    if (!options.stage.trim()) {
-      errorLogger("Missing stage option. Empty string passed");
-      process.exit();
-    }
-    if (!options.script && !options.command) {
-      errorLogger(
-        "Either --script or --command is required, but none was found"
-      );
-      process.exit();
-    }
-    if (options.script && options.command) {
-      errorLogger("Cannot use both --script and --command at the same time");
-      process.exit();
-    }
+    errorHandler(
+      !options.stage.trim(),
+      "Missing stage option. Empty string passed"
+    );
+    errorHandler(
+      !options.script && !options.command,
+      "Either --script or --command is required, but none was found"
+    );
 
-    process.env[CUSTOM_STAGE_NAME] = options.stage;
+    errorHandler(
+      !!(options.script && options.command),
+      "Cannot use both --script and --command at the same time"
+    );
 
     let args: string[] = [];
 
     if (options.command) {
-      if (!options.command?.trim()) {
-        errorLogger("Empty command passed");
-        process.exit();
-      }
-      if (process.platform === "win32") {
-        args = ["cmd", "/C", options.command];
-      } else {
-        const shells: string[] = [
-          "/bash",
-          "/dash",
-          "/fish",
-          "/zsh",
-          "/ksh",
-          "/csh",
-          "/tcsh",
-        ];
-        args = ["sh", "-c", options.command];
-        const envShell = process.env.SHELL as string;
-        for (const shell of shells) {
-          if (shell.endsWith(envShell)) {
-            args[0] = envShell;
-          }
-        }
-      }
-    } else {
-      if (!options.script?.trim()) {
-        errorLogger("Empty script passed");
-        process.exit();
-      }
-      args = [...options.script?.split(" ")];
+      args = handleCommandInput(options.command);
+    } else if (options.script) {
+      args = handleScriptInput(options.script);
     }
 
-    const opts = {
-      stdio: [process.stdin, process.stdout, process.stderr, "pipe", "pipe"], // one pipe for writing, one for reading
-    };
-    spawnChild(args, opts);
+    // one pipe for reading and one for writing
+    spawnChild(args, {
+      stdio: [process.stdin, process.stdout, process.stderr, "pipe", "pipe"],
+    });
   });
 
 program.parse(process.argv);
