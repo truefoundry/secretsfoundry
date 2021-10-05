@@ -6,7 +6,7 @@ export default class SSMLoader implements BaseLoader {
     const REGION_REGEX =
       /^(us(-gov)?|ap|ca|cn|eu|sa)-(central|(north|south)?(east|west)?)-\d?/;
     const NAME_REGEX = /^[\w\/\-._]+$/;
-    const DECRYPTION_REGEX = /^(true|false)?/;
+    const DECRYPTION_REGEX = /^(true|false)$/;
     const [region, secretName, withDecryption] = ssm_variable.split(SEPARATOR);
 
     if (!REGION_REGEX.test(region) || !region) {
