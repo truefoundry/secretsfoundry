@@ -10,9 +10,6 @@ export default class Variables {
       const refKey = varExp.substr(0, firstColonIndex);
       const refValue = varExp.substr(firstColonIndex + 1);
       switch (refKey) {
-        case Loaders.ENV.key:
-          return await Loaders.ENV.loader.loadData(refValue);
-
         case Loaders.AWS.key:
           return await Loaders.AWS.loader.loadData(refValue);
 
