@@ -1,8 +1,7 @@
 {
   "dependencies": {
     "chalk": "^4.1.2",
-    "commander": "^8.2.0",
-    "figlet": "^1.5.2"
+    "commander": "^8.2.0"
   },
   "devDependencies": {
     "@types/node": "^16.10.2",
