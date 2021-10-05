@@ -5,6 +5,9 @@
       "author"
     ]
   },
+  "bundled": {
+    "aws-sdk": "^2.999.0"
+  },
   "description": "",
   "docs": {
     "stability": "stable"
@@ -53,16 +56,17 @@
       "kind": "class",
       "locationInModule": {
         "filename": "lib\\index.ts",
-        "line": 41
+        "line": 4
       },
       "methods": [
         {
+          "async": true,
           "docs": {
             "stability": "stable"
           },
           "locationInModule": {
             "filename": "lib\\index.ts",
-            "line": 42
+            "line": 5
           },
           "name": "readFile",
           "parameters": [
@@ -89,5 +93,5 @@
     }
   },
   "version": "1.0.0",
-  "fingerprint": "C3/TLTdCDxuA+DVRMRl+45DW9WV7Cv3kuRYPJzmmnyI="
+  "fingerprint": "FLtmvrSV3kNarY1yFxCR6BqWtFNmSTLYlb1FcZIxUYQ="
 }

@@ -1,18 +1,34 @@
 import Loader from "./index";
-const os = require("os");
-const path = require("path");
-const { readFileSync } = require("fs");
+import os = require("os");
+import path = require("path");
+import { readFileSync } from "fs";
 
 export default class awsLoader implements Loader {
-  public loadData(awsVariable: string): string {
+  private isVariableInINI(awsVariable: string): boolean | string {
     const awsDir = path.join(path.join(os.homedir(), ".aws"), "credentials");
-
-    let fileContents: string[] = readFileSync(awsDir, "utf-8").split("\n");
+    const paramsMatch = /^\s*([^=]+?)\s*=\s*(.*?)\s*$/
+    let fileContents: string[] = readFileSync(awsDir, "utf-8").split(/\r\n|\r|\n/);
     for (const content of fileContents) {
-      if (content.startsWith(awsVariable)) {
-        return content.split("=", 2)[1];
+      let match = content.match(paramsMatch);
+      if (match && match[1] === awsVariable) {
+        return match[2];
       }
     }
-    throw Error(`Cannot find any AWS CREDENTIAL named ${awsVariable}`);
+    return false;
+  }
+  public loadData(awsVariable: string): string {
+    const awsValue = this.isVariableInINI(awsVariable);
+    // check if awsValue is a string
+    if (typeof awsValue === "string") {
+      return awsValue;
+    } else
+    // if awsValue is false, check if it is a variable in the environment
+    {
+      if (process.env[awsVariable] !== undefined && process.env[awsVariable] !== "") {
+        return process.env[awsVariable] as string;
+      } else {
+        throw new Error(`${awsVariable} is not defined in the environment`);
+      }
+    }
   }
 }

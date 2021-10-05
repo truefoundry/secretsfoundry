@@ -1,5 +1,5 @@
 import Loader, { SEPARATOR } from ".";
-const AWS = require("aws-sdk");
+import AWS = require("aws-sdk");
 
 export default class s3Loader implements Loader {
   public async loadData(s3Variable: string): Promise<string> {
@@ -51,7 +51,7 @@ export default class s3Loader implements Loader {
     return new Promise(function (success, reject) {
       s3.getObject(
         { Bucket, Key },
-        function (err: any, data: { [key: string]: string }) {
+        function (err: any, data: any) {
           if (err) {
             reject(err);
           } else {

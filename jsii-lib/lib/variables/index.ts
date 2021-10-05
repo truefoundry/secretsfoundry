@@ -11,7 +11,7 @@ export default class Variables {
       const refValue = varExp.substr(firstColonIndex + 1);
       switch (refKey) {
         case Loaders.AWS.key:
-          return await Loaders.AWS.loader.loadData(refValue);
+          return Loaders.AWS.loader.loadData(refValue);
 
         case Loaders.SSM.key:
           return await Loaders.SSM.loader.loadData(refValue);
@@ -23,10 +23,9 @@ export default class Variables {
           return await Loaders.S3.loader.loadData(refValue);
 
         default:
-          return "hello";
+          throw new Error(`${refKey} is not a valid loader`);
       }
     }
-
     // a default return for no variable
     return value;
   }
