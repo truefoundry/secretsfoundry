@@ -12,13 +12,15 @@ export async function parse(inputBuffer: fs.PathLike) {
   // convert Buffers before splitting into lines and processing
   const lines = inputBuffer.toString().split(NEWLINES_MATCH);
 
+  let keys: string[] = [];
+  let values: Promise<string>[] = [];
   for (const [idx, line] of lines.entries()) {
     // matching "KEY' and 'VAL' in 'KEY=VAL'
     const keyValueArr = line.match(RE_INI_KEY_VAL);
     if (keyValueArr != null) {
       let key = keyValueArr[1];
       // default undefined or missing values to empty string
-      let val: string | Promise<string> = keyValueArr[2] || "";
+      let val: string = keyValueArr[2] || "";
       const end = val.length - 1;
       const isDoubleQuoted = val[0] === '"' && val[end] === '"';
       const isSingleQuoted = val[0] === "'" && val[end] === "'";
@@ -35,16 +37,25 @@ export async function parse(inputBuffer: fs.PathLike) {
         // remove surrounding whitespace
         val = val.trim();
       }
-      // assign the key-value pair to obj
-
-      obj[key] = (await new Variables().populate(val)) || val;
+      keys.push(key);
+      values.push(new Variables().populate(val));
     } else {
       console.log(
         `did not match key and value when parsing line ${idx + 1}: ${line}`
       );
     }
   }
-  return obj;
+  return Promise.all(values)
+    .then(function (results) {
+      keys.forEach((key, idx) => {
+        // assign the key-value pair
+        obj[key] = results[idx];
+      });
+      return obj;
+    })
+    .catch(err => {
+      throw new Error(err);
+    });
 }
 export class SecretsFoundry {
   public async readFile(filePath: string) {
@@ -54,8 +65,12 @@ export class SecretsFoundry {
 }
 
 const getData = async () => {
-  const w = new SecretsFoundry();
-  console.log(await w.readFile("./test.txt"));
+  try {
+    const w = new SecretsFoundry();
+    console.log(await w.readFile("./test.txt"));
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 getData();
