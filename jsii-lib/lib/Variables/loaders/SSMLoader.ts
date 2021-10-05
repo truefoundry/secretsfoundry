@@ -1,7 +1,7 @@
-import BaseLoader, { SEPARATOR } from ".";
+import Loader, { SEPARATOR } from ".";
 const AWS = require("aws-sdk");
 
-export default class SSMLoader implements BaseLoader {
+export default class SSMLoader implements Loader {
   public async loadData(ssm_variable: string): Promise<string> {
     const REGION_REGEX =
       /^(us(-gov)?|ap|ca|cn|eu|sa)-(central|(north|south)?(east|west)?)-\d?/;

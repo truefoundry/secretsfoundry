@@ -1,9 +1,9 @@
-import BaseLoader from "./index";
+import Loader from "./index";
 const os = require("os");
 const path = require("path");
 const { readFileSync } = require("fs");
 
-export default class AWSLoader implements BaseLoader {
+export default class AWSLoader implements Loader {
   public loadData(aws_variable: string): string {
     const awsDir = path.join(path.join(os.homedir(), ".aws"), "credentials");
 

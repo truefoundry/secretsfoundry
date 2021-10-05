@@ -1,9 +1,9 @@
-import BaseLoader, { SEPARATOR } from ".";
+import Loader, { SEPARATOR } from ".";
 
 const AWS = require("aws-sdk");
 const Buffer = require("buffer");
 
-export default class SecretsLoader implements BaseLoader {
+export default class SecretsLoader implements Loader {
   public async loadData(secrets_variable: string): Promise<string> {
     const REGION_REGEX =
       /^(us(-gov)?|ap|ca|cn|eu|sa)-(central|(north|south)?(east|west)?)-\d?/;
@@ -21,6 +21,16 @@ export default class SecretsLoader implements BaseLoader {
         region,
         secretName
       );
+      /**
+       * {
+            ARN: '',
+            Name: '',
+            VersionId: '',
+            SecretString: '',
+            VersionStages: [ '' ],
+            CreatedDate: Date
+          }
+       */
       if ("SecretString" in data) {
         return data.SecretString;
       } else {

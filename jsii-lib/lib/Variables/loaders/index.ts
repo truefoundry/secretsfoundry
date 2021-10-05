@@ -7,8 +7,16 @@ import SSMLoader from "./SSMLoader";
 // a custom made separator for splitting values
 export const SEPARATOR = ";;";
 
-export default interface BaseLoader {
-  loadData: (...args: any[]) => string | Promise<string>;
+export default interface Loader {
+  loadData: (...args: string[]) => string | Promise<string>;
 }
 
-export { AWSLoader, EnvLoader, S3Loader, SecretsLoader, SSMLoader };
+const Loaders = {
+  ENV: { key: "env", loader: new EnvLoader() },
+  AWS: { key: "aws", loader: new AWSLoader() },
+  SECRET: { key: "sec", loader: new SecretsLoader() },
+  SSM: { key: "ssm", loader: new SSMLoader() },
+  S3: { key: "s3", loader: new S3Loader() },
+};
+
+export { AWSLoader, EnvLoader, S3Loader, SecretsLoader, SSMLoader, Loaders };

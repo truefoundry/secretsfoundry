@@ -1,6 +1,6 @@
-import BaseLoader from "./index";
+import Loader from "./index";
 
-export default class EnvLoader implements BaseLoader {
+export default class EnvLoader implements Loader {
   public loadData(env_variable: string): string {
     if (!process.env[env_variable]) {
       throw new Error(`No Env variable with name ${env_variable}`);

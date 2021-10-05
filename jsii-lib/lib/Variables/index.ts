@@ -1,10 +1,4 @@
-import {
-  AWSLoader,
-  EnvLoader,
-  S3Loader,
-  SecretsLoader,
-  SSMLoader,
-} from "./loaders";
+import { Loaders } from "./loaders";
 
 export default class Variables {
   VARIABLES_MATCH = /\${[\w]+?:.+?}/g;
@@ -16,25 +10,20 @@ export default class Variables {
       const refKey = varExp.substr(0, firstColonIndex);
       const refValue = varExp.substr(firstColonIndex + 1);
       switch (refKey) {
-        case "env":
-          const envLoader = new EnvLoader();
-          return envLoader.loadData(refValue);
+        case Loaders.ENV.key:
+          return await Loaders.ENV.loader.loadData(refValue);
 
-        case "aws":
-          const awsLoader = new AWSLoader();
-          return awsLoader.loadData(refValue);
+        case Loaders.AWS.key:
+          return await Loaders.AWS.loader.loadData(refValue);
 
-        case "ssm":
-          const ssmLoader = new SSMLoader();
-          return await ssmLoader.loadData(refValue);
+        case Loaders.SSM.key:
+          return await Loaders.SSM.loader.loadData(refValue);
 
-        case "sec":
-          const secretLoader = new SecretsLoader();
-          return await secretLoader.loadData(refValue);
+        case Loaders.SECRET.key:
+          return await Loaders.SECRET.loader.loadData(refValue);
 
-        case "s3":
-          const s3Loader = new S3Loader();
-          return await s3Loader.loadData(refValue);
+        case Loaders.S3.key:
+          return await Loaders.S3.loader.loadData(refValue);
 
         default:
           return "hello";
