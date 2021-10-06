@@ -51,6 +51,9 @@ export class SecretsFoundry {
         case Loaders.S3.key:
           return await Loaders.S3.loader.loadData(refValue);
 
+        case Loaders.VAULT.key:
+          return await Loaders.VAULT.loader.loadData(refValue);
+
         default:
           throw new Error(`${refKey} is not a valid loader`);
       }
