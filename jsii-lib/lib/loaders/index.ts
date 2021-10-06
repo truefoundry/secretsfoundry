@@ -1,4 +1,3 @@
-import awsLoader from "./awsLoader";
 import s3Loader from "./s3Loader";
 import secretsLoader from "./secretsLoader";
 import ssmLoader from "./ssmLoader";
@@ -11,10 +10,9 @@ export default interface Loader {
 }
 
 const Loaders = {
-  AWS: { key: "aws", loader: new awsLoader() },
   SECRET: { key: "sec", loader: new secretsLoader() },
   SSM: { key: "ssm", loader: new ssmLoader() },
   S3: { key: "s3", loader: new s3Loader() },
 };
 
-export { awsLoader, s3Loader, secretsLoader, ssmLoader, Loaders };
+export { s3Loader, secretsLoader, ssmLoader, Loaders };
