@@ -1,11 +1,8 @@
 #!/usr/bin/env node
-
-require('module-alias/register');
 import chalk from 'chalk';
 import { Command } from 'commander';
 import { spawn } from 'child_process';
-const secretsFoundry = require('@/SecretsFoundry');
-// import secretsFoundry from '@/SecretsFoundry';
+import { SecretsFoundry } from '@/SecretsFoundry';
 
 interface Options {
   stage: string;
@@ -90,7 +87,7 @@ const program = new Command();
 program
   .version('0.1.0', '-V, --version', 'output the current version')
   .command('run')
-  .requiredOption('--stage <string>', 'Stage of the service')
+  .option('--stage <string>', 'Stage of the service', 'development')
   .option('-c, --command <string>', 'Single command to run')
   .option('-s, --script <string>', 'Multiple Commands to run like cd ~/ && ls')
   .description(
@@ -98,7 +95,8 @@ program
   )
   .action((options: Options) => {
     validateInput(options);
-
+    var secretsFoundry = new SecretsFoundry();
+    secretsFoundry.extractValues();
     let args: string[] = [];
     if (options.command) {
       args = options.command.split(' ');

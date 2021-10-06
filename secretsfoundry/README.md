@@ -23,3 +23,7 @@
     - Launches the test runner by watch mode
   - `npm run test`
     - get coverage report
+
+## To test locally
+
+npx ts-node -r tsconfig-paths/register src/index.ts run --script "node example.js"

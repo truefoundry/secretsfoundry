@@ -15,7 +15,11 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "paths": {
+      "*": ["node_modules/*"],
+      "@/*": ["src/*"]
+    }
   },
   "include": ["src/**/*"]
 }
