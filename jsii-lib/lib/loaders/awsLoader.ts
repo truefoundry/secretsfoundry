@@ -3,7 +3,7 @@ import os = require("os");
 import path = require("path");
 import { readFileSync } from "fs";
 
-export default class awsLoader implements Loader {
+export default class AWSLoader implements Loader {
   private isVariableInINI(awsVariable: string): boolean | string {
     const awsDir = path.join(path.join(os.homedir(), ".aws"), "credentials");
     const paramsMatch = /^\s*([^=]+?)\s*=\s*(.*?)\s*$/

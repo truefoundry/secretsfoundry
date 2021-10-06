@@ -1,7 +1,7 @@
 import Loader, { SEPARATOR } from ".";
 import AWS = require("aws-sdk");
 
-export default class s3Loader implements Loader {
+export default class S3Loader implements Loader {
   public async loadData(s3Variable: string): Promise<string> {
     const REGION_REGEX =
       /^(us(-gov)?|ap|ca|cn|eu|sa)-(central|(north|south)?(east|west)?)-\d?/;

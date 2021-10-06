@@ -3,7 +3,7 @@ import Loader, { SEPARATOR } from ".";
 const AWS = require("aws-sdk");
 const Buffer = require("buffer");
 
-export default class secretsLoader implements Loader {
+export default class SecretsLoader implements Loader {
   public async loadData(secretsVariable: string): Promise<string> {
     const REGION_REGEX =
       /^(us(-gov)?|ap|ca|cn|eu|sa)-(central|(north|south)?(east|west)?)-\d?/;
