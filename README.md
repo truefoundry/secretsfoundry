@@ -4,5 +4,5 @@ Secretsfoundry removes the need for installing libraries for using `.env` files 
 
 
 
-Testing syncing with github
+Testing syncing with github - testing branch main
 
