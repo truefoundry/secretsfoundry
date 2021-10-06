@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
-const chalk = require('chalk');
-const { Command } = require('commander');
-const { spawn } = require('child_process');
+const chalk = require("chalk");
+const { Command } = require("commander");
+const { spawn } = require("child_process");
 
 interface Options {
   stage: string;
@@ -21,30 +21,30 @@ function logErrorAndExit(message: string): void {
 
 function validateInput(options: Options): void {
   if (!options.stage.trim()) {
-    logErrorAndExit('Missing stage option. Empty string passed');
+    logErrorAndExit("Missing stage option. Empty string passed");
   }
 
   if (!options.script && !options.command) {
     logErrorAndExit(
-      'Either --script or --command is required, but none was found'
+      "Either --script or --command is required, but none was found"
     );
   }
 
   if (options.script && options.command) {
-    logErrorAndExit('Cannot use both --script and --command at the same time');
+    logErrorAndExit("Cannot use both --script and --command at the same time");
   }
 
   if (options.command && !options.command.trim()) {
-    logErrorAndExit('Command cannot be empty');
+    logErrorAndExit("Command cannot be empty");
   }
 
   if (options.script && !options.script.trim()) {
-    logErrorAndExit('Script cannot be empty');
+    logErrorAndExit("Script cannot be empty");
   }
 }
 
 function runChildProcess(cmd: String, args: String[]): void {
-  spawn(cmd, args, { stdio: 'inherit' });
+  spawn(cmd, args, { stdio: "inherit" });
 }
 
 /**
@@ -59,21 +59,21 @@ function runChildProcess(cmd: String, args: String[]): void {
 const getScriptArgs = (script: string): string[] => {
   let args: string[] = [];
 
-  if (process.platform === 'win32') {
-    args = ['cmd', '/C', script];
+  if (process.platform === "win32") {
+    args = ["cmd", "/C", script];
     return args;
   }
   // Figure out the shell in Unix
   const shells: string[] = [
-    '/bash',
-    '/dash',
-    '/fish',
-    '/zsh',
-    '/ksh',
-    '/csh',
-    '/tcsh',
+    "/bash",
+    "/dash",
+    "/fish",
+    "/zsh",
+    "/ksh",
+    "/csh",
+    "/tcsh",
   ];
-  args = ['sh', '-c', script];
+  args = ["sh", "-c", script];
   const envShell = process.env.SHELL as string;
   for (const shell of shells) {
     if (shell.endsWith(envShell)) {
@@ -85,20 +85,20 @@ const getScriptArgs = (script: string): string[] => {
 
 const program = new Command();
 program
-  .version('0.1.0', '-V, --version', 'output the current version')
-  .command('run')
-  .requiredOption('--stage <string>', 'Stage of the service')
-  .option('-c, --command <string>', 'Single command to run')
-  .option('-s, --script <string>', 'Multiple Commands to run like cd ~/ && ls')
+  .version("0.1.0", "-V, --version", "output the current version")
+  .command("run")
+  .requiredOption("--stage <string>", "Stage of the service")
+  .option("-c, --command <string>", "Single command to run")
+  .option("-s, --script <string>", "Multiple Commands to run like cd ~/ && ls")
   .description(
-    'Run the process in command/script after injecting the environment variables'
+    "Run the process in command/script after injecting the environment variables"
   )
   .action((options: Options) => {
     validateInput(options);
 
     let args: string[] = [];
     if (options.command) {
-      args = options.command.split(' ');
+      args = options.command.split(" ");
     } else if (options.script) {
       args = getScriptArgs(options.script);
     }
