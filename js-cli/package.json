@@ -11,7 +11,7 @@
   },
   "name": "js-lib",
   "version": "1.0.0",
-  "main": "./cli/index.ts",
+  "main": "./index.ts",
   "bin": {
     "secretsfoundry": "./lib/index.js"
   },
