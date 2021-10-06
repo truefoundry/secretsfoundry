@@ -1,6 +1,6 @@
-import s3Loader from "./s3Loader";
-import secretsLoader from "./secretsLoader";
-import ssmLoader from "./ssmLoader";
+import awsS3Loader from "./AwsS3Loader";
+import awsSecretsLoader from "./AwsSecretsLoader";
+import awsSSMLoader from "./AwsSSMLoader";
 
 // a custom made separator for splitting values
 export const SEPARATOR = ";;";
@@ -10,9 +10,9 @@ export default interface Loader {
 }
 
 const Loaders = {
-  SECRET: { key: "sec", loader: new secretsLoader() },
-  SSM: { key: "ssm", loader: new ssmLoader() },
-  S3: { key: "s3", loader: new s3Loader() },
+  SECRET: { key: "sec", loader: new awsSecretsLoader() },
+  SSM: { key: "ssm", loader: new awsSSMLoader() },
+  S3: { key: "s3", loader: new awsS3Loader() },
 };
 
-export { s3Loader, secretsLoader, ssmLoader, Loaders };
+export { awsS3Loader, awsSecretsLoader, awsSSMLoader, Loaders };
