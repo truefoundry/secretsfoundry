@@ -5,6 +5,10 @@
       "author"
     ]
   },
+  "bundled": {
+    "aws-sdk": "^2.999.0",
+    "dotenv": "^10.0.0"
+  },
   "description": "",
   "docs": {
     "stability": "stable"
@@ -52,22 +56,29 @@
       },
       "kind": "class",
       "locationInModule": {
-        "filename": "lib\\index.ts",
-        "line": 41
+        "filename": "lib/index.ts",
+        "line": 4
       },
       "methods": [
         {
+          "async": true,
           "docs": {
-            "stability": "stable"
+            "returns": "Object/dict containing key and corresponding populated variable value",
+            "stability": "stable",
+            "summary": "Reads values from the file stage specified and populates the variables."
           },
           "locationInModule": {
-            "filename": "lib\\index.ts",
-            "line": 42
+            "filename": "lib/index.ts",
+            "line": 10
           },
-          "name": "readFile",
+          "name": "extractValues",
           "parameters": [
             {
-              "name": "filePath",
+              "docs": {
+                "summary": "Stage for the process."
+              },
+              "name": "stage",
+              "optional": true,
               "type": {
                 "primitive": "string"
               }
@@ -89,5 +100,5 @@
     }
   },
   "version": "1.0.0",
-  "fingerprint": "C3/TLTdCDxuA+DVRMRl+45DW9WV7Cv3kuRYPJzmmnyI="
+  "fingerprint": "6Idpc+sOg85SevfzZI7MLaaPmeNrq9HtaugJwoaW9iE="
 }

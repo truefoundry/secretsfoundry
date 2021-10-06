@@ -11,3 +11,5 @@ dist/
 *.tabl.json
 *.swp
 *.snk
+venv/
+
