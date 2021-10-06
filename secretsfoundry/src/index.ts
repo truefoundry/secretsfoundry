@@ -1,10 +1,11 @@
 #!/usr/bin/env node
 
+require('module-alias/register');
 import chalk from 'chalk';
 import { Command } from 'commander';
 import { spawn } from 'child_process';
-// const { Command } = require('commander');
-// const { spawn } = require('child_process');
+const secretsFoundry = require('@/SecretsFoundry');
+// import secretsFoundry from '@/SecretsFoundry';
 
 interface Options {
   stage: string;
