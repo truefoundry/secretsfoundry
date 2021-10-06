@@ -1,18 +1,24 @@
 import variables from "./variables";
+const dotenv = require("dotenv");
 
 export class SecretsFoundry {
   /**
-   * Extracts the values read from a file and populates the variables present
-   * @param data An object/dict containing key,value (both strings)
-   * @returns Object/dict containing key and corresponding populated value
+   * Reads values from the file stage specified and populates the variables
+   * @param stage Stage for the process. Defaults to development
+   * @returns Object/dict containing key and corresponding populated variable value
    */
-  public async extractValues(data: { [key: string]: string }) {
+  public async extractValues(stage: string = "development") {
     let keys: string[] = [];
     let values: Promise<string>[] = [];
     let extractedValues: { [key: string]: string | Promise<string> } = {};
-    for (const key in data) {
+    const result = dotenv.config({ path: `./.env.${stage}` });
+    if (result.error) {
+      throw result.error;
+    }
+    const fileValues = result.parsed;
+    for (const key in fileValues) {
       keys.push(key);
-      values.push(new variables().populate(data[key]));
+      values.push(new variables().populate(fileValues[key]));
     }
     try {
       const results = await Promise.all(values);

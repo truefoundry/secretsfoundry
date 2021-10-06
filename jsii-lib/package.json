@@ -33,9 +33,11 @@
   },
   "homepage": "https://github.com/innoavator/secretsfoundry.git",
   "dependencies": {
-    "aws-sdk": "^2.999.0"
+    "aws-sdk": "^2.999.0",
+    "dotenv": "^10.0.0"
   },
   "bundledDependencies": [
-    "aws-sdk"
+    "aws-sdk",
+    "dotenv"
   ]
 }
