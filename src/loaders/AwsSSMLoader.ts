@@ -1,7 +1,10 @@
 import Loader, { SEPARATOR } from '.';
 import AWS from 'aws-sdk';
 
-export default class SSMLoader implements Loader {
+/**
+ *
+ */
+export default class AwsSSMLoader implements Loader {
   public async loadData(ssmVariable: string): Promise<string> {
     const REGION_REGEX =
       /^(us(-gov)?|ap|ca|cn|eu|sa)-(central|(north|south)?(east|west)?)-\d?/;
@@ -20,8 +23,11 @@ export default class SSMLoader implements Loader {
     if (!DECRYPTION_REGEX.test(withDecryption) || !withDecryption) {
       throw new Error('Improper decryption type provided');
     }
-    const data =
-      await this.fetchData(region, secretName, withDecryption === 'true');
+    const data = await this.fetchData(
+      region,
+      secretName,
+      withDecryption === 'true'
+    );
     return data.Parameter?.Value as string;
   }
 

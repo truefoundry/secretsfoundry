@@ -3,7 +3,7 @@ import Loader, { SEPARATOR } from '.';
 import AWS from 'aws-sdk';
 import { Buffer } from 'buffer';
 
-export default class SecretsLoader implements Loader {
+export default class AwsSecretsLoader implements Loader {
   public async loadData(secretsVariable: string): Promise<string> {
     const REGION_REGEX =
       /^(us(-gov)?|ap|ca|cn|eu|sa)-(central|(north|south)?(east|west)?)-\d?/;
@@ -16,10 +16,7 @@ export default class SecretsLoader implements Loader {
     if (!NAME_REGEX.test(secretName)) {
       throw new Error('Improper Name provided');
     }
-    const data = await this.fetchData(
-      region,
-      secretName
-    );
+    const data = await this.fetchData(region, secretName);
     /**
      * {
           ARN: '',
@@ -38,22 +35,22 @@ export default class SecretsLoader implements Loader {
     }
   }
 
-  private async fetchData(region: string, secretName: string): Promise<AWS.SecretsManager.GetSecretValueResponse> {
+  private async fetchData(
+    region: string,
+    secretName: string
+  ): Promise<AWS.SecretsManager.GetSecretValueResponse> {
     const client = new AWS.SecretsManager({
       region: region,
     });
 
     return new Promise(function (success, reject) {
-      client.getSecretValue(
-        { SecretId: secretName },
-        function (err, data) {
-          if (err) {
-            reject(err);
-          } else {
-            success(data);
-          }
+      client.getSecretValue({ SecretId: secretName }, function (err, data) {
+        if (err) {
+          reject(err);
+        } else {
+          success(data);
         }
-      );
+      });
     });
   }
 }
