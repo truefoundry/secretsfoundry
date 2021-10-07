@@ -33,7 +33,7 @@ export default class AwsSSMLoader extends Loader {
     const argsStr = groups[2]; // args
     const paramName = groups[3]; // path to param
 
-    const args = this.getArgsFromStr(argsStr);
+    const args = Loader.getArgsFromStr(argsStr);
 
     // Validate decrypt param
     let decrypt: boolean;
