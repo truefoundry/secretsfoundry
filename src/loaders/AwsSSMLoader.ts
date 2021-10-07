@@ -7,45 +7,60 @@ import AWS from 'aws-sdk';
  * AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY. It also falls
  * back to looking up the credentials in local aws config directory
  * if it cannot find the variables set.
+ *
+ * It accepts two params:
+ * region: AWS region to get the parameter from
+ * decrypt: Boolean to indicate whether to decrypt or not
  */
-export default class AwsSSMLoader implements Loader {
-  private static PATTERN = /^aws-ssm(\(.*?\))?:([a-zA-Z0-9_.\-\/]+)/;
+export default class AwsSSMLoader extends Loader {
+  private static PATTERN = /^aws-ssm(\((.*)?\))?:([a-zA-Z0-9_.\-\/]+)/;
   private static REGION_REGEX =
     /^(us(-gov)?|ap|ca|cn|eu|sa)-(central|(north|south)?(east|west)?)-\d?/;
-  private static NAME_REGEX = /^[\w/\-._]+$/;
-  private static DECRYPTION_REGEX = /^(true|false)$/;
+  // private static NAME_REGEX = /^[\w/\-._]+$/;
+  // private static DECRYPTION_REGEX = /^(true|false)$/;
 
   static canResolve(value: string): boolean {
     if (value.match(this.PATTERN) !== null) {
       return false;
     }
-    const [region, secretName, withDecryption] = value.split(SEPARATOR);
-    // TODO: Need to fix the valiation for the new pattern
-    if (!AwsSSMLoader.REGION_REGEX.test(region) || !region) {
-      return false;
-    }
-    if (!AwsSSMLoader.NAME_REGEX.test(secretName) || !AwsSSMLoader.NAME_REGEX) {
-      return false;
-    }
-    if (!AwsSSMLoader.DECRYPTION_REGEX.test(withDecryption) || !withDecryption) {
-      return false;
-    }
     return true;
   }
 
-  public async resolveVariable(ssmVariable: string): Promise<LoaderOutput> {
-    if (!AwsSSMLoader.canResolve(ssmVariable)) {
-      return { canResolve: false };
+  public async resolveVariable(ssmVariable: string): Promise<string> {
+    const groups = ssmVariable.match(AwsSSMLoader.PATTERN);
+    if (groups === null) {
+      throw new Error(
+        'AwsSSMLoader cannot parse the variable name. This should never happen \
+      since client is supposed to be calling canResolve first'
+      );
     }
-    const [region, secretName, withDecryption] = ssmVariable.split(SEPARATOR);
-    const ssm = new AWS.SSM({ region: region });
+    const argsStr = groups[2]; // args
+    const paramName = groups[3]; // path to param
+
+    const args = this.getArgsFromStr(argsStr);
+    // Validate region param
+    // TODO:
+
+    // Validate decrypt param
+    let decrypt: boolean;
+    if (!args.decrypt) {
+      decrypt = false;
+    } else if (args.decrypt === 'true') {
+      decrypt = true;
+    } else if (args.decrypt === 'false') {
+      decrypt = false;
+    } else {
+      throw new Error('decrypt value has to be true or false');
+    }
+
+    // const [region, secretName, withDecryption] = ssmVariable.split(SEPARATOR);
+    const ssm = new AWS.SSM({ region: args.region || 'us-east-1' });
     const data = await ssm
       .getParameter({
-        Name: secretName,
-        WithDecryption: withDecryption === 'true',
+        Name: paramName,
+        WithDecryption: decrypt,
       })
       .promise();
-    return { canResolve: true, resolvedOutput: data.Parameter?.Value as string };
+    return data.Parameter?.Value as string;
   }
-
 }
