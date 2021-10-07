@@ -16,7 +16,7 @@ import { Buffer } from 'buffer';
  *      or return the whole json object
  */
 export default class AwsSecretsLoader extends Loader {
-  private static PATTERN = /^aws-secrets(\((.*)?\))?:([a-zA-Z0-9_.\-\/]+)/;
+  private static PATTERN = /^aws-secrets(\((.*)?\))?:([a-zA-Z0-9_.\-\/]+)$/;
 
   private static NAME_REGEX = /^[\w-]+$/;
 
