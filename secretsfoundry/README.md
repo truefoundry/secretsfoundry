@@ -26,4 +26,4 @@
 
 ## To test locally
 
-npx ts-node -r tsconfig-paths/register src/index.ts run --script "node example.js"
+`node -r ts-node/register -r tsconfig-paths/register src/index.ts run --script "node example.js"`
