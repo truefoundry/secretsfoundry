@@ -2,9 +2,14 @@ import Loader, { SEPARATOR } from '.';
 import AWS from 'aws-sdk';
 
 /**
- *
+ * AWSSSMLoader loads the variable from AWS Parameter Store.
+ * We get the AWS credentials from the environment variables
+ * AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY. It also falls
+ * back to looking up the credentials in local aws config directory
+ * if it cannot find the variables set.
  */
 export default class AwsSSMLoader implements Loader {
+  private static PATTERN = /^aws-ssm(\(.*?\))?:([a-zA-Z0-9_.\-\/]+)/;
   public async loadData(ssmVariable: string): Promise<string> {
     const REGION_REGEX =
       /^(us(-gov)?|ap|ca|cn|eu|sa)-(central|(north|south)?(east|west)?)-\d?/;
@@ -31,24 +36,21 @@ export default class AwsSSMLoader implements Loader {
     return data.Parameter?.Value as string;
   }
 
+  static canResolve(value: string): boolean {
+    return value.match(this.PATTERN) !== null;
+  }
+
   private async fetchData(
     region: string,
     secretName: string,
     WithDecryption: boolean
   ): Promise<AWS.SSM.GetParameterResult> {
     const ssm = new AWS.SSM({ region: region });
-
-    return new Promise(function (success, reject) {
-      ssm.getParameter(
-        { Name: secretName, WithDecryption },
-        function (err, data) {
-          if (err) {
-            reject(err);
-          } else {
-            success(data);
-          }
-        }
-      );
-    });
+    return ssm
+      .getParameter({
+        Name: secretName,
+        WithDecryption: WithDecryption,
+      })
+      .promise();
   }
 }

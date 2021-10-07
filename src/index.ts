@@ -96,10 +96,16 @@ program
   .action(async (options: Options) => {
     validateInput(options);
     const secretsFoundry = new SecretsFoundry();
-    const result = await secretsFoundry.extractValues(options.stage);
-    for (const key in result) {
-      process.env[key] = result[key] as string;
+    try {
+      const result = await secretsFoundry.extractValues(options.stage);
+      for (const key in result) {
+        process.env[key] = result[key] as string;
+      }
+    } catch (err: any) {
+      console.error('Error parsing config file: ', err);
+      process.exit();
     }
+
     let args: string[] = [];
     if (options.command) {
       args = options.command.split(' ');

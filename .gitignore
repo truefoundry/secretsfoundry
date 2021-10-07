@@ -71,3 +71,5 @@ dist
 
 # Yarn Integrity file
 .yarn-integrity
+
+.env.development

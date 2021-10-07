@@ -30,6 +30,7 @@ export class SecretsFoundry {
       });
       return extractedValues;
     } catch (error) {
+      console.error(error);
       throw new Error(error as string);
     }
   }
@@ -40,7 +41,7 @@ export class SecretsFoundry {
       const refKey = variables[1];
       const refValue = variables[2];
 
-      const loader = Object.values(Loaders).find(mode => mode.key === refKey)
+      const loader = Object.values(Loaders).find((mode) => mode.key === refKey);
 
       if (loader) {
         return await loader.loader.loadData(refValue);
