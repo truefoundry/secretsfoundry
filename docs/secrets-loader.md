@@ -2,17 +2,17 @@
 description: About and how to use
 ---
 
-# AWSSecrets Loader
+# AWS Secrets Manager
 
 AwsSecretsLoader loads the secret from AWSSecretsManager.
 
-### Usage
+## Usage
 
 ```text
 VARIABLE=${aws-secrets(region=us-east-2,raw=true):/path/to/secret}
 ```
 
-### **Syntax Terms Explanation**
+## **Syntax Terms Explanation**
 
 **aws-secrets:** Tells that provider is secrets and to load data from secrets manager.
 
@@ -23,3 +23,4 @@ VARIABLE=${aws-secrets(region=us-east-2,raw=true):/path/to/secret}
 **path:** Name of the secret used.
 
 Hence, the complete variable **must follow** the REGEX: `/^aws-secrets(((.*)?))?:([a-zA-Z0-9_.-\/]+)$/`
+

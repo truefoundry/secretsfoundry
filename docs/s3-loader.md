@@ -2,17 +2,17 @@
 description: About S3 Loader and how to use
 ---
 
-# AWSS3 Loader
+# AWS S3
 
 AwsS3Loader loads the secret from S3 Bucket.
 
-### Usage
+## Usage
 
 ```text
 VARIABLE=${aws-s3(region='us-east-2'):bucket/key}
 ```
 
-### **Syntax Terms Explanation**
+## **Syntax Terms Explanation**
 
 **aws-s3:** Tells that provider is s3 and to load data from s3.
 
@@ -24,3 +24,4 @@ VARIABLE=${aws-s3(region='us-east-2'):bucket/key}
 **key:** The key used for fetching the object details. **Must follow** the REGEX `/^[\w]+?/`
 
 Hence, the complete variable **must follow** the REGEX: `/^aws-s3(((.*)?))?:((.+?)\/(.+)$)/`
+
