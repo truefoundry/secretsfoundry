@@ -1,4 +1,4 @@
-import Loader, { LoaderOutput, SEPARATOR } from '.';
+import Loader from '.';
 import AWS from 'aws-sdk';
 
 /**
@@ -14,10 +14,6 @@ import AWS from 'aws-sdk';
  */
 export default class AwsSSMLoader extends Loader {
   private static PATTERN = /^aws-ssm(\((.*)?\))?:([a-zA-Z0-9_.\-\/]+)/;
-  private static REGION_REGEX =
-    /^(us(-gov)?|ap|ca|cn|eu|sa)-(central|(north|south)?(east|west)?)-\d?/;
-  // private static NAME_REGEX = /^[\w/\-._]+$/;
-  // private static DECRYPTION_REGEX = /^(true|false)$/;
 
   static canResolve(value: string): boolean {
     if (value.match(this.PATTERN) !== null) {
@@ -38,8 +34,6 @@ export default class AwsSSMLoader extends Loader {
     const paramName = groups[3]; // path to param
 
     const args = this.getArgsFromStr(argsStr);
-    // Validate region param
-    // TODO:
 
     // Validate decrypt param
     let decrypt: boolean;
@@ -53,7 +47,6 @@ export default class AwsSSMLoader extends Loader {
       throw new Error('decrypt value has to be true or false');
     }
 
-    // const [region, secretName, withDecryption] = ssmVariable.split(SEPARATOR);
     const ssm = new AWS.SSM({ region: args.region || 'us-east-1' });
     const data = await ssm
       .getParameter({
