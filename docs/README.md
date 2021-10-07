@@ -10,5 +10,7 @@ Secretsfoundry removes the need for installing libraries for using `.env` files 
 
 ## Questions?
 
-We're always happy to help with code or other questions you might have. Search our documentation,or post questions to our [Github repo](https://github.com/innoavator/secretsfoundry) if you run into any technical roadblocks.
+We're always happy to help with code or other questions you might have. Search our documentation,or post questions to our [Github repo](https://github.com/innoavator/secretsfoundry) if you run into any technical roadblocks. 
+
+You can also reach out to me at abhichoudhary06@gmail.com.
 
