@@ -2,22 +2,25 @@
 description: About S3 Loader and how to use
 ---
 
-# S3 Loader
+# AWSS3 Loader
 
-S3 loader loads the value from S3 Bucket.
+AwsS3Loader loads the secret from S3 Bucket.
 
 ### Usage
 
 ```text
-VARIABLE=${s3:<region>;;<name>;;<key>}
+VARIABLE=${aws-s3(region='us-east-2'):bucket/key}
 ```
 
-### **Parameters**
+### **Syntax Terms Explanation**
 
-**s3:** Tells that loader is of type s3 and to load data from s3.
+**aws-s3:** Tells that provider is s3 and to load data from s3.
 
-**region:** Region in which value is to be looked for. Must follow the following REGEX `/^(us(-gov)?|ap|ca|cn|eu|sa)-(central|(north|south)?(east|west)?)-\d?/`
+**\(\):** Parameters for aws-s3. Currently, a single paramater is accepted:  
+**region:** region for aws-s3. Defaults to _us-east-1_
 
-**name:** Name of the bucket to be used. Must follow the REGEX `/^[\w\/-._]+$/`
+**bucket:** Name of the bucket to be used. **Must follow** the REGEX `/^[\w/-._]+$/`
 
-**key:** The Key to be used for fetching the object details. Must follow the REGEX `/^[\w]+?/`
+**key:** The key used for fetching the object details. **Must follow** the REGEX `/^[\w]+?/`
+
+Hence, the complete variable **must follow** the REGEX: `/^aws-s3(((.*)?))?:((.+?)\/(.+)$)/`

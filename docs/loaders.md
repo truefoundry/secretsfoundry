@@ -21,9 +21,9 @@ VARIABLE=${i_have_a_variable_value}
 However, just writing text between `${ }` won't work. There is a special syntax, which needs to be followed.
 
 ```text
-VARIABLE=${loader:path}
+VARIABLE=${loader():path}
 ```
 
 where:  
-**loader:** can be one of these types: `aws` , `ssm`, `s3` and `sec` .  
+**loader:** can be one of these types: `aws-ssm` , `aws-s3`, `aws-secrets` and `vault` . If any arguments need to be passed, they are passed inside `()`  
 **path:** the path from where value is to be fetched.
