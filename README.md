@@ -99,7 +99,7 @@ AWS_DEFAULT_REGION
 ```
 
 You can customise aws-ssm provider using:
-`${aws-ssm(region=us-east-2, decrypt=true):/path/to/param`
+`${aws-ssm(region=us-east-2,decrypt=true):/path/to/param`
 
 SecretsFoundry decrypts the key by default. Pass decrypt=false to get the raw value.
 
@@ -109,18 +109,15 @@ SecretsFoundry decrypts the key by default. Pass decrypt=false to get the raw va
 ### AWS Secrets Manager
 
 AWS credentials are fetched in a similar way as AWS Parameter Store. You can customise aws-secrets provider using:
-`${aws-secrets(region='us-east-2', decrypt="true")`
+`${aws-secrets(region=us-east-2,raw=true)`
 
-**region:** Region in which value is to be looked for. Must follow the following REGEX `/^(us(-gov)?|ap|ca|cn|eu|sa)-(central|(north|south)?(east|west)?)-\d?/`
-
-**name:** Name of the secret to be used. Must follow the REGEX `/^[\w\/-._]+$/`
-
-**withDecryption:** Tells whether the secret value should be decrypted or not. Can only be either `true` or `false`
+**region:** Region in which value is to be looked for.
+**raw:** Tells whether the secret value should be decrypted or not. Can only be either `true` or `false`
 
 ### AWS S3
 
 AWS credentials are fetched in a similar way as AWS Parameter Store
-`${aws-s3(region='us-east-2')`
+`${aws-s3(region='us-east-2'):bucket/key`
 
 ### Hashicorp vault
 
