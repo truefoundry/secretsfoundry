@@ -2,8 +2,7 @@ import dotenv from 'dotenv';
 import Loader from './loaders/loader';
 
 export class SecretsFoundry {
-  VARIABLES_MATCH = /([\w]+?):(.+)/g;
-  EXPAND_REGEX = /\${([:a-zA-Z0-9_;(=)\-/]+)?}/g;
+  EXPAND_REGEX = /\${([:a-zA-Z0-9_;(=),\-/]+)?}/g;
   private loaders: Loader[];
 
   constructor(loaders: Loader[]) {
@@ -43,7 +42,6 @@ export class SecretsFoundry {
       let groups = [...newValue.matchAll(this.EXPAND_REGEX)];
       // Groups are the matches at a given level, since the regex is non-greedy
       // notice the ? mark for the content inside {}. It matches smallest first
-
       while (groups.length > 0) {
         for (const parts of groups) {
           // parts are the matching groups, parts[1] is the content of the braces

@@ -12,13 +12,9 @@ import { Buffer } from 'buffer';
  *
  * It accepts two params:
  * @param region: AWS region to get the parameter from
- * @param raw: Boolean to indicate whether to extract the SecretString from secret data
- *      or return the whole json object
  */
 export default class AwsSecretsLoader extends Loader {
   private static PATTERN = /^aws-secrets(\((.*)?\))?:([a-zA-Z0-9_.\-\/]+)/;
-
-  private static NAME_REGEX = /^[\w-]+$/;
 
   public canResolve(value: string): boolean {
     return value.match(AwsSecretsLoader.PATTERN) !== null;
@@ -35,7 +31,6 @@ export default class AwsSecretsLoader extends Loader {
 
     const argsStr = groups[2]; // args
     const secretName = groups[3]; // path to param
-
     const args = this.getArgsFromStr(argsStr);
 
     const client = new AWS.SecretsManager({
@@ -47,12 +42,10 @@ export default class AwsSecretsLoader extends Loader {
       const result = await client
         .getSecretValue({ SecretId: secretName })
         .promise();
-      if (!args.raw && 'SecretString' in result) {
+      if ('SecretString' in result) {
         return result.SecretString as string;
-      } else {
-        const buff = Buffer.from(result.SecretBinary as string, 'base64');
-        return buff.toString('ascii');
       }
+      throw new Error('No SecretString in the Secret: `${secretsVariable}`');
     } catch (error) {
       throw new Error(error as string);
     }
