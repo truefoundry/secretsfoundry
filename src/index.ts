@@ -3,6 +3,7 @@ import chalk from 'chalk';
 import { Command } from 'commander';
 import { spawn } from 'child_process';
 import { SecretsFoundry } from './SecretsFoundry';
+import { Loaders } from './loaders';
 
 interface Options {
   stage: string;
@@ -95,13 +96,13 @@ program
   )
   .action(async (options: Options) => {
     validateInput(options);
-    const secretsFoundry = new SecretsFoundry();
+    const secretsFoundry = new SecretsFoundry(Loaders);
     try {
       const result = await secretsFoundry.extractValues(options.stage);
       for (const key in result) {
         process.env[key] = result[key] as string;
       }
-    } catch (err: any) {
+    } catch (err) {
       console.error('Error parsing config file: ', err);
       process.exit();
     }

@@ -1,4 +1,4 @@
-import Loader from '.';
+import Loader from './loader.interface';
 import AWS from 'aws-sdk';
 
 /**

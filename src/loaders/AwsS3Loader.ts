@@ -1,4 +1,4 @@
-import Loader from '.';
+import Loader, { SEPARATOR } from './loader.interface';
 import AWS from 'aws-sdk';
 
 export default class AwsS3Loader extends Loader {

@@ -1,4 +1,4 @@
-import Loader from '.';
+import Loader, { SEPARATOR } from './loader.interface';
 
 import AWS from 'aws-sdk';
 import { Buffer } from 'buffer';
