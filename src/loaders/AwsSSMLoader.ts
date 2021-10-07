@@ -1,11 +1,11 @@
 import Loader, { SEPARATOR } from '.';
-const AWS = require('aws-sdk');
+import AWS from 'aws-sdk';
 
 export default class SSMLoader implements Loader {
   public async loadData(ssmVariable: string): Promise<string> {
     const REGION_REGEX =
       /^(us(-gov)?|ap|ca|cn|eu|sa)-(central|(north|south)?(east|west)?)-\d?/;
-    const NAME_REGEX = /^[\w\/\-._]+$/;
+    const NAME_REGEX = /^[\w/\-._]+$/;
     const DECRYPTION_REGEX = /^(true|false)$/;
     const [region, secretName, withDecryption] = ssmVariable.split(SEPARATOR);
 
@@ -20,27 +20,22 @@ export default class SSMLoader implements Loader {
     if (!DECRYPTION_REGEX.test(withDecryption) || !withDecryption) {
       throw new Error('Improper decryption type provided');
     }
-    try {
-      const data: { [key: string]: { [key: string]: string } } =
-        await this.fetchData(region, secretName, withDecryption === 'true');
-      return data.Parameter?.Value;
-    } catch (error) {
-      //@ts-ignore
-      throw new Error(`${error.code}: ${error.message}`);
-    }
+    const data =
+      await this.fetchData(region, secretName, withDecryption === 'true');
+    return data.Parameter?.Value as string;
   }
 
   private async fetchData(
     region: string,
     secretName: string,
     WithDecryption: boolean
-  ): Promise<any> {
+  ): Promise<AWS.SSM.GetParameterResult> {
     const ssm = new AWS.SSM({ region: region });
 
     return new Promise(function (success, reject) {
       ssm.getParameter(
         { Name: secretName, WithDecryption },
-        function (err: any, data: { [key: string]: string }) {
+        function (err, data) {
           if (err) {
             reject(err);
           } else {

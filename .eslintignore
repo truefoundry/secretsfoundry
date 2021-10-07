@@ -10,3 +10,5 @@ coverage/*
 /src/types/
 # config files
 **/*.config.js
+
+example.js

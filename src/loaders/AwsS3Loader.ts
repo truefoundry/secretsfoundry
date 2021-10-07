@@ -1,11 +1,11 @@
 import Loader, { SEPARATOR } from '@/loaders';
-import AWS = require('aws-sdk');
+import AWS from 'aws-sdk';
 
 export default class S3Loader implements Loader {
   public async loadData(s3Variable: string): Promise<string> {
     const REGION_REGEX =
       /^(us(-gov)?|ap|ca|cn|eu|sa)-(central|(north|south)?(east|west)?)-\d?/;
-    const NAME_REGEX = /^[\w\/\-._]+$/;
+    const NAME_REGEX = /^[\w/\-._]+$/;
     const KEY_REGEX = /^[\w]+?/;
     const [region, bucket, key] = s3Variable.split(SEPARATOR);
 
@@ -20,36 +20,32 @@ export default class S3Loader implements Loader {
     if (!KEY_REGEX.test(key) || !key) {
       throw new Error('Improper key provided');
     }
-    try {
-      const data: { [key: string]: string } = await this.fetchData(
-        region,
-        bucket,
-        key
-      );
-      if (
-        data.ContentType.startsWith('text') ||
-        data.ContentType === 'application/json'
-      ) {
-        // body is a buffer
-        return data.Body.toString();
-      }
-
-      throw new Error('Uncompatible data type');
-    } catch (error) {
-      //@ts-ignore
-      throw new Error(`${error.code}: ${error.message}`);
+    const data: AWS.S3.GetObjectOutput = await this.fetchData(
+      region,
+      bucket,
+      key
+    );
+    if (
+      data.ContentType?.startsWith('text') ||
+      data.ContentType === 'application/json'
+    ) {
+      // body is a buffer
+      return data.Body?.toString() as string;
     }
+
+    throw new Error('Uncompatible data type');
   }
 
   private async fetchData(
     region: string,
     Bucket: string,
     Key: string
-  ): Promise<{ [key: string]: string }> {
+  ): Promise<AWS.S3.GetObjectOutput> {
     const s3 = new AWS.S3({ region: region });
 
     return new Promise(function (success, reject) {
-      s3.getObject({ Bucket, Key }, function (err: any, data: any) {
+      s3.getObject({ Bucket, Key }, function (err, data) {
+        data.Body?.toString
         if (err) {
           reject(err);
         } else {
