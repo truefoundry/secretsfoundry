@@ -14,7 +14,7 @@ export default class AwsS3Loader extends Loader {
     return true;
   }
 
-  public async resolveVariable(s3Variable: string): Promise<string> {
+  public async resolve(s3Variable: string): Promise<string> {
     const groups = s3Variable.match(AwsS3Loader.PATTERN);
     if (groups === null) {
       throw new Error(

@@ -26,7 +26,7 @@ export default class AwsSecretsLoader extends Loader {
     return true;
   }
 
-  public async resolveVariable(secretsVariable: string): Promise<string> {
+  public async resolve(secretsVariable: string): Promise<string> {
     const groups = secretsVariable.match(AwsSecretsLoader.PATTERN);
     if (groups === null) {
       throw new Error(

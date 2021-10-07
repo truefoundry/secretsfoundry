@@ -7,6 +7,16 @@ const vault = nodeVault({
 
 export default class VaultLoader extends Loader {
   private static PATTERN = /^vault(\((.*)?\))?:([a-zA-Z0-9_.\-\/]+)/;
+  private nodeVault: any;
+
+  async VaultLoader() {
+    const roleId = process.env.ROLE_ID;
+    const secretId = process.env.SECRET_ID;
+    this.nodeVault = await vault.approleLogin({
+      role_id: roleId,
+      secret_id: secretId,
+    });
+  }
 
   static canResolve(value: string): boolean {
     if (value.match(this.PATTERN) !== null) {
@@ -15,7 +25,7 @@ export default class VaultLoader extends Loader {
     return true;
   }
 
-  public async resolveVariable(vaultVariable: string): Promise<string> {
+  public async resolve(vaultVariable: string): Promise<string> {
     const groups = vaultVariable.match(VaultLoader.PATTERN);
     if (groups === null) {
       throw new Error(
@@ -25,15 +35,9 @@ export default class VaultLoader extends Loader {
     }
     const secretName = groups[2]; // name of the vault secret
 
-    const roleId = process.env.ROLE_ID;
-    const secretId = process.env.SECRET_ID;
-    // need to check regex for vaultVariable but not sure as of now
-    const result = await vault.approleLogin({
-      role_id: roleId,
-      secret_id: secretId,
-    });
+    // need to check regex for secretName but not sure as of now
 
-    vault.token = result.auth.client_token;
+    vault.token = this.nodeVault.auth.client_token;
     const data = await vault.read(secretName);
     return JSON.stringify(data);
   }

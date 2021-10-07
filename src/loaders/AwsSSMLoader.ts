@@ -22,7 +22,7 @@ export default class AwsSSMLoader extends Loader {
     return true;
   }
 
-  public async resolveVariable(ssmVariable: string): Promise<string> {
+  public async resolve(ssmVariable: string): Promise<string> {
     const groups = ssmVariable.match(AwsSSMLoader.PATTERN);
     if (groups === null) {
       throw new Error(
