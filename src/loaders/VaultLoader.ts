@@ -9,8 +9,8 @@ const vault = nodeVault({
  * VaultLoader loads the secret from HashiCorp's NodeVault
  * We get the credentials for the vault from the environment variables
  * The credentials required are as follows:
- * - ROLE_ID
- * - SECRET_ID
+ * - VAULT_ROLE_ID
+ * - VAULT_SECRET_ID
  *
  * It accepts one param:
  * path: the path to the secret in vault
@@ -34,7 +34,7 @@ export default class VaultLoader extends Loader {
       );
     }
     const secretName = groups[2]; // name of the vault secret
-
+    // TODO: Keep endpoint as args or env variable (We should support both)
     // need to check regex for secretName but not sure as of now
     const roleId = process.env.ROLE_ID;
     const secretId = process.env.SECRET_ID;

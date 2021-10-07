@@ -69,12 +69,18 @@ SIMPLE = "simple"
 VARIABLE = ${SIMPLE}
 
 // Use variable defined in aws parameter store
+// Args: region, decrypt
+// To use with args, ${aws-ssm(region=us-east-1):/path/to/variable}
 AWS_SSM_VARIABLE = ${aws-ssm:/path/to/variable}
 
 // Use variable defined in aws secrets manager
-AWS_SECRETS_SECRET = ${aws-secret:/path/to/secret}
+// Args: region
+// To use with args, ${aws-secrets(region=us-east-1):/path/to/variable}
+AWS_SECRETS_SECRET = ${aws-secrets:/path/to/secret}
 
 // Use value from S3
+// args: region
+// To use with args, ${aws-s3(region=us-east-1):bucket/key}
 AWS_S3_VALUE = ${aws-s3:bucket/key}
 
 // Use value from Hashicorp vault
@@ -98,25 +104,31 @@ AWS_SECRET_ACCESS_KEY
 AWS_DEFAULT_REGION
 ```
 
+Arguments (optional)
+
+- **region:** Region in which value is to be looked for. Should be a valid AWS region
+- **decrypt** If the value should be decrypted (default is false)
+
 You can customise aws-ssm provider using:
 `${aws-ssm(region=us-east-2,decrypt=true):/path/to/param`
 
-SecretsFoundry decrypts the key by default. Pass decrypt=false to get the raw value.
-
-**region:** Region in which value is to be looked for.
-**decrypt** If the value should be decrypted (default is false)
-
 ### AWS Secrets Manager
 
-AWS credentials are fetched in a similar way as AWS Parameter Store. You can customise aws-secrets provider using:
-`${aws-secrets(region=us-east-2,raw=true)`
-
+AWS credentials are fetched in a similar way as AWS Parameter Store.
+Arguments (optional)
 **region:** Region in which value is to be looked for.
-**raw:** Tells whether the secret value should be decrypted or not. Can only be either `true` or `false`
+
+You can customise aws-secrets provider using:
+`${aws-secrets(region=us-east-2)`
 
 ### AWS S3
 
 AWS credentials are fetched in a similar way as AWS Parameter Store
+
+Arguments (optional)
+**region:** AWS Region to lookup the value
+
+You can customise aws-secrets provider using:
 `${aws-s3(region='us-east-2'):bucket/key`
 
 ### Hashicorp vault
