@@ -2,8 +2,8 @@ import { Loaders } from './loaders';
 import dotenv from 'dotenv';
 
 export class SecretsFoundry {
-  VARIABLES_MATCH = /\${([\w]+?):(.+?)}/g;
-  EXPAND_REGEX = /((?:\\{2})?)\${([:a-zA-Z0-9_;\-/]+)?}/g;
+  VARIABLES_MATCH = /([\w]+?):(.+)/g;
+  EXPAND_REGEX = /\${([:a-zA-Z0-9_;(=)\-/]+)?}/g;
   /**
    * Reads values from the file stage specified and populates the variables
    * @param stage Stage for the process. Defaults to development
@@ -14,10 +14,8 @@ export class SecretsFoundry {
     if (result.error || !result.parsed) {
       throw result.error;
     }
-    const fileValues = result.parsed;
-
     try {
-      return await this.dotenvExpand(fileValues);
+      return await this.dotenvExpand(result.parsed);
     } catch (error) {
       console.error(error);
       throw new Error(error as string);
@@ -25,11 +23,9 @@ export class SecretsFoundry {
   }
 
   async resolveVariableValue(value: string) {
-    const variables = this.VARIABLES_MATCH.exec(value);
-    this.VARIABLES_MATCH.lastIndex = 0;
-    if (variables) {
-      const refKey = variables[1];
-      const refValue = variables[2];
+    const variables = [...value.matchAll(this.VARIABLES_MATCH)];
+    if (variables.length > 0) {
+      const [, refKey, refValue] = variables[0];
 
       const loader = Object.values(Loaders).find((mode) => mode.key === refKey);
 
@@ -43,48 +39,39 @@ export class SecretsFoundry {
     return value;
   }
 
-  async dotenvExpand(inputConfig: dotenv.DotenvParseOutput): Promise<{ [key: string]: string; }> {
-    const environment = process.env;
-    const foundryVars: string[] = [];
-    for (const key in inputConfig) {
-      let newValue = inputConfig[key]
-      let parts = this.EXPAND_REGEX.exec(newValue);
-      this.EXPAND_REGEX.lastIndex = 0; // reset regex
-      while (parts) { 
-        const prefix = parts[1];
-        let value: string, replacePart: string;
-  
-        if (prefix === '\\') {
-          replacePart = parts[0];
-          value = replacePart.replace('\\$', '$');
-        } else {
-          const replacementKey = parts[2];
-          replacePart = parts[0].substring(prefix.length);
-          // process.env value 'wins' over .env file's value
-          if (Object.prototype.hasOwnProperty.call(environment, replacementKey))
-            value = environment[replacementKey] as string;
-          else if (inputConfig[replacementKey])
-            value = inputConfig[replacementKey];
-          else {
-            foundryVars.push(key);
-            break;
-          }
-        }
-        newValue = newValue.replace(replacePart, value);
-        parts = this.EXPAND_REGEX.exec(newValue)
-        this.EXPAND_REGEX.lastIndex = 0; // reset regex
+  async dotenvExpand(envVars: Record<string, string>): Promise<Record<string, string>> {
+    for (const key in envVars) {
+      let newValue = envVars[key]
+      let groups = [...newValue.matchAll(this.EXPAND_REGEX)];
+      // Groups are the matches at a given level, since the regex is non-greedy
+      // notice the ? mark for the content inside {}. It matches smallest first
+      
+      while(groups.length > 0) {     
+        for (const parts of groups) { 
+          // parts are the matching groups, parts[1] is the content of the braces
+          newValue = newValue.replace(
+            parts[0],
+            // eslint-disable-next-line no-await-in-loop
+            await this.resolveVar(parts[1], envVars)
+          );
+          // The braces at current level are resolved, and the code then attempts to find
+          // vars at a higher level.
+          groups = [...newValue.matchAll(this.EXPAND_REGEX)]
+        } 
       }
-      inputConfig[key] = newValue;
+      envVars[key] = newValue;
     }
-    const values: Promise<string>[] = [];
-    for (const foundryKey of foundryVars) {
-      const newValue = inputConfig[foundryKey];
-      values.push(this.resolveVariableValue(newValue));
-    }
-    const results = await Promise.all(values);
-    foundryVars.forEach((key, i) => {
-      inputConfig[key] = results[i];
-    })
-    return inputConfig;
+    return envVars;
+  }
+  
+  async resolveVar(variable: string, envVars: Record<string, string>): Promise<string> {
+    // process.env value 'wins' over .env file's value.
+    if (Object.prototype.hasOwnProperty.call(process.env, variable))
+      return process.env[variable] as string;
+    // check current env for difinition.
+    else if (envVars[variable])
+      return envVars[variable];
+    // pass it foundry to be resolved finally.
+    return await this.resolveVariableValue(variable);
   }
 }
