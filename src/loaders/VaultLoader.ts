@@ -9,7 +9,7 @@ export default class VaultLoader extends Loader {
   private static PATTERN = /^vault(\((.*)?\))?:([a-zA-Z0-9_.\-\/]+)/;
   private nodeVault: any;
 
-  async VaultLoader() {
+  async constructor() {
     const roleId = process.env.ROLE_ID;
     const secretId = process.env.SECRET_ID;
     this.nodeVault = await vault.approleLogin({
