@@ -1,41 +1,121 @@
 # secretsfoundry
 
-- Package to manage your environment variables and secrets
+SecretsFoundry is a package to automatically fetch your environment variables
+from different sources and secret managers. You can write the path to secret key in .env and
+SecretsFoundry will automatically fetch it for you. It parses the .env or .env.\* files
+to automatically extract the values and provide them as environment variables to your
+application.
 
-## Required
+# Prerequisites
 
-- Node.js 14+
+- npm
+  `npm install npm@latest -g`
 
-## Getting started with development
+# Getting Started
 
-- `cd secretsfoundry`
-  - cd into the repository
-- `npm install`
-  - install dependencies
-- `npm run build`
-  - Build the code
+- npm install secretsfoundry --save
+- Create a .env file in your repository
 
-## How to using
+```
+SIMPLE = "simple"
 
-- Lunch commands
+// Use the environment variables described earlier
+VARIABLE = ${SIMPLE}
 
-  - `npm start`
-    - run cli
-  - `npm run dev`
-    - run force debug cli
-  - `npm run lint`
-    - run lint
-  - `npm run build`
-    - run tsc
-      - this only development, not production
-  - `npm run test`
-    - Launches the test runner by watch mode
-  - `npm run test`
-    - get coverage report
+// Use variable defined in aws parameter store
+AWS_SSM_VARIABLE = ${aws-ssm:/path/to/variable}
 
-## To test locally
+// Use variable defined in aws secrets manager
+AWS_SECRETS_SECRET = ${aws-secret:/path/to/secret}
 
-node -r ts-node/register -r tsconfig-paths/register src/index.ts run --script "node example.js"
+// Use value from S3
+AWS_S3_VALUE = ${aws-s3:bucket/key}
+
+// Use value from Hashicorp vault
+VAULT_VALUE = ${vault:/path/to/secret}
+```
+
+If you were earlier running your application using node app.js, use:
+
+`secretsfoundry run --command "node app.js"`
+
+app.js can now access all the variables using process.env
+
+```
+SIMPLE = "hello"
+VARIABLE = "hello"
+AWS_SSM_VARIABLE = 'aws-ssm-variable'
+AWS_SECRETS_SECRET = 'aws-secret-value'
+AWS_S3_VALUE = 'aws-s3-value'
+VAULT_VALUE = 'vault-decrypted-value'
+```
+
+SecretsFoundry currently provides support for the following sources:
+
+1. AWS Parameter Store
+2. AWS Secrets Manager
+3. Hashicorp Vault
+4. AWS S3
+
+We will soon be extending support for GCP Secrets Engine and Azure Key Vault. If you need support
+for other sources, reach out to us for support or send a PR.
+
+## Formats in env files
+
+```
+SIMPLE = "simple"
+
+// Use the environment variables described earlier
+VARIABLE = ${SIMPLE}
+
+// Use variable defined in aws parameter store
+AWS_SSM_VARIABLE = ${aws-ssm:/path/to/variable}
+
+// Use variable defined in aws secrets manager
+AWS_SECRETS_SECRET = ${aws-secret:/path/to/secret}
+
+// Use value from S3
+AWS_S3_VALUE = ${aws-s3:bucket/key}
+
+// Use value from Hashicorp vault
+VAULT_VALUE = ${vault:/path/to/secret}
+```
+
+## Advanced Usage:
+
+Each of the secrets loaders can be customized with a few arguments in format:
+
+`${provider(args):key_name}`
+
+### AWS Parameter Store
+
+SecretsFoundry relies on getting aws credentials via environment variables or from ~/.aws directory.
+It looks for the following environment variables:
+
+```
+AWS_ACCESS_KEY_ID
+AWS_SECRET_ACCESS_KEY
+AWS_DEFAULT_REGION
+```
+
+You can customise aws-ssm provider using:
+${aws-ssm(region='us-east-2', decrypt="true")
+
+SecretsFoundry decrypts the key by default. Pass decrypt=false to get the raw value.
+
+### AWS Secret Manager
+
+### AWS S3
+
+### Hashicorp Vault
+
+# Contributing
+
+# License
+
+Distributed under the MIT License. See LICENSE.txt for more information.
+
+# Deprecated
 
 ## How to give variables with variable values
 
