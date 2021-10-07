@@ -2,7 +2,7 @@
 import chalk from 'chalk';
 import { Command } from 'commander';
 import { spawn } from 'child_process';
-import { SecretsFoundry } from '@/SecretsFoundry';
+import { SecretsFoundry } from './SecretsFoundry';
 
 interface Options {
   stage: string;

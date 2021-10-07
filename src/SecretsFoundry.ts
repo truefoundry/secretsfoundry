@@ -1,4 +1,4 @@
-import { Loaders } from '@/loaders';
+import { Loaders } from './loaders';
 import dotenv from 'dotenv';
 
 export class SecretsFoundry {
