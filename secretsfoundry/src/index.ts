@@ -95,8 +95,12 @@ program
   )
   .action((options: Options) => {
     validateInput(options);
-    var secretsFoundry = new SecretsFoundry();
-    secretsFoundry.extractValues();
+    const secretsFoundry = new SecretsFoundry();
+    const result = secretsFoundry.extractValues(options.stage);
+    for (const key in result) {
+      //@ts-ignore
+      process.env[key] = result[key];
+    }
     let args: string[] = [];
     if (options.command) {
       args = options.command.split(' ');
