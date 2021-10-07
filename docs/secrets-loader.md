@@ -2,20 +2,24 @@
 description: About and how to use
 ---
 
-# Secrets Loader
+# AWSSecrets Loader
 
-Secrets Loader fetches the value from the AWS Secrets Manager.
+AwsSecretsLoader loads the secret from AWSSecretsManager.
 
 ### Usage
 
 ```text
-VARIABLE=${sec:<region>;;<name>}
+VARIABLE=${aws-secrets(region=us-east-2,raw=true):/path/to/secret}
 ```
 
-### **Parameters**
+### **Syntax Terms Explanation**
 
-**sec:** Tells that loader is of type secrets and to load data from secrets manager.
+**aws-secrets:** Tells that provider is secrets and to load data from secrets manager.
 
-**region:** Region in which value is to be looked for. Must follow the following REGEX `/^(us(-gov)?|ap|ca|cn|eu|sa)-(central|(north|south)?(east|west)?)-\d?/`
+**\(\):** Parameters for aws-secrets. Currently, two parameters are accepted:  
+**region:** region for aws-s3. Defaults to _us-east-1_  
+**raw:** Tells whether the secret value should be decrypted or not. Can only be either `true` or `false` . Defaults to _`false`_ .
 
-**name:** Name of the secret to be used. Must follow the REGEX `/^[\w-]+$/`
+**path:** Name of the secret used.
+
+Hence, the complete variable **must follow** the REGEX: `/^aws-secrets(((.*)?))?:([a-zA-Z0-9_.-\/]+)$/`
