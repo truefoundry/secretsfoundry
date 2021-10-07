@@ -12,13 +12,15 @@ import { Buffer } from 'buffer';
  *
  * It accepts two params:
  * region: AWS region to get the parameter from
- * raw: Boolean to indicate whether the output is a binary (raw) or not (string), by default it is the decrypted string
+ * decrypt: Boolean to indicate whether to decrypt or not
  */
 export default class AwsSecretsLoader extends Loader {
   private static PATTERN = /^aws-secrets(\((.*)?\))?:([a-zA-Z0-9_.\-\/]+)/;
 
-  static canResolve(value: string): boolean {
-    if (value.match(this.PATTERN) !== null) {
+  private static NAME_REGEX = /^[\w-]+$/;
+
+  public canResolve(value: string): boolean {
+    if (value.match(AwsSecretsLoader.PATTERN) !== null) {
       return false;
     }
     return true;
@@ -36,7 +38,14 @@ export default class AwsSecretsLoader extends Loader {
     const argsStr = groups[2]; // args
     const secretName = groups[3]; // path to param
 
-    const args = Loader.getArgsFromStr(argsStr);
+    // validate secret name
+    if (!AwsSecretsLoader.NAME_REGEX.test(secretName)) {
+      throw new Error(
+        'Error while validating secret name, please check your secret name'
+      );
+    }
+
+    const args = this.getArgsFromStr(argsStr);
 
     const client = new AWS.SecretsManager({
       region: args.region || 'us-east-1',

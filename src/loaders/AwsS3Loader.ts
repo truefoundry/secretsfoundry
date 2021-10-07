@@ -1,6 +1,17 @@
 import Loader from './loader';
 import AWS from 'aws-sdk';
 
+/**
+ * AwsS3Loader loads the secret from S3 Bucket.
+ * We get the AWS credentials from the environment variables
+ * AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY. It also falls
+ * back to looking up the credentials in local aws config directory
+ * if it cannot find the variables set.
+ *
+ * It accepts two params:
+ * region: AWS region to get the parameter from
+ * bucket: Bucket name to get the parameter from
+ */
 export default class AwsS3Loader extends Loader {
   private static PATTERN = /^aws-s3(\((.*)?\))?:((.+?)\/(.+)$)/;
 
@@ -42,22 +53,22 @@ export default class AwsS3Loader extends Loader {
       );
     }
 
-    // get the value from s3
     const s3 = new AWS.S3({ region: args.region || 'us-east-1' });
-    const data: AWS.S3.GetObjectOutput = await new Promise(function (
-      success,
-      reject
-    ) {
-      s3.getObject({ Bucket, Key }, function (err, data) {
-        if (err) {
-          reject(err);
-        } else {
-          success(data);
-        }
-      });
-    });
 
-    // body is a buffer
-    return data.Body?.toString() as string;
+    // get secret from AWS Secrets Manager
+    try {
+      const data = await s3.getObject({ Bucket, Key }).promise();
+      // return the value
+      if (
+        data.ContentType?.startsWith('text') ||
+        data.ContentType === 'application/json'
+      ) {
+        // body is a buffer
+        return data.Body?.toString() as string;
+      }
+      throw new Error('Incompatible data type');
+    } catch (error) {
+      throw new Error(error as string);
+    }
   }
 }
