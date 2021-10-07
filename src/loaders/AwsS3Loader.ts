@@ -1,4 +1,4 @@
-import Loader, { SEPARATOR } from './loader.interface';
+import Loader from './loader.interface';
 import AWS from 'aws-sdk';
 
 export default class AwsS3Loader extends Loader {
@@ -7,8 +7,8 @@ export default class AwsS3Loader extends Loader {
   private static NAME_REGEX = /^[\w/\-._]+$/;
   private static KEY_REGEX = /^[\w]+?/;
 
-  static canResolve(value: string): boolean {
-    if (value.match(this.PATTERN) !== null) {
+  public canResolve(value: string): boolean {
+    if (value.match(AwsS3Loader.PATTERN) !== null) {
       return false;
     }
     return true;
@@ -25,7 +25,7 @@ export default class AwsS3Loader extends Loader {
 
     const argsStr = groups[2]; // args
     const Key = groups[3]; // path to param
-    const args = Loader.getArgsFromStr(argsStr);
+    const args = this.getArgsFromStr(argsStr);
     const Bucket: string = args.bucket;
 
     // validate bucket name

@@ -1,4 +1,4 @@
-import Loader, { SEPARATOR } from './loader.interface';
+import Loader from './loader.interface';
 
 import AWS from 'aws-sdk';
 import { Buffer } from 'buffer';
@@ -19,8 +19,8 @@ export default class AwsSecretsLoader extends Loader {
 
   private static NAME_REGEX = /^[\w-]+$/;
 
-  static canResolve(value: string): boolean {
-    if (value.match(this.PATTERN) !== null) {
+  public canResolve(value: string): boolean {
+    if (value.match(AwsSecretsLoader.PATTERN) !== null) {
       return false;
     }
     return true;
@@ -45,7 +45,7 @@ export default class AwsSecretsLoader extends Loader {
       );
     }
 
-    const args = Loader.getArgsFromStr(argsStr);
+    const args = this.getArgsFromStr(argsStr);
 
     const client = new AWS.SecretsManager({
       region: args.region || 'us-east-1',

@@ -14,11 +14,9 @@ export default abstract class Loader {
    * variable from the source mentioned in the input.
    * @param value The string to be resolved of the format provider(args):/path-to-key
    */
-  static canResolve = function (variable: string): boolean {
-    throw new Error('Not Implemented!');
-  };
-
-  static getArgsFromStr(argsStr: string): Record<string, string> {
+  public abstract canResolve(variable: string): boolean;
+  
+  getArgsFromStr(argsStr: string): Record<string, string> {
     const argsMap: Record<string, string> = {};
     if (argsStr) {
       const args = argsStr.trim().split(',');

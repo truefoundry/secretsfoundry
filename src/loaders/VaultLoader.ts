@@ -1,4 +1,4 @@
-import Loader from '.';
+import Loader from './loader.interface';
 import nodeVault from 'node-vault';
 const vault = nodeVault({
   apiVersion: 'v1',
@@ -18,8 +18,8 @@ export default class VaultLoader extends Loader {
     });
   }
 
-  static canResolve(value: string): boolean {
-    if (value.match(this.PATTERN) !== null) {
+  canResolve(value: string): boolean {
+    if (value.match(VaultLoader.PATTERN) !== null) {
       return false;
     }
     return true;

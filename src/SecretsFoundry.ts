@@ -36,7 +36,7 @@ export class SecretsFoundry {
       );
 
       if (loader) {
-        return await loader.resolveVariable(refValue);
+        return await loader.resolve(refValue);
       } else {
         throw new Error(`${refKey} is not a valid loader`);
       }
