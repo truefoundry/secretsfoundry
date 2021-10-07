@@ -6,8 +6,13 @@ import vaultLoader from './VaultLoader';
 // a custom made separator for splitting values
 export const SEPARATOR = ';;';
 
+export interface LoaderOutput {
+  canResolve?: boolean;
+  resolvedOutput?: string | Promise<string>;
+}
+
 export default interface Loader {
-  loadData: (...args: string[]) => string | Promise<string>;
+  resolveVariable: (...args: string[]) => Promise<LoaderOutput>;
 }
 
 const Loaders = {
@@ -16,5 +21,6 @@ const Loaders = {
   S3: { key: 's3', loader: new awsS3Loader() },
   VAULT: { key: 'vault', loader: new vaultLoader() },
 };
+
 
 export { awsS3Loader, awsSecretsLoader, awsSSMLoader, vaultLoader, Loaders };
