@@ -40,7 +40,6 @@ export default abstract class Loader {
     return argsMap;
   }
 }
-
 const Loaders = {
   SECRET: { key: 'sec', loader: new awsSecretsLoader() },
   SSM: { key: 'ssm', loader: new awsSSMLoader() },
