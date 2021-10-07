@@ -1,4 +1,4 @@
-import Loader, { SEPARATOR } from '.';
+import Loader, { SEPARATOR } from '@/loaders';
 import AWS = require('aws-sdk');
 
 export default class S3Loader implements Loader {
@@ -45,7 +45,7 @@ export default class S3Loader implements Loader {
     region: string,
     Bucket: string,
     Key: string
-  ): Promise<any> {
+  ): Promise<{ [key: string]: string }> {
     const s3 = new AWS.S3({ region: region });
 
     return new Promise(function (success, reject) {

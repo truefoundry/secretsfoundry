@@ -1,5 +1,5 @@
 import { Loaders } from '@/loaders';
-const dotenv = require('dotenv');
+import dotenv from 'dotenv';
 
 export class SecretsFoundry {
   VARIABLES_MATCH = /\${[\w]+?:.+?}/g;
@@ -9,9 +9,9 @@ export class SecretsFoundry {
    * @returns Object/dict containing key and corresponding populated variable value
    */
   public async extractValues(stage: string = 'development') {
-    let keys: string[] = [];
-    let values: Promise<string>[] = [];
-    let extractedValues: { [key: string]: string | Promise<string> } = {};
+    const keys: string[] = [];
+    const values: Promise<string>[] = [];
+    const extractedValues: { [key: string]: string | Promise<string> } = {};
     const result = dotenv.config({ path: `./.env.${stage}` });
     if (result.error) {
       throw result.error;

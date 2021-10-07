@@ -14,12 +14,12 @@ interface Options {
  * Log Error and Exit
  * @param message   message to be logged in case of error
  */
-function logErrorAndExit(message: string): void {
+const logErrorAndExit = function (message: string): void {
   console.log(chalk.red(`ERROR: ${message}`));
   process.exit();
-}
+};
 
-function validateInput(options: Options): void {
+const validateInput = function (options: Options): void {
   if (!options.stage.trim()) {
     logErrorAndExit('Missing stage option. Empty string passed');
   }
@@ -41,11 +41,11 @@ function validateInput(options: Options): void {
   if (options.script && !options.script.trim()) {
     logErrorAndExit('Script cannot be empty');
   }
-}
+};
 
-function runChildProcess(cmd: string, args: string[]): void {
+const runChildProcess = function (cmd: string, args: string[]): void {
   spawn(cmd, args, { stdio: 'inherit' });
-}
+};
 
 /**
  * Executes a multi-command using shell.
@@ -95,7 +95,7 @@ program
   )
   .action((options: Options) => {
     validateInput(options);
-    var secretsFoundry = new SecretsFoundry();
+    const secretsFoundry = new SecretsFoundry();
     secretsFoundry.extractValues();
     let args: string[] = [];
     if (options.command) {
