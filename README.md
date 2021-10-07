@@ -6,6 +6,15 @@
 
 - Node.js 14+
 
+## Getting started with development
+
+- `cd secretsfoundry`
+  - cd into the repository
+- `npm install`
+  - install dependencies
+- `npm run build`
+  - Build the code
+
 ## How to using
 
 - Lunch commands
@@ -26,7 +35,7 @@
 
 ## To test locally
 
-npx ts-node -r tsconfig-paths/register src/index.ts run --script "node example.js"
+node -r ts-node/register -r tsconfig-paths/register src/index.ts run --script "node example.js"
 
 ## How to give variables with variable values
 
