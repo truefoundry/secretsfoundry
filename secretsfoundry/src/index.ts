@@ -93,10 +93,14 @@ program
   .description(
     'Run the process in command/script after injecting the environment variables'
   )
-  .action((options: Options) => {
+  .action(async (options: Options) => {
     validateInput(options);
     const secretsFoundry = new SecretsFoundry();
-    secretsFoundry.extractValues();
+    const result = await secretsFoundry.extractValues(options.stage);
+    for (const key in result) {
+      //@ts-ignore
+      process.env[key] = result[key];
+    }
     let args: string[] = [];
     if (options.command) {
       args = options.command.split(' ');
