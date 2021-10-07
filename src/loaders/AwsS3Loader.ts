@@ -2,7 +2,7 @@ import Loader from './loader';
 import AWS from 'aws-sdk';
 
 export default class AwsS3Loader extends Loader {
-  private static PATTERN = /^aws-s3(\((.*)?\))?:([a-zA-Z0-9_.\-\/]+)/;
+  private static PATTERN = /^aws-s3(\((.*)?\))?:((.+?)\/(.+)$)/;
 
   private static NAME_REGEX = /^[\w/\-._]+$/;
   private static KEY_REGEX = /^[\w]+?/;
@@ -57,14 +57,7 @@ export default class AwsS3Loader extends Loader {
       });
     });
 
-    // return the value
-    if (
-      data.ContentType?.startsWith('text') ||
-      data.ContentType === 'application/json'
-    ) {
-      // body is a buffer
-      return data.Body?.toString() as string;
-    }
-    throw new Error('Incompatible data type');
+    // body is a buffer
+    return data.Body?.toString() as string;
   }
 }

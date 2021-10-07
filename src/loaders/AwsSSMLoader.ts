@@ -9,8 +9,8 @@ import AWS from 'aws-sdk';
  * if it cannot find the variables set.
  *
  * It accepts two params:
- * region: AWS region to get the parameter from
- * decrypt: Boolean to indicate whether to decrypt or not
+ * @param region: AWS region to get the parameter from
+ * @param decrypt: Boolean to indicate whether to decrypt or not
  */
 export default class AwsSSMLoader extends Loader {
   private static PATTERN = /^aws-ssm(\((.*)?\))?:([a-zA-Z0-9_.\-\/]+)/;
