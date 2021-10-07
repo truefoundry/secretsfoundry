@@ -99,13 +99,12 @@ AWS_DEFAULT_REGION
 ```
 
 You can customise aws-ssm provider using:
-`${aws-ssm(region='us-east-2', decrypt="true")`
+`${aws-ssm(region=us-east-2, decrypt=true):/path/to/param`
 
 SecretsFoundry decrypts the key by default. Pass decrypt=false to get the raw value.
 
-**region:** Region in which value is to be looked for. Must follow the following REGEX `/^(us(-gov)?|ap|ca|cn|eu|sa)-(central|(north|south)?(east|west)?)-\d?/`
-
-**name:** Name of the secret to be used. Must follow the REGEX `/^[\w-]+$/`
+**region:** Region in which value is to be looked for.
+**decrypt** If the value should be decrypted (default is false)
 
 ### AWS Secrets Manager
 
