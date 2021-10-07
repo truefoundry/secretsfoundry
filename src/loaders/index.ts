@@ -17,7 +17,7 @@ export default abstract class Loader {
    * the secret manager store and getting the value
    * @param args
    */
-  public abstract resolveVariable(...args: string[]): Promise<string>;
+  public abstract resolve(...args: string[]): Promise<string>;
 
   /**
    * This function returns true if the loader knows how to get the values for the
@@ -28,7 +28,7 @@ export default abstract class Loader {
     throw new Error('Not Implemented!');
   };
 
-  getArgsFromStr(argsStr: string): Record<string, string> {
+  static getArgsFromStr(argsStr: string): Record<string, string> {
     const argsMap: Record<string, string> = {};
     if (argsStr) {
       const args = argsStr.trim().split(',');

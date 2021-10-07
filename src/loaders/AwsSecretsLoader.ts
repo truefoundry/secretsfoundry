@@ -1,4 +1,4 @@
-import Loader, { SEPARATOR } from '.';
+import Loader from '.';
 
 import AWS from 'aws-sdk';
 import { Buffer } from 'buffer';
@@ -14,20 +14,53 @@ import { Buffer } from 'buffer';
  * region: AWS region to get the parameter from
  * decrypt: Boolean to indicate whether to decrypt or not
  */
-export default class AwsSecretsLoader implements Loader {
-  public async loadData(secretsVariable: string): Promise<string> {
-    const REGION_REGEX =
-      /^(us(-gov)?|ap|ca|cn|eu|sa)-(central|(north|south)?(east|west)?)-\d?/;
-    const NAME_REGEX = /^[\w-]+$/;
-    const [region, secretName] = secretsVariable.split(SEPARATOR);
+export default class AwsSecretsLoader extends Loader {
+  private static PATTERN = /^aws-secrets(\((.*)?\))?:([a-zA-Z0-9_.\-\/]+)/;
 
-    if (!REGION_REGEX.test(region)) {
-      throw new Error('Invalid Region provided');
+  private static NAME_REGEX = /^[\w-]+$/;
+
+  static canResolve(value: string): boolean {
+    if (value.match(this.PATTERN) !== null) {
+      return false;
     }
-    if (!NAME_REGEX.test(secretName)) {
-      throw new Error('Improper Name provided');
+    return true;
+  }
+
+  public async resolve(secretsVariable: string): Promise<string> {
+    const groups = secretsVariable.match(AwsSecretsLoader.PATTERN);
+    if (groups === null) {
+      throw new Error(
+        'AwsSSMLoader cannot parse the variable name. This should never happen \
+      since client is supposed to be calling canResolve first'
+      );
     }
-    const data = await this.fetchData(region, secretName);
+
+    const argsStr = groups[2]; // args
+    const secretName = groups[3]; // path to param
+
+    // validate secret name
+    if (!AwsSecretsLoader.NAME_REGEX.test(secretName)) {
+      throw new Error(
+        'Error while validating secret name, please check your secret name'
+      );
+    }
+
+    const args = Loader.getArgsFromStr(argsStr);
+
+    const client = new AWS.SecretsManager({
+      region: args.region || 'us-east-1',
+    });
+
+    // get secret from AWS Secrets Manager
+    const data: { [key: string]: string } = await new Promise(function (success, reject) {
+      client.getSecretValue({ SecretId: secretName }, function (err, data) {
+        if (err) {
+          reject(err);
+        } else {
+          success(data as { [key: string]: string });
+        }
+      });
+    });
     /**
      * {
           ARN: '',
@@ -38,30 +71,12 @@ export default class AwsSecretsLoader implements Loader {
           CreatedDate: Date
         }
       */
-    if ('SecretString' in data) {
+
+    if (!args.raw) {
       return data.SecretString as string;
     } else {
       const buff = Buffer.from(data.SecretBinary as string, 'base64');
       return buff.toString('ascii');
     }
-  }
-
-  private async fetchData(
-    region: string,
-    secretName: string
-  ): Promise<AWS.SecretsManager.GetSecretValueResponse> {
-    const client = new AWS.SecretsManager({
-      region: region,
-    });
-
-    return new Promise(function (success, reject) {
-      client.getSecretValue({ SecretId: secretName }, function (err, data) {
-        if (err) {
-          reject(err);
-        } else {
-          success(data);
-        }
-      });
-    });
   }
 }
