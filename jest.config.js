@@ -5,7 +5,7 @@ module.exports = {
   preset: 'ts-jest',
   clearMocks: true,
   testEnvironment: 'node',
-  roots: ['<rootDir>/src/'],
+  roots: ['<rootDir>/'],
   moduleFileExtensions: ['ts', 'js'],
   collectCoverageFrom: ['src/**/*.{ts,js}'],
   testPathIgnorePatterns: ['<rootDir>[/\\\\](node_modules|dist)[/\\\\]'],

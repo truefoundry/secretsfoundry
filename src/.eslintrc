@@ -11,6 +11,7 @@
   "parserOptions": {
     "project": "./tsconfig.json"
   },
+  "root": true,
   "rules": {
     // Enforce the consistent use of either backticks, double, or single quotes
     "quotes": ["warn", "single"],
