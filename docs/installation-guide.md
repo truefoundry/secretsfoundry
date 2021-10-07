@@ -1,10 +1,8 @@
 ---
-description: How to install secretsfoundry on your system
+description: secretsfoundry is available as a npm package.
 ---
 
 # Installation Guide
-
-secretsfoundry is available as a `npm` package.
 
 ## Prerequisites
 
