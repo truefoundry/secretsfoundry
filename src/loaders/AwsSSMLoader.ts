@@ -1,4 +1,4 @@
-import Loader from '.';
+import Loader from './loader';
 import AWS from 'aws-sdk';
 
 /**
@@ -15,8 +15,8 @@ import AWS from 'aws-sdk';
 export default class AwsSSMLoader extends Loader {
   private static PATTERN = /^aws-ssm(\((.*)?\))?:([a-zA-Z0-9_.\-\/]+)/;
 
-  static canResolve(value: string): boolean {
-    if (value.match(this.PATTERN) !== null) {
+  public canResolve(value: string): boolean {
+    if (value.match(AwsSSMLoader.PATTERN) !== null) {
       return false;
     }
     return true;
@@ -33,7 +33,7 @@ export default class AwsSSMLoader extends Loader {
     const argsStr = groups[2]; // args
     const paramName = groups[3]; // path to param
 
-    const args = Loader.getArgsFromStr(argsStr);
+    const args = this.getArgsFromStr(argsStr);
 
     // Validate decrypt param
     let decrypt = false;

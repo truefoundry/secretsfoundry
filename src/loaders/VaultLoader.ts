@@ -1,4 +1,4 @@
-import Loader from '.';
+import Loader from './loader';
 import nodeVault from 'node-vault';
 const vault = nodeVault({
   apiVersion: 'v1',
@@ -9,7 +9,7 @@ export default class VaultLoader extends Loader {
   private static PATTERN = /^vault(\((.*)?\))?:([a-zA-Z0-9_.\-\/]+)/;
   private nodeVault: any;
 
-  async constructor() {
+  constructor() {
     const roleId = process.env.ROLE_ID;
     const secretId = process.env.SECRET_ID;
     this.nodeVault = await vault.approleLogin({
@@ -18,8 +18,8 @@ export default class VaultLoader extends Loader {
     });
   }
 
-  static canResolve(value: string): boolean {
-    if (value.match(this.PATTERN) !== null) {
+  canResolve(value: string): boolean {
+    if (value.match(VaultLoader.PATTERN) !== null) {
       return false;
     }
     return true;

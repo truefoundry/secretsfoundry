@@ -1,9 +1,14 @@
-import { Loaders } from './loaders';
 import dotenv from 'dotenv';
+import Loader from './loaders/loader';
 
 export class SecretsFoundry {
   VARIABLES_MATCH = /([\w]+?):(.+)/g;
   EXPAND_REGEX = /\${([:a-zA-Z0-9_;(=)\-/]+)?}/g;
+  private loaders: Loader[];
+
+  constructor(loaders: Loader[]) {
+    this.loaders = loaders;
+  }
   /**
    * Reads values from the file stage specified and populates the variables
    * @param stage Stage for the process. Defaults to development
@@ -27,10 +32,10 @@ export class SecretsFoundry {
     if (variables.length > 0) {
       const [, refKey, refValue] = variables[0];
 
-      const loader = Object.values(Loaders).find((mode) => mode.key === refKey);
+      const loader = this.loaders.find((loader) => loader.canResolve(value));
 
       if (loader) {
-        return await loader.loader.resolve(refValue);
+        return await loader.resolve(refValue);
       } else {
         throw new Error(`${refKey} is not a valid loader`);
       }
