@@ -13,8 +13,9 @@ export interface LoaderOutput {
 
 export default abstract class Loader {
   public abstract resolveVariable(...args: string[]): Promise<LoaderOutput>;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   static canResolve = function (value: string): boolean {
-    throw new Error("Not Implemented!");
+    throw new Error('Not Implemented!');
   };
 }
 

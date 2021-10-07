@@ -1,4 +1,4 @@
-import Loader from '.';
+import Loader, { LoaderOutput } from '.';
 import nodeVault from 'node-vault';
 const vault = nodeVault({
   apiVersion: 'v1',
@@ -6,7 +6,7 @@ const vault = nodeVault({
 });
 
 export default class vaultLoader implements Loader {
-  public async loadData(vaultVariable: string) {
+  public async resolveVariable(vaultVariable: string): Promise<LoaderOutput> {
     const roleId = process.env.ROLE_ID;
     const secretId = process.env.SECRET_ID;
     // need to check regex for vaultVariable but not sure as of now
@@ -16,6 +16,6 @@ export default class vaultLoader implements Loader {
     });
     vault.token = result.auth.client_token;
     const data = await vault.read(vaultVariable);
-    return JSON.stringify(data);
+    return { canResolve: true, resolvedOutput: JSON.stringify(data) };
   }
 }

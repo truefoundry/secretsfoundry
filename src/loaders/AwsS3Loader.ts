@@ -1,49 +1,28 @@
-import Loader, { SEPARATOR } from '.';
+import Loader, { LoaderOutput, SEPARATOR } from '.';
 import AWS from 'aws-sdk';
 
-export default class AwsS3Loader implements Loader {
-  public async loadData(s3Variable: string): Promise<string> {
-    const REGION_REGEX =
-      /^(us(-gov)?|ap|ca|cn|eu|sa)-(central|(north|south)?(east|west)?)-\d?/;
-    const NAME_REGEX = /^[\w/\-._]+$/;
-    const KEY_REGEX = /^[\w]+?/;
-    const [region, bucket, key] = s3Variable.split(SEPARATOR);
-
-    if (!REGION_REGEX.test(region) || !region) {
-      throw new Error('Invalid Region provided');
+export default class AwsS3Loader extends Loader {
+  private static REGION_REGEX =
+    /^(us(-gov)?|ap|ca|cn|eu|sa)-(central|(north|south)?(east|west)?)-\d?/;
+  private static NAME_REGEX = /^[\w/\-._]+$/;
+  private static KEY_REGEX = /^[\w]+?/;
+  static canResolve = function (value: string): boolean {
+    const [region, bucket, key] = value.split(SEPARATOR);
+    if (!AwsS3Loader.REGION_REGEX.test(region) || !region) {
+      return false;
     }
-
-    if (!NAME_REGEX.test(bucket) || !NAME_REGEX) {
-      throw new Error('Improper Bucket Name provided');
+    if (!AwsS3Loader.NAME_REGEX.test(bucket) || !AwsS3Loader.NAME_REGEX) {
+      return false;
     }
-
-    if (!KEY_REGEX.test(key) || !key) {
-      throw new Error('Improper key provided');
+    if (!AwsS3Loader.KEY_REGEX.test(key) || !key) {
+      return false;
     }
-    const data: AWS.S3.GetObjectOutput = await this.fetchData(
-      region,
-      bucket,
-      key
-    );
-    if (
-      data.ContentType?.startsWith('text') ||
-      data.ContentType === 'application/json'
-    ) {
-      // body is a buffer
-      return data.Body?.toString() as string;
-    }
-
-    throw new Error('Uncompatible data type');
-  }
-
-  private async fetchData(
-    region: string,
-    Bucket: string,
-    Key: string
-  ): Promise<AWS.S3.GetObjectOutput> {
+    return true;
+  };
+  public async resolveVariable(s3Variable: string): Promise<LoaderOutput> {
+    const [region, Bucket, Key] = s3Variable.split(SEPARATOR);
     const s3 = new AWS.S3({ region: region });
-
-    return new Promise(function (success, reject) {
+    const data: AWS.S3.GetObjectOutput = await new Promise(function (success, reject) {
       s3.getObject({ Bucket, Key }, function (err, data) {
         if (err) {
           reject(err);
@@ -52,5 +31,14 @@ export default class AwsS3Loader implements Loader {
         }
       });
     });
+    if (
+      data.ContentType?.startsWith('text') ||
+      data.ContentType === 'application/json'
+    ) {
+      // body is a buffer
+      return { canResolve: true, resolvedOutput: data.Body?.toString() as string };
+    }
+    throw new Error('Incompatible data type');
   }
+
 }
