@@ -1,8 +1,29 @@
 # secretsfoundry
 
-## Running JS-CLI
+- Package to manage your environment variables and secrets
 
-1. Clone the repo and run `cd js-lib` and run `npm i`.
-2. Now, the cli can be run either by two ways:
-   - cd `cli` and run `npx ts-node ./index.ts`
-   - `npm run build && npm run local`. Then run `secretsfoundry`
+## Required
+
+- Node.js 14+
+
+## How to using
+
+- Lunch commands
+
+  - `npm start`
+    - run cli
+  - `npm run dev`
+    - run force debug cli
+  - `npm run lint`
+    - run lint
+  - `npm run build`
+    - run tsc
+      - this only development, not production
+  - `npm run test`
+    - Launches the test runner by watch mode
+  - `npm run test`
+    - get coverage report
+
+## To test locally
+
+npx ts-node -r tsconfig-paths/register src/index.ts run --script "node example.js"
