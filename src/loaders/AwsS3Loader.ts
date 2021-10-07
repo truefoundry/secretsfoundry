@@ -15,9 +15,6 @@ import AWS from 'aws-sdk';
 export default class AwsS3Loader extends Loader {
   private static PATTERN = /^aws-s3(\((.*)?\))?:((.+?)\/(.+)$)/;
 
-  private static NAME_REGEX = /^[\w/\-._]+$/;
-  private static KEY_REGEX = /^[\w]+?/;
-
   public canResolve(value: string): boolean {
     return value.match(AwsS3Loader.PATTERN) !== null;
   }
@@ -30,25 +27,11 @@ export default class AwsS3Loader extends Loader {
       since client is supposed to be calling canResolve first'
       );
     }
-
     const argsStr = groups[2]; // args
-    const Key = groups[3]; // path to param
     const args = this.getArgsFromStr(argsStr);
-    const Bucket: string = args.bucket;
 
-    // validate bucket name
-    if (!AwsS3Loader.NAME_REGEX.test(Bucket) || !Bucket) {
-      throw new Error(
-        'Error while validating bucket name, please check your bucket name'
-      );
-    }
-
-    // validate key
-    if (!AwsS3Loader.KEY_REGEX.test(Key) || !Key) {
-      throw new Error(
-        'Error while validating bucket key, please check your bucket key'
-      );
-    }
+    const Bucket: string = groups[4]; // path to param
+    const Key = groups[5]; // path to file
 
     const s3 = new AWS.S3({ region: args.region || 'us-east-1' });
 
