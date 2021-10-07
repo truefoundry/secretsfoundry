@@ -29,12 +29,10 @@ export default class AwsSSMLoader extends Loader {
     }
     const argsStr = groups[2]; // args
     const paramName = groups[3]; // path to param
-
     const args = this.getArgsFromStr(argsStr);
-
     // Validate decrypt param
     let decrypt = false;
-    if ('decrypt' in args) {
+    if (!('decrypt' in args)) {
       decrypt = false;
     } else if (args.decrypt === 'true') {
       decrypt = true;
@@ -43,7 +41,6 @@ export default class AwsSSMLoader extends Loader {
     } else {
       throw new Error('decrypt value has to be true or false');
     }
-
     const ssm = new AWS.SSM({ region: args.region || 'us-east-1' });
     const data = await ssm
       .getParameter({

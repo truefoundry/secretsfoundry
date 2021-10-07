@@ -28,20 +28,11 @@ export class SecretsFoundry {
   }
 
   async resolveVariableValue(value: string) {
-    const variables = [...value.matchAll(this.VARIABLES_MATCH)];
-    if (variables.length > 0) {
-      const [, refKey, refValue] = variables[0];
-
-      const loader = this.loaders.find((loader) => loader.canResolve(value));
-
-      if (loader) {
-        return await loader.resolve(refValue);
-      } else {
-        throw new Error(`${refKey} is not a valid loader`);
-      }
+    const loader = this.loaders.find((loader) => loader.canResolve(value));
+    if (loader) {
+      return await loader.resolve(value);
     }
-    // a default return for no variable
-    return value;
+    throw new Error(`${value} is not a valid loader`);
   }
 
   async dotenvExpand(

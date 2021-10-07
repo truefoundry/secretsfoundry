@@ -19,7 +19,7 @@ export default abstract class Loader {
     const argsMap: Record<string, string> = {};
     if (argsStr) {
       const args = argsStr.trim().split(',');
-      for (const arg in args) {
+      for (const arg of args) {
         const keyValue = arg.trim().split('=');
         argsMap[keyValue[0]] = keyValue[1];
       }
