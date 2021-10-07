@@ -98,8 +98,7 @@ program
     const secretsFoundry = new SecretsFoundry();
     const result = await secretsFoundry.extractValues(options.stage);
     for (const key in result) {
-      //@ts-ignore
-      process.env[key] = result[key];
+      process.env[key] = result[key] as string;
     }
     let args: string[] = [];
     if (options.command) {
