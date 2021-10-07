@@ -2,7 +2,7 @@ import { Loaders } from '@/loaders';
 import dotenv from 'dotenv';
 
 export class SecretsFoundry {
-  VARIABLES_MATCH = /\${[\w]+?:.+?}/g;
+  VARIABLES_MATCH = /\${([\w]+?):(.+?)}/g;
   /**
    * Reads values from the file stage specified and populates the variables
    * @param stage Stage for the process. Defaults to development
@@ -37,25 +37,15 @@ export class SecretsFoundry {
   async resolveVariableValue(value: string) {
     const variables = this.VARIABLES_MATCH.exec(value);
     if (variables) {
-      const varExp = variables[0].substring(2, variables[0].length - 1);
-      const firstColonIndex = varExp.indexOf(':');
-      const refKey = varExp.substr(0, firstColonIndex);
-      const refValue = varExp.substr(firstColonIndex + 1);
-      switch (refKey) {
-        case Loaders.SSM.key:
-          return await Loaders.SSM.loader.loadData(refValue);
+      const refKey = variables[1];
+      const refValue = variables[2];
 
-        case Loaders.SECRET.key:
-          return await Loaders.SECRET.loader.loadData(refValue);
+      const loader = Object.values(Loaders).find(mode => mode.key === refKey)
 
-        case Loaders.S3.key:
-          return await Loaders.S3.loader.loadData(refValue);
-
-        case Loaders.VAULT.key:
-          return await Loaders.VAULT.loader.loadData(refValue);
-
-        default:
-          throw new Error(`${refKey} is not a valid loader`);
+      if (loader) {
+        return await loader.loader.loadData(refValue);
+      } else {
+        throw new Error(`${refKey} is not a valid loader`);
       }
     }
     // a default return for no variable
