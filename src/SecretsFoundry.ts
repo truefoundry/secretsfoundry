@@ -2,8 +2,8 @@ import { Loaders } from './loaders';
 import dotenv from 'dotenv';
 
 export class SecretsFoundry {
-  VARIABLES_MATCH = /\${([\w]+?:.+?)}/g;
-  EXPAND_REGEX = /(.?\${?(?:[a-zA-Z0-9_]+)?}?)/g;
+  VARIABLES_MATCH = /\${([\w]+?):(.+?)}/g;
+  EXPAND_REGEX = /((?:\\{2})?)\${([:a-zA-Z0-9_;\-/]+)?}/g;
   /**
    * Reads values from the file stage specified and populates the variables
    * @param stage Stage for the process. Defaults to development
@@ -26,6 +26,7 @@ export class SecretsFoundry {
 
   async resolveVariableValue(value: string) {
     const variables = this.VARIABLES_MATCH.exec(value);
+    this.VARIABLES_MATCH.lastIndex = 0;
     if (variables) {
       const refKey = variables[1];
       const refValue = variables[2];
@@ -46,8 +47,12 @@ export class SecretsFoundry {
     const environment = process.env;
     const foundryVars: string[] = [];
     for (const key in inputConfig) {
-      const parts = this.EXPAND_REGEX.exec(inputConfig[key]);
-      if (parts) {
+      let newValue = inputConfig[key]
+      let parts = this.EXPAND_REGEX.exec(newValue);
+      this.EXPAND_REGEX.lastIndex = 0; // reset regex
+      let i = 0
+      while (parts && i <3) { 
+        i++;
         const prefix = parts[1];
         let value: string, replacePart: string;
   
@@ -55,39 +60,33 @@ export class SecretsFoundry {
           replacePart = parts[0];
           value = replacePart.replace('\\$', '$');
         } else {
-          const key = parts[2];
+          const replacementKey = parts[2];
           replacePart = parts[0].substring(prefix.length);
           // process.env value 'wins' over .env file's value
-          if (Object.prototype.hasOwnProperty.call(environment, key))
-            value = environment[key] as string;
-          else if (inputConfig[key])
-            value = inputConfig[key];
+          if (Object.prototype.hasOwnProperty.call(environment, replacementKey))
+            value = environment[replacementKey] as string;
+          else if (inputConfig[replacementKey])
+            value = inputConfig[replacementKey];
           else {
             foundryVars.push(key);
-            continue;
+            break;
           }
         }
-        inputConfig[key] = inputConfig[key].replace(replacePart, value);
+        newValue = newValue.replace(replacePart, value);
+        parts = this.EXPAND_REGEX.exec(newValue)
+        this.EXPAND_REGEX.lastIndex = 0; // reset regex
       }
+      inputConfig[key] = newValue;
     }
-
+    const values: Promise<string>[] = [];
     for (const foundryKey of foundryVars) {
-      let newValue = inputConfig[foundryKey];
-      const subCommands = this.VARIABLES_MATCH.exec(newValue);
-      if (subCommands) {
-        let match: RegExpExecArray | null;
-        let nextValue = newValue;
-        while( match = this.EXPAND_REGEX.exec(subCommands[1]) ) {
-          nextValue.replace(match[2], inputConfig[match[2]] || match[2]);
-        }
-        newValue = nextValue;
-      }
-      inputConfig[foundryKey] = await this.resolveVariableValue(newValue);
+      const newValue = inputConfig[foundryKey];
+      values.push(this.resolveVariableValue(newValue));
     }
-
-    for (const processKey in inputConfig) {
-      environment[processKey] = inputConfig[processKey];
-    }
-    return inputConfig
+    const results = await Promise.all(values);
+    foundryVars.forEach((key, i) => {
+      inputConfig[key] = results[i];
+    })
+    return inputConfig;
   }
 }
