@@ -11,8 +11,11 @@ export interface LoaderOutput {
   resolvedOutput?: string | Promise<string>;
 }
 
-export default interface Loader {
-  resolveVariable: (...args: string[]) => Promise<LoaderOutput>;
+export default abstract class Loader {
+  public abstract resolveVariable(...args: string[]): Promise<LoaderOutput>;
+  static canResolve = function (value: string): boolean {
+    throw new Error("Not Implemented!");
+  };
 }
 
 const Loaders = {
