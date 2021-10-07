@@ -45,7 +45,6 @@ export default class S3Loader implements Loader {
 
     return new Promise(function (success, reject) {
       s3.getObject({ Bucket, Key }, function (err, data) {
-        data.Body?.toString
         if (err) {
           reject(err);
         } else {
