@@ -12,15 +12,13 @@ import { Buffer } from 'buffer';
  *
  * It accepts two params:
  * region: AWS region to get the parameter from
- * decrypt: Boolean to indicate whether to decrypt or not
+ * raw: Boolean to indicate whether the output is a binary (raw) or not (string), by default it is the decrypted string
  */
 export default class AwsSecretsLoader extends Loader {
   private static PATTERN = /^aws-secrets(\((.*)?\))?:([a-zA-Z0-9_.\-\/]+)/;
 
-  private static NAME_REGEX = /^[\w-]+$/;
-
-  public canResolve(value: string): boolean {
-    if (value.match(AwsSecretsLoader.PATTERN) !== null) {
+  static canResolve(value: string): boolean {
+    if (value.match(this.PATTERN) !== null) {
       return false;
     }
     return true;
@@ -38,48 +36,25 @@ export default class AwsSecretsLoader extends Loader {
     const argsStr = groups[2]; // args
     const secretName = groups[3]; // path to param
 
-    // validate secret name
-    if (!AwsSecretsLoader.NAME_REGEX.test(secretName)) {
-      throw new Error(
-        'Error while validating secret name, please check your secret name'
-      );
-    }
-
-    const args = this.getArgsFromStr(argsStr);
+    const args = Loader.getArgsFromStr(argsStr);
 
     const client = new AWS.SecretsManager({
       region: args.region || 'us-east-1',
     });
 
     // get secret from AWS Secrets Manager
-    const data: { [key: string]: string } = await new Promise(function (
-      success,
-      reject
-    ) {
-      client.getSecretValue({ SecretId: secretName }, function (err, data) {
-        if (err) {
-          reject(err);
-        } else {
-          success(data as { [key: string]: string });
-        }
-      });
-    });
-    /**
-     * {
-          ARN: '',
-          Name: '',
-          VersionId: '',
-          SecretString: '',
-          VersionStages: [ '' ],
-          CreatedDate: Date
-        }
-      */
-
-    if (!args.raw) {
-      return data.SecretString as string;
-    } else {
-      const buff = Buffer.from(data.SecretBinary as string, 'base64');
-      return buff.toString('ascii');
+    try {
+      const result = await client
+        .getSecretValue({ SecretId: secretName })
+        .promise();
+      if (!args.raw && 'SecretString' in result) {
+        return result.SecretString as string;
+      } else {
+        const buff = Buffer.from(result.SecretBinary as string, 'base64');
+        return buff.toString('ascii');
+      }
+    } catch (error) {
+      throw new Error(error as string);
     }
   }
 }
