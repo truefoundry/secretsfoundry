@@ -147,6 +147,8 @@ VARIABLE=${vault:<secret_name>}
 
 **NOTE**: Currently, one needs to export root_id and secret_id as `ROOT_ID` and `SECRET_ID` to make vault loader work.
 
+You can refer to our [docs](https://abhichoudhary06.gitbook.io/secretsfoundry/) for more information.
+
 # Contributing
 
 We love our contributors! Please read our [Contributing Document](CONTRIBUTING.md) to learn how you can start working on the Framework yourself.
