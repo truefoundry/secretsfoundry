@@ -1,12 +1,12 @@
 ---
-description: About and how to use
+description: Loading secrets from AWS Secrets Manager
 ---
 
 # AWS Secrets Manager
 
 AwsSecretsLoader loads the secret from AWSSecretsManager.
 
-## Usage
+## Usage in .env
 
 ```text
 VARIABLE=${aws-secrets(region=us-east-2,raw=true):/path/to/secret}
