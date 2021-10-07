@@ -19,10 +19,7 @@ export default class AwsS3Loader extends Loader {
   private static KEY_REGEX = /^[\w]+?/;
 
   public canResolve(value: string): boolean {
-    if (value.match(AwsS3Loader.PATTERN) !== null) {
-      return false;
-    }
-    return true;
+    return value.match(AwsS3Loader.PATTERN) !== null;
   }
 
   public async resolve(s3Variable: string): Promise<string> {

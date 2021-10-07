@@ -11,8 +11,9 @@ import { Buffer } from 'buffer';
  * if it cannot find the variables set.
  *
  * It accepts two params:
- * region: AWS region to get the parameter from
- * decrypt: Boolean to indicate whether to decrypt or not
+ * @param region: AWS region to get the parameter from
+ * @param raw: Boolean to indicate whether to extract the SecretString from secret data
+ *      or return the whole json object
  */
 export default class AwsSecretsLoader extends Loader {
   private static PATTERN = /^aws-secrets(\((.*)?\))?:([a-zA-Z0-9_.\-\/]+)/;
@@ -20,10 +21,7 @@ export default class AwsSecretsLoader extends Loader {
   private static NAME_REGEX = /^[\w-]+$/;
 
   public canResolve(value: string): boolean {
-    if (value.match(AwsSecretsLoader.PATTERN) !== null) {
-      return false;
-    }
-    return true;
+    return value.match(AwsSecretsLoader.PATTERN) !== null;
   }
 
   public async resolve(secretsVariable: string): Promise<string> {
@@ -37,13 +35,6 @@ export default class AwsSecretsLoader extends Loader {
 
     const argsStr = groups[2]; // args
     const secretName = groups[3]; // path to param
-
-    // validate secret name
-    if (!AwsSecretsLoader.NAME_REGEX.test(secretName)) {
-      throw new Error(
-        'Error while validating secret name, please check your secret name'
-      );
-    }
 
     const args = this.getArgsFromStr(argsStr);
 

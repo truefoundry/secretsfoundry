@@ -16,10 +16,7 @@ export default class AwsSSMLoader extends Loader {
   private static PATTERN = /^aws-ssm(\((.*)?\))?:([a-zA-Z0-9_.\-\/]+)/;
 
   public canResolve(value: string): boolean {
-    if (value.match(AwsSSMLoader.PATTERN) !== null) {
-      return false;
-    }
-    return true;
+    return value.match(AwsSSMLoader.PATTERN) !== null;
   }
 
   public async resolve(ssmVariable: string): Promise<string> {
@@ -27,7 +24,7 @@ export default class AwsSSMLoader extends Loader {
     if (groups === null) {
       throw new Error(
         'AwsSSMLoader cannot parse the variable name. This should never happen \
-      since client is supposed to be calling canResolve first'
+        since client is supposed to be calling canResolve first'
       );
     }
     const argsStr = groups[2]; // args

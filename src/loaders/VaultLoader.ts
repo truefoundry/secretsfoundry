@@ -22,10 +22,7 @@ export default class VaultLoader extends Loader {
   private static PATTERN = /^vault(\((.*)?\))?:([a-zA-Z0-9_.\-\/]+)/;
 
   canResolve(value: string): boolean {
-    if (value.match(VaultLoader.PATTERN) !== null) {
-      return false;
-    }
-    return true;
+    return value.match(VaultLoader.PATTERN) !== null;
   }
 
   public async resolve(vaultVariable: string): Promise<string> {
