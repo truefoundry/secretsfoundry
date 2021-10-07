@@ -52,34 +52,18 @@ export default class AwsSecretsLoader extends Loader {
     });
 
     // get secret from AWS Secrets Manager
-    const data: { [key: string]: string } = await new Promise(function (
-      success,
-      reject
-    ) {
-      client.getSecretValue({ SecretId: secretName }, function (err, data) {
-        if (err) {
-          reject(err);
-        } else {
-          success(data as { [key: string]: string });
-        }
-      });
-    });
-    /**
-     * {
-          ARN: '',
-          Name: '',
-          VersionId: '',
-          SecretString: '',
-          VersionStages: [ '' ],
-          CreatedDate: Date
-        }
-      */
-
-    if (!args.raw) {
-      return data.SecretString as string;
-    } else {
-      const buff = Buffer.from(data.SecretBinary as string, 'base64');
-      return buff.toString('ascii');
+    try {
+      const result = await client
+        .getSecretValue({ SecretId: secretName })
+        .promise();
+      if (!args.raw && 'SecretString' in result) {
+        return result.SecretString as string;
+      } else {
+        const buff = Buffer.from(result.SecretBinary as string, 'base64');
+        return buff.toString('ascii');
+      }
+    } catch (error) {
+      throw new Error(error as string);
     }
   }
 }
