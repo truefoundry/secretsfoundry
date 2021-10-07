@@ -3,6 +3,17 @@ import Loader, { SEPARATOR } from '.';
 import AWS from 'aws-sdk';
 import { Buffer } from 'buffer';
 
+/**
+ * AwsSecretsLoader loads the secret from AWSSecretsManager.
+ * We get the AWS credentials from the environment variables
+ * AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY. It also falls
+ * back to looking up the credentials in local aws config directory
+ * if it cannot find the variables set.
+ *
+ * It accepts two params:
+ * region: AWS region to get the parameter from
+ * decrypt: Boolean to indicate whether to decrypt or not
+ */
 export default class AwsSecretsLoader implements Loader {
   public async loadData(secretsVariable: string): Promise<string> {
     const REGION_REGEX =
