@@ -1,4 +1,4 @@
-import Loader from './loader.interface';
+import Loader from './loader';
 import AWS from 'aws-sdk';
 
 export default class AwsS3Loader extends Loader {
@@ -44,7 +44,10 @@ export default class AwsS3Loader extends Loader {
 
     // get the value from s3
     const s3 = new AWS.S3({ region: args.region || 'us-east-1' });
-    const data: AWS.S3.GetObjectOutput = await new Promise(function (success, reject) {
+    const data: AWS.S3.GetObjectOutput = await new Promise(function (
+      success,
+      reject
+    ) {
       s3.getObject({ Bucket, Key }, function (err, data) {
         if (err) {
           reject(err);
@@ -64,5 +67,4 @@ export default class AwsS3Loader extends Loader {
     }
     throw new Error('Incompatible data type');
   }
-
 }

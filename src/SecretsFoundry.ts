@@ -1,11 +1,12 @@
 import dotenv from 'dotenv';
+import Loader from './loaders/loader';
 
 export class SecretsFoundry {
   VARIABLES_MATCH = /([\w]+?):(.+)/g;
   EXPAND_REGEX = /\${([:a-zA-Z0-9_;(=)\-/]+)?}/g;
-  private loaders: ILoader[];
+  private loaders: Loader[];
 
-  constructor(loaders: ILoader[]) {
+  constructor(loaders: Loader[]) {
     this.loaders = loaders;
   }
   /**
@@ -31,9 +32,7 @@ export class SecretsFoundry {
     if (variables.length > 0) {
       const [, refKey, refValue] = variables[0];
 
-      const loader = this.loaders.find(
-        loader => loader.canResolve(value)
-      );
+      const loader = this.loaders.find((loader) => loader.canResolve(value));
 
       if (loader) {
         return await loader.resolve(refValue);

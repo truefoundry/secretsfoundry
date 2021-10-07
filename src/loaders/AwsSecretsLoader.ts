@@ -1,4 +1,4 @@
-import Loader from './loader.interface';
+import Loader from './loader';
 
 import AWS from 'aws-sdk';
 import { Buffer } from 'buffer';
@@ -52,7 +52,10 @@ export default class AwsSecretsLoader extends Loader {
     });
 
     // get secret from AWS Secrets Manager
-    const data: { [key: string]: string } = await new Promise(function (success, reject) {
+    const data: { [key: string]: string } = await new Promise(function (
+      success,
+      reject
+    ) {
       client.getSecretValue({ SecretId: secretName }, function (err, data) {
         if (err) {
           reject(err);
