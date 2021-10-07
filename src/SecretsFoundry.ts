@@ -50,9 +50,7 @@ export class SecretsFoundry {
       let newValue = inputConfig[key]
       let parts = this.EXPAND_REGEX.exec(newValue);
       this.EXPAND_REGEX.lastIndex = 0; // reset regex
-      let i = 0
-      while (parts && i <3) { 
-        i++;
+      while (parts) { 
         const prefix = parts[1];
         let value: string, replacePart: string;
   
