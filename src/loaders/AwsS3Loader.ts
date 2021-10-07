@@ -1,7 +1,7 @@
 import Loader, { LoaderOutput, SEPARATOR } from '.';
 import AWS from 'aws-sdk';
 
-export default class AwsS3Loader extends Loader {
+export default class AwsS3Loader implements Loader {
   private static REGION_REGEX =
     /^(us(-gov)?|ap|ca|cn|eu|sa)-(central|(north|south)?(east|west)?)-\d?/;
   private static NAME_REGEX = /^[\w/\-._]+$/;
