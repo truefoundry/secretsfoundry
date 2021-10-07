@@ -1,4 +1,4 @@
-import Loader, { SEPARATOR } from '@/loaders';
+import Loader, { SEPARATOR } from '.';
 import AWS from 'aws-sdk';
 
 export default class S3Loader implements Loader {

@@ -1,4 +1,4 @@
-import { Loaders } from '@/loaders';
+import { Loaders } from './loaders';
 import dotenv from 'dotenv';
 
 export class SecretsFoundry {
@@ -40,7 +40,7 @@ export class SecretsFoundry {
       const refKey = variables[1];
       const refValue = variables[2];
 
-      const loader = Object.values(Loaders).find(mode => mode.key === refKey)
+      const loader = Object.values(Loaders).find((mode) => mode.key === refKey);
 
       if (loader) {
         return await loader.loader.loadData(refValue);
