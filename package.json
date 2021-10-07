@@ -18,7 +18,8 @@
     "build": "npm run type-check && npm run build-ts",
     "build-ts": "tsc",
     "test": "jest --watch",
-    "coverage": "jest --coverage"
+    "coverage": "jest --coverage",
+    "example": "node --trace-warnings -r ts-node/register src/index.ts run --script \"node example.js\""
   },
   "devDependencies": {
     "@types/jest": "^26.0.24",
