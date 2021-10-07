@@ -52,4 +52,41 @@ export class SecretsFoundry {
     // a default return for no variable
     return value;
   }
+  dotenvExpand(inputConfig: { [key: string]: string }): { [key: string]: string } {
+    const environment = process.env;
+    const interpolate = function (envValue: string): string {
+      const matches = envValue.match(/(.?\${?(?:[a-zA-Z0-9_]+)?}?)/g) || []
+
+      return matches.reduce(function (newEnv, match) {
+        const parts = /(.?)\${?([a-zA-Z0-9_]+)?}?/g.exec(match) || '';
+        const prefix = parts[1];
+
+        let value, replacePart
+
+        if (prefix === '\\') {
+          replacePart = parts[0]
+          value = replacePart.replace('\\$', '$')
+        } else {
+          const key = parts[2]
+          replacePart = parts[0].substring(prefix.length)
+          // process.env value 'wins' over .env file's value
+          value = Object.prototype.hasOwnProperty.call(environment, key) ? environment[key] : (inputConfig[key] || '')
+
+          // Resolve recursive interpolations
+          value = interpolate(value || '')
+        }
+        return newEnv.replace(replacePart, value)
+      }, envValue)
+    }
+    for (const configKey in inputConfig) {
+      const value = Object.prototype.hasOwnProperty.call(environment, configKey) ? environment[configKey] : inputConfig[configKey]
+
+      inputConfig[configKey] = interpolate(value || '')
+    }
+
+    for (const processKey in inputConfig) {
+      environment[processKey] = inputConfig[processKey]
+    }
+    return inputConfig
+  }
 }
