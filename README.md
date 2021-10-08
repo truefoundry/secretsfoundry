@@ -115,8 +115,9 @@ You can customise aws-ssm provider using:
 ### AWS Secrets Manager
 
 AWS credentials are fetched in a similar way as AWS Parameter Store.
+
 Arguments (optional)
-**region:** Region in which value is to be looked for.
+- **region:** Region in which value is to be looked for.
 
 You can customise aws-secrets provider using:
 `${aws-secrets(region=us-east-2)`
@@ -126,26 +127,30 @@ You can customise aws-secrets provider using:
 AWS credentials are fetched in a similar way as AWS Parameter Store
 
 Arguments (optional)
-**region:** AWS Region to lookup the value
+- **region:** AWS Region to lookup the value
 
 You can customise aws-secrets provider using:
 `${aws-s3(region='us-east-2'):bucket/key`
 
 ### Hashicorp vault
 
-TODO: Fill up
-
-```text
-VARIABLE=${vault:<secret_name>}
+VaultLoader loads the secret from HashiCorp's NodeVault We get the credentials for the vault from the environment variables The credentials required are as follows:
+```
+VAULT_ROLE_ID
+VAULT_SECRET_ID
+VAULT_ENDPOINT_URL # can be left empty, if endpoint_url is passed as argument
 ```
 
-### Parameters
+Arguments (optional)
+- **endpoint_url**: the url of the vault server, can be left empty if `VAULT_ENDPOINT_URL` is set accordingly
 
-**vault**: tells loader is of type vault.
+It accepts one parameter: 
+- **secret_name**: the path to the secret in vault
 
-**secret_name**: name of the secret to be used.
+You can customise the vault provider using:
+`${vault(endpoint_url=<url>):<secret_name>}`
 
-**NOTE**: Currently, one needs to export root_id and secret_id as `ROOT_ID` and `SECRET_ID` to make vault loader work.
+**NOTE**: NodeVault instace must be running, and the environment variables must be set.
 
 You can refer to our [docs](https://abhichoudhary06.gitbook.io/secretsfoundry/) for more information.
 
