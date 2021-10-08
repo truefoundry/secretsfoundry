@@ -50,10 +50,10 @@ export class SecretsFoundry {
             // eslint-disable-next-line no-await-in-loop
             await this.resolveVar(parts[1], envVars)
           );
-          // The braces at current level are resolved, and the code then attempts to find
-          // vars at a higher level.
-          groups = [...newValue.matchAll(this.EXPAND_REGEX)];
         }
+        // The braces at current level are resolved, and the code then attempts to find
+        // vars at a higher level.
+        groups = [...newValue.matchAll(this.EXPAND_REGEX)];
       }
       envVars[key] = newValue;
     }
