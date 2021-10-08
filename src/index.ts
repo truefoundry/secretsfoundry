@@ -23,35 +23,25 @@ const logErrorAndExit = function (message: string): void {
 };
 
 const validateInput = function (options: Options): void {
-  if (!options.stage.trim()) {
-    logErrorAndExit('Missing stage option. Empty string passed');
-  }
-
-  if (!options.script && !options.command) {
-    logErrorAndExit(
-      'Either --script or --command is required, but none was found'
-    );
-  }
-
-  if (options.script && options.command) {
-    logErrorAndExit('Cannot use both --script and --command at the same time');
-  }
-
-  if (options.command && !options.command.trim()) {
-    logErrorAndExit('Command cannot be empty');
-  }
-
-  if (options.script && !options.script.trim()) {
-    logErrorAndExit('Script cannot be empty');
+  if (options.stage && options.stage.trim()) {
+    if (!options.stage.startsWith('.')) {
+      options.stage = `.${options.stage}`;
+    }
   }
   if (options.path && options.path.trim()) {
     options.path = options.path.trim();
     if (!fs.existsSync(options.path)) {
       logErrorAndExit(`Config folder, ${options.path} does not exist`);
     }
-    if (!options.path.endsWith('/')) {
-      options.path = `${options.path}/`;
-    }
+  }
+  if (options.script && options.command) {
+    logErrorAndExit('Cannot use both --script and --command at the same time');
+  }
+  if (options.command && !options.command.trim()) {
+    logErrorAndExit('Command cannot be empty');
+  }
+  if (options.script && !options.script.trim()) {
+    logErrorAndExit('Script cannot be empty');
   }
 };
 
@@ -99,7 +89,7 @@ const program = new Command();
 program
   .version('0.1.0', '-V, --version', 'output the current version')
   .command('run')
-  .option('--stage <string>', 'Stage of the service', 'development')
+  .option('--stage <string>', 'Stage of the service')
   .option('-c, --command <string>', 'Single command to run')
   .option('-s, --script <string>', 'Multiple Commands to run like cd ~/ && ls')
   .option('-p, --path <string>', 'Path to the config directory, that holds the .env files. Defaults to current directory')
@@ -111,6 +101,12 @@ program
     const secretsFoundry = new SecretsFoundry(Loaders);
     try {
       const result = await secretsFoundry.extractValues(options.stage, options.path);
+      if (!options.command && !options.script) {
+        // if the user doesn't provide a command or a script, we will just log the result from parsing 
+        // the .env file
+        console.log(JSON.stringify(result, null, 2));
+        return;
+      }
       for (const key in result) {
         process.env[key] = result[key] as string;
       }
