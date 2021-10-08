@@ -1,7 +1,6 @@
 import Loader from './loader';
 
 import AWS from 'aws-sdk';
-import { Buffer } from 'buffer';
 
 /**
  * AwsSecretsLoader loads the secret from AWSSecretsManager.
@@ -14,7 +13,7 @@ import { Buffer } from 'buffer';
  * @param region: AWS region to get the parameter from
  */
 export default class AwsSecretsLoader extends Loader {
-  private static PATTERN = /^aws-secrets(\((.*)?\))?:([a-zA-Z0-9_.\-\/]+)$/;
+  private static PATTERN = /^aws-secrets(\((.*)?\))?:([a-zA-Z0-9_.\-/]+)$/;
 
   public canResolve(value: string): boolean {
     return value.match(AwsSecretsLoader.PATTERN) !== null;
