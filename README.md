@@ -134,7 +134,7 @@ You can customise aws-secrets provider using:
 
 ### Hashicorp vault
 
-VaultLoader loads the secret from HashiCorp's NodeVault We get the credentials for the vault from the environment variables The credentials required are as follows:
+VaultLoader loads the secret from HashiCorp's Vault. We get the credentials for the vault from the environment variables. The credentials required are as follows:
 ```js
 VAULT_ROLE_ID
 VAULT_SECRET_ID
