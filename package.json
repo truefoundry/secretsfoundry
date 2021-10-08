@@ -1,12 +1,12 @@
 {
   "name": "secretsfoundry",
-  "version": "0.10.0",
+  "version": "0.1.0",
   "description": "Package to manage your environment variables and secrets",
   "author": "Abhishek CHoudhary <abhichoudhary06@gmail.com>",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "https://github.com/innoavator/secretsfoundry"
   },
   "bin": {
     "secretsfoundry": "./dist/index.js"
