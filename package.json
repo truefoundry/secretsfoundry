@@ -1,6 +1,6 @@
 {
   "name": "secretsfoundry",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Package to manage your environment variables and secrets",
   "author": "Abhishek CHoudhary <abhichoudhary06@gmail.com>",
   "license": "MIT",
@@ -19,7 +19,7 @@
     "build-ts": "tsc",
     "test": "jest --watch",
     "coverage": "jest --coverage",
-    "example": "node --trace-warnings -r ts-node/register src/index.ts run --script \"node example.js\""
+    "publish": "npm run build && npm publish --access public"
   },
   "devDependencies": {
     "@types/jest": "^26.0.24",
