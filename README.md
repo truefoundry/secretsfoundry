@@ -16,7 +16,7 @@ application.
 
 - Create a .env file in your repository
 
-```
+```js
 SIMPLE = "simple"
 
 // Use the environment variables described earlier
@@ -41,7 +41,7 @@ VAULT_VALUE = ${vault:/path/to/secret}
 
 app.js can now access all the variables using process.env
 
-```
+```js
 SIMPLE = "hello"
 VARIABLE = "hello"
 AWS_SSM_VARIABLE = 'aws-ssm-variable'
@@ -62,7 +62,7 @@ for other sources, reach out to us for support or send a PR.
 
 ## Format in env files
 
-```
+```js
 SIMPLE = "simple"
 
 // Use the environment variables described earlier
@@ -98,7 +98,7 @@ Each of the secrets loaders can be customized with a few arguments in format:
 SecretsFoundry relies on getting aws credentials via environment variables or from ~/.aws directory.
 It looks for the following environment variables:
 
-```
+```js
 AWS_ACCESS_KEY_ID
 AWS_SECRET_ACCESS_KEY
 AWS_DEFAULT_REGION
