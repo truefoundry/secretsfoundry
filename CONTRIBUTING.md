@@ -14,7 +14,7 @@ If you'd like to see a certain feature in SecretsFoundry, file an issue first wi
 
 ### Setup
 
-Once you've cloned forked repository, all is needed is to run npm install at its root folder
+Once you've cloned therepository, all that is needed is to run npm install at its root of the repository.
 
 ### Running the code
 
