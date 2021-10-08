@@ -4,6 +4,8 @@
   "description": "Package to manage your environment variables and secrets",
   "author": "Abhishek CHoudhary <abhichoudhary06@gmail.com>",
   "license": "MIT",
+  "readmeFilename": "README.md",
+  "homepage": "https://abhichoudhary06.gitbook.io/secretsfoundry/",
   "repository": {
     "type": "git",
     "url": "https://github.com/innoavator/secretsfoundry"
@@ -11,7 +13,29 @@
   "bin": {
     "secretsfoundry": "./dist/index.js"
   },
+  "keywords": [
+    "dotenv",
+    "env",
+    ".env",
+    "environment",
+    "variables",
+    "config",
+    "settings",
+    "secrets",
+    "cloud",
+    "aws",
+    "hashicorp"
+  ],
+  "engines": {
+    "node": ">=12"
+  },
   "main": "./dist/index.js",
+  "files": [
+    "dist/*"
+  ],
+  "exports": {
+    ".": "./dist/SecretsFoundry.js"
+  },
   "scripts": {
     "dev": "node -r ts-node/register src/index.ts run --script 'node example.js'",
     "type-check": "tsc --noEmit && eslint .",
@@ -19,7 +43,10 @@
     "build-ts": "tsc",
     "test": "jest --watch",
     "coverage": "jest --coverage",
-    "publish": "npm run build && npm publish --access public"
+    "publish": "npm run build && npm publish"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "devDependencies": {
     "@types/jest": "^26.0.24",
