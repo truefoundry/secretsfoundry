@@ -21,6 +21,3 @@ VARIABLE=${aws-secrets(region=us-east-2,raw=true):/path/to/secret}
 **raw:** Tells whether the secret value should be decrypted or not. Can only be either `true` or `false` . Defaults to _`false`_ .
 
 **path:** Name of the secret used.
-
-Hence, the complete variable **must follow** the REGEX: `/^aws-secrets(((.*)?))?:([a-zA-Z0-9_.-\/]+)$/`
-
