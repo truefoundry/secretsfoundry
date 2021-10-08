@@ -9,9 +9,12 @@ import nodeVault from 'node-vault';
  * - VAULT_SECRET_ID
  * - VAULT_ENDPOINT_URL, can be left empty, if endpoint_url is passed as argument
  * 
+ * You can also pass the following arguments:
+ * endpoint_url: the url of the vault server, can be left empty if VAULT_ENDPOINT_URL is set 
+ * 
  * It accepts one param:
  * path: the path to the secret in vault
- * endpoint_url: the url of the vault server, can be left empty if VAULT_ENDPOINT_URL is set 
+ * 
  * Note: The vault server must be running
  */
 
