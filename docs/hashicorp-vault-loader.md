@@ -1,24 +1,25 @@
 ---
-description: How to install secretsfoundry on your system
+description: 'https://www.vaultproject.io/'
 ---
 
-# Hashicorp Vault
+# HashiCorp Vault
 
-secretsfoundry is available as a `npm` package.
+VaultLoader loads the secret from HashiCorp's NodeVault.
 
-## Prerequisites
-
-Make sure that the latest version of npm is installed. You can install it using `npm install npm@latest -g`
-
-## Installation via npm
-
-```bash
-npm install secretsfoundry
-```
-
-## Confirm Installation
+## Usage
 
 ```text
-secretsfoundry --version/-V
+VARIABLE=${vault(endpoint_url=<url>):<secret-name>}
 ```
+
+## **Syntax Terms Explanation**
+
+**vault:** Tells that provider is vault and to load data from NodeVault.
+
+**\(\):** Parameters for vault. Currently, a single paramater is accepted:  
+- **endpoint_url:** endpoint url where the NodeVault server is running. If not passed, `VAULT_ENDPOINT_URL` environment variable will be taken. If both are not set, error will be thrown 
+
+**secret-name:** The key used for fetching the object details.
+
+Hence, the complete variable **must follow** the REGEX: `/^vault(\((.*)?\))?:([a-zA-Z0-9_.\-/]+)/`
 
