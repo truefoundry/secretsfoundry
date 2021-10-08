@@ -14,9 +14,12 @@ Runs secretsfoundry reading the `.env.<stage>` file and injecting them as enviro
 
 **Options**
 
-1. **--stage:** Sets the stage for the process and reads `.env.{stage}` file according to this. It depends on [`dotenv`](https://www.npmjs.com/package/dotenv) for loading them. If not given, will look for `.env.development` in the directory where the command is run. Not a required option.
-2. **--command**: Runs a single command with the injected environment variables. Not a required option. \***\*Alias:** -c\*\*
-3. **--script:** Runs multiple commands with the injected environment variables. These run using the native shell. Not a required option. Alias: **-s Note:** Either `--script` or `--command` is required. The CLI will throw an error if either both or present or both are absent.
+1. **--stage**: Sets the stage for the process and reads `.env.{stage}` file according to this. It depends on [`dotenv`](https://www.npmjs.com/package/dotenv) for loading them. If not given, will look for `.env` file. Not a required option.
+2. **-c / --command**: Runs a single command with the injected environment variables. Not a required option.
+3. **-s / --script**: Runs multiple commands with the injected environment variables. These run using the native shell. Not a required option. 
+4. **-p / --path**: Path to the folder to look for the `.env` files. Defaults to current working directory. Not a required option. 
+
+If both, `command` and `script` options are empty, `secretsfoundry run` will output the resolved `.env` file onto the terminal. This can be used as a way to debug, should the need be. 
 
 {% tabs %}
 {% tab title="Single Command" %}
@@ -39,7 +42,7 @@ Multiple commands mean that you are using identifiers that are present in the sh
 {% tabs %}
 {% tab title="Single Command" %}
 ```text
-secretsfoundry run --stage development -C "npm --version"
+secretsfoundry run --stage development -c "npm --version"
 ```
 {% endtab %}
 
@@ -56,7 +59,7 @@ secretsfoundry run --stage development -s "npm --version && npm install"
 secretsfoundry run -c "npm --version"
 ```
 
-The above will look for `.env.development` file in the project root and use that contents for extracting values and injecting them as env variables.
+The above will look for `.env` file in the current working directory and use that contents for extracting values and injecting them as env variables.
 {% endtab %}
 
 {% tab title="With stage" %}
@@ -65,6 +68,25 @@ secretsfoundry run --stage prod -c "npm --version"
 ```
 
 Will look for a file named `.env.prod` in the directory above command is run and uses its content for extracting values and injecting them as env variables.
+{% endtab %}
+{% endtabs %}
+
+
+{% tabs %}
+{% tab title="Without path" %}
+```text
+secretsfoundry run -c "npm --version"
+```
+
+The above will look for `.env` file in the current working directory and use that contents for extracting values and injecting them as env variables.
+{% endtab %}
+
+{% tab title="With path" %}
+```text
+secretsfoundry run --stage prod -c "npm --version" -p ./config
+```
+
+Will look for a file named `.env.prod` in the `./config` directory, and uses its content for extracting values and injecting them as env variables.
 {% endtab %}
 {% endtabs %}
 
