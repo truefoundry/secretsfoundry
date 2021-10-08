@@ -1,9 +1,5 @@
 import Loader from './loader';
 import nodeVault from 'node-vault';
-const vault = nodeVault({
-  apiVersion: 'v1',
-  endpoint: 'http://127.0.0.1:8200',
-});
 
 /**
  * VaultLoader loads the secret from HashiCorp's NodeVault
@@ -11,10 +7,11 @@ const vault = nodeVault({
  * The credentials required are as follows:
  * - VAULT_ROLE_ID
  * - VAULT_SECRET_ID
- *
+ * - VAULT_ENDPOINT_URL, can be left empty, if endpoint_url is passed as argument
+ * 
  * It accepts one param:
  * path: the path to the secret in vault
- *
+ * endpoint_url: the url of the vault server, can be left empty if VAULT_ENDPOINT_URL is set 
  * Note: The vault server must be running
  */
 
@@ -33,16 +30,34 @@ export default class VaultLoader extends Loader {
       since client is supposed to be calling canResolve first'
       );
     }
-    const secretName = groups[2]; // name of the vault secret
-    // TODO: Keep endpoint as args or env variable (We should support both)
-    // need to check regex for secretName but not sure as of now
+    let secretName: string, vaultEndpoint, args: Record<string, string>;
+    if (groups.length === 4) {
+      args = this.getArgsFromStr(groups[2]);
+      if (args.endpoint_url) {
+        vaultEndpoint = args.endpoint_url;
+      }
+      secretName = groups[3];
+    } else {
+      secretName = groups[2];
+    }
+    if (!vaultEndpoint) {
+      console.log(process.env.VAULT_ENDPOINT_URL);
+      if ('VAULT_ENDPOINT_URL' in process.env)
+        vaultEndpoint = process.env.VAULT_ENDPOINT_URL;
+      else
+        throw new Error('Vault endpoint url is not passed through args, nor set in env');
+    }
+    const vault = nodeVault({
+      apiVersion: 'v1',
+      endpoint: vaultEndpoint,
+    });
     const roleId = process.env.ROLE_ID;
     const secretId = process.env.SECRET_ID;
-    const nodeVault = await vault.approleLogin({
+    const vaultLogin = await vault.approleLogin({
       role_id: roleId,
       secret_id: secretId,
     });
-    vault.token = nodeVault.auth.client_token;
+    vault.token = vaultLogin.auth.client_token;
     const data = await vault.read(secretName);
     return JSON.stringify(data);
   }
