@@ -2,7 +2,7 @@
 
 SecretsFoundry is a package to automatically fetch your environment variables
 from different sources and secret managers. You can write the path to secret key in .env and
-SecretsFoundry will automatically fetch it for you. It parses the .env or .env.\* files
+SecretsFoundry will automatically fetch it for you. It parses the `.env` or `.env.*` files
 to automatically extract the values and provide them as environment variables to your
 application.
 
@@ -14,7 +14,7 @@ application.
 
 - `npm install secretsfoundry --save`
 
-- Create a .env file in your repository
+- Create a `.env` file in your repository
 
 ```js
 SIMPLE = "simple"
@@ -35,11 +35,11 @@ AWS_S3_VALUE = ${aws-s3:bucket/key}
 VAULT_VALUE = ${vault:/path/to/secret}
 ```
 
-- If you were earlier running your application using node app.js, use:
+- If you were earlier running your application using `node app.js`, use:
 
 `secretsfoundry run --command "node app.js"`
 
-app.js can now access all the variables using process.env
+`app.js` can now access all the variables using process.env
 
 ```js
 SIMPLE = "hello"
@@ -135,10 +135,10 @@ You can customise aws-secrets provider using:
 ### Hashicorp vault
 
 VaultLoader loads the secret from HashiCorp's NodeVault We get the credentials for the vault from the environment variables The credentials required are as follows:
-```
+```js
 VAULT_ROLE_ID
 VAULT_SECRET_ID
-VAULT_ENDPOINT_URL # can be left empty, if endpoint_url is passed as argument
+VAULT_ENDPOINT_URL // can be left empty, if endpoint_url is passed as argument
 ```
 
 Arguments (optional)
