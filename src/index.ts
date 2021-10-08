@@ -3,7 +3,7 @@ import { Command } from 'commander';
 import { spawn } from 'child_process';
 import { SecretsFoundry } from './SecretsFoundry';
 import { Loaders } from './loaders';
-import { Options, validateInput, getScriptArgs } from './utils';
+import Utils, { Options } from './utils';
 
 const runChildProcess = function (cmd: string, args: string[]): void {
   spawn(cmd, args, { stdio: 'inherit' });
@@ -24,7 +24,7 @@ program
     'Run the process in command/script after injecting the environment variables'
   )
   .action(async (options: Options) => {
-    validateInput(options);
+    Utils.validateInput(options);
     const secretsFoundry = new SecretsFoundry(Loaders);
     try {
       const result = await secretsFoundry.extractValues(
@@ -49,7 +49,7 @@ program
     if (options.command) {
       args = options.command.split(' ');
     } else if (options.script) {
-      args = getScriptArgs(options.script);
+      args = Utils.getScriptArgs(options.script);
     }
     runChildProcess(args[0], args.splice(1));
   });
