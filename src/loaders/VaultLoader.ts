@@ -19,7 +19,7 @@ const vault = nodeVault({
  */
 
 export default class VaultLoader extends Loader {
-  private static PATTERN = /^vault(\((.*)?\))?:([a-zA-Z0-9_.\-\/]+)/;
+  private static PATTERN = /^vault(\((.*)?\))?:([a-zA-Z0-9_.\-/]+)/;
 
   canResolve(value: string): boolean {
     return value.match(VaultLoader.PATTERN) !== null;
