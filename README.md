@@ -6,6 +6,8 @@ SecretsFoundry will automatically fetch it for you. It parses the `.env` or `.en
 to automatically extract the values and provide them as environment variables to your
 application.
 
+You can refer to our [docs](https://abhichoudhary06.gitbook.io/secretsfoundry/) for more information.
+
 ## Prerequisites
 
 `npm install npm@latest -g`
@@ -151,8 +153,6 @@ You can customise the vault provider using:
 `${vault(endpoint_url=<url>):<secret_name>}`
 
 **NOTE**: NodeVault instace must be running, and the environment variables must be set.
-
-You can refer to our [docs](https://abhichoudhary06.gitbook.io/secretsfoundry/) for more information.
 
 ## Integrating with docker
 You can also use our package to inject variables on a container. 
