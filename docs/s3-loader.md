@@ -22,6 +22,3 @@ VARIABLE=${aws-s3(region='us-east-2'):bucket/key}
 **bucket:** Name of the bucket to be used. **Must follow** the REGEX `/^[\w/-._]+$/`
 
 **key:** The key used for fetching the object details. **Must follow** the REGEX `/^[\w]+?/`
-
-Hence, the complete variable **must follow** the REGEX: `/^aws-s3(((.*)?))?:((.+?)\/(.+)$)/`
-
