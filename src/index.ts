@@ -23,11 +23,6 @@ const logErrorAndExit = function (message: string): void {
 };
 
 const validateInput = function (options: Options): void {
-  if (options.stage && options.stage.trim()) {
-    if (!options.stage.startsWith('.')) {
-      options.stage = `.${options.stage}`;
-    }
-  }
   if (options.path && options.path.trim()) {
     options.path = options.path.trim();
     if (!fs.existsSync(options.path)) {
@@ -89,7 +84,7 @@ const program = new Command();
 program
   .version('0.1.0', '-V, --version', 'output the current version')
   .command('run')
-  .option('--stage <string>', 'Stage of the service')
+  .option('--stage <string>', 'Stage of the service', '')
   .option('-c, --command <string>', 'Single command to run')
   .option('-s, --script <string>', 'Multiple Commands to run like cd ~/ && ls')
   .option('-p, --path <string>', 'Path to the config directory, that holds the .env files. Defaults to current directory')
