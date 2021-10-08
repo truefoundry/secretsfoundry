@@ -15,7 +15,7 @@ export class SecretsFoundry {
    * @param configDir Path to directory which contains the .env files. Defaults to .
    * @returns Object/dict containing key and corresponding populated variable value
    */
-  public async extractValues(stage: string, configDir: string = '.') {
+  public async extractValues(stage: string = '', configDir: string = '.') {
     const envPath = '.env' + (stage ? `.${stage}` : '');
     const result = dotenv.config({ path: path.join(configDir, envPath) });
     if (result.error || !result.parsed) {
