@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import chalk from 'chalk';
+import fs from 'fs';
 import { Command } from 'commander';
 import { spawn } from 'child_process';
 import { SecretsFoundry } from './SecretsFoundry';
@@ -9,6 +10,7 @@ interface Options {
   stage: string;
   command?: string;
   script?: string;
+  path?: string;
 }
 
 /**
@@ -41,6 +43,15 @@ const validateInput = function (options: Options): void {
 
   if (options.script && !options.script.trim()) {
     logErrorAndExit('Script cannot be empty');
+  }
+  if (options.path && options.path.trim()) {
+    options.path = options.path.trim();
+    if (!fs.existsSync(options.path)) {
+      logErrorAndExit(`Config folder, ${options.path} does not exist`);
+    }
+    if (!options.path.endsWith('/')) {
+      options.path = `${options.path}/`;
+    }
   }
 };
 
@@ -91,6 +102,7 @@ program
   .option('--stage <string>', 'Stage of the service', 'development')
   .option('-c, --command <string>', 'Single command to run')
   .option('-s, --script <string>', 'Multiple Commands to run like cd ~/ && ls')
+  .option('-p, --path <string>', 'Path to the config directory, that holds the .env files. Defaults to current directory')
   .description(
     'Run the process in command/script after injecting the environment variables'
   )
@@ -98,7 +110,7 @@ program
     validateInput(options);
     const secretsFoundry = new SecretsFoundry(Loaders);
     try {
-      const result = await secretsFoundry.extractValues(options.stage);
+      const result = await secretsFoundry.extractValues(options.stage, options.path);
       for (const key in result) {
         process.env[key] = result[key] as string;
       }

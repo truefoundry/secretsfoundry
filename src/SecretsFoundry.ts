@@ -11,10 +11,11 @@ export class SecretsFoundry {
   /**
    * Reads values from the file stage specified and populates the variables
    * @param stage Stage for the process. Defaults to development
+   * @param configDir Path to directory which contains the .env files. Defaults to .
    * @returns Object/dict containing key and corresponding populated variable value
    */
-  public async extractValues(stage: string = 'development') {
-    const result = dotenv.config({ path: `./.env.${stage}` });
+  public async extractValues(stage: string = 'development', configDir: string = '.') {
+    const result = dotenv.config({ path: `${configDir}/.env.${stage}` });
     if (result.error || !result.parsed) {
       throw result.error;
     }
