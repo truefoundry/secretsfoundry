@@ -30,23 +30,19 @@ export default class VaultLoader extends Loader {
       since client is supposed to be calling canResolve first'
       );
     }
-    let secretName: string, vaultEndpoint, args: Record<string, string>;
-    if (groups.length === 4) {
-      args = this.getArgsFromStr(groups[2]);
-      if (args.endpoint_url) {
-        vaultEndpoint = args.endpoint_url;
-      }
-      secretName = groups[3];
-    } else {
-      secretName = groups[2];
+    let vaultEndpoint = process.env.VAULT_ENDPOINT_URL || '';
+
+    const args = this.getArgsFromStr(groups[2]);
+    const secretName = groups[3];
+
+    if (args.endpoint_url) {
+      vaultEndpoint = args.endpoint_url;
+    };
+
+    if (vaultEndpoint.length === 0) {
+      throw new Error('Vault endpoint url is not passed through args, nor set in env');
     }
-    if (!vaultEndpoint) {
-      console.log(process.env.VAULT_ENDPOINT_URL);
-      if ('VAULT_ENDPOINT_URL' in process.env)
-        vaultEndpoint = process.env.VAULT_ENDPOINT_URL;
-      else
-        throw new Error('Vault endpoint url is not passed through args, nor set in env');
-    }
+
     const vault = nodeVault({
       apiVersion: 'v1',
       endpoint: vaultEndpoint,
