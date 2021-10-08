@@ -13,7 +13,7 @@
   },
   "main": "./dist/index.js",
   "scripts": {
-    "dev": "node -r ts-node/register -r tsconfig-paths/register src/index.ts run --script 'node example.js'",
+    "dev": "node -r ts-node/register src/index.ts run --script 'node example.js'",
     "type-check": "tsc --noEmit && eslint .",
     "build": "npm run type-check && npm run build-ts",
     "build-ts": "tsc",
