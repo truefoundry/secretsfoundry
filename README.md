@@ -37,7 +37,7 @@ VAULT_VALUE = ${vault:/path/to/secret}
 
 - If you were earlier running your application using `node app.js`, use:
 
-`secretsfoundry run --command "node app.js"`
+`secretsfoundry run --script "node app.js"`
 
 `app.js` can now access all the variables using process.env
 
