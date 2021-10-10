@@ -1,5 +1,6 @@
 import chalk from 'chalk';
 import fs from 'fs';
+import { spawn } from 'child_process';
 
 export interface Options {
   stage?: string;
@@ -51,7 +52,7 @@ export default class Utils {
    */
   static logErrorAndExit(message: string): void {
     console.log(chalk.red(`ERROR: ${message}`));
-    process.exit();
+    process.exit(-1);
   }
 
   static validateInput(options: Options): boolean {
@@ -74,5 +75,8 @@ export default class Utils {
     }
 
     return true;
+  }
+  static runChildProcess(cmd: string, args: string[]): void {
+    spawn(cmd, args, { stdio: 'inherit' });
   }
 }

@@ -1,13 +1,8 @@
 #!/usr/bin/env node
 import { Command } from 'commander';
-import { spawn } from 'child_process';
 import { SecretsFoundry } from './SecretsFoundry';
 import { Loaders } from './loaders';
 import Utils, { Options } from './utils';
-
-const runChildProcess = function (cmd: string, args: string[]): void {
-  spawn(cmd, args, { stdio: 'inherit' });
-};
 
 const program = new Command();
 program
@@ -51,7 +46,7 @@ program
     } else if (options.script) {
       args = Utils.getScriptArgs(options.script);
     }
-    runChildProcess(args[0], args.splice(1));
+    Utils.runChildProcess(args[0], args.splice(1));
   });
 
 program.parse(process.argv);
