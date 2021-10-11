@@ -41,7 +41,12 @@ export default class AwsSSMLoader extends Loader {
     } else {
       throw new Error('decrypt value has to be true or false');
     }
-    const ssm = new AWS.SSM({ region: args.region || 'us-east-1' });
+    let ssm: AWS.SSM;
+    if (args.region || process.env.AWS_REGION) {
+      ssm = new AWS.SSM({ region: args.region || process.env.AWS_DEFAULT_REGION });
+    } else {
+      ssm = new AWS.SSM();
+    }
     const data = await ssm
       .getParameter({
         Name: paramName,
