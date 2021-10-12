@@ -42,8 +42,8 @@ export default class AwsSSMLoader extends Loader {
       throw new Error('decrypt value has to be true or false');
     }
     let ssm: AWS.SSM;
-    if (args.region || process.env.AWS_REGION) {
-      ssm = new AWS.SSM({ region: args.region || process.env.AWS_DEFAULT_REGION });
+    if (args.region) {
+      ssm = new AWS.SSM({ region: args.region });
     } else {
       ssm = new AWS.SSM();
     }

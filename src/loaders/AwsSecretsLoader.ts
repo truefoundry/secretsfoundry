@@ -32,11 +32,8 @@ export default class AwsSecretsLoader extends Loader {
     const secretName = groups[3]; // path to param
     const args = this.getArgsFromStr(argsStr);
     let client: AWS.SecretsManager;
-    if (args.region || process.env.AWS_REGION) {
-      client = new AWS.SecretsManager({
-        region: args.region || process.env.AWS_DEFAULT_REGION,
-      });
-
+    if (args.region) {
+      client = new AWS.SecretsManager({ region: args.region });
     } else {
       client = new AWS.SecretsManager();
     }

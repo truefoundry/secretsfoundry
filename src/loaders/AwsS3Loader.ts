@@ -33,8 +33,8 @@ export default class AwsS3Loader extends Loader {
     const Bucket: string = groups[4]; // path to param
     const Key = groups[5]; // path to file
     let s3: AWS.S3;
-    if (args.region || process.env.AWS_REGION) {
-      s3 = new AWS.S3({ region: args.region || process.env.AWS_REGION });
+    if (args.region) {
+      s3 = new AWS.S3({ region: args.region});
     } else {
       s3 = new AWS.S3();
     }
