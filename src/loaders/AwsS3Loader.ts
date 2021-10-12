@@ -32,9 +32,12 @@ export default class AwsS3Loader extends Loader {
 
     const Bucket: string = groups[4]; // path to param
     const Key = groups[5]; // path to file
-
-    const s3 = new AWS.S3({ region: args.region || 'us-east-1' });
-
+    let s3: AWS.S3;
+    if (args.region) {
+      s3 = new AWS.S3({ region: args.region});
+    } else {
+      s3 = new AWS.S3();
+    }
     // get secret from AWS Secrets Manager
     try {
       const data = await s3.getObject({ Bucket, Key }).promise();
