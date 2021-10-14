@@ -1,4 +1,5 @@
 import awsSecretsLoader from '../../src/loaders/AwsSecretsLoader';
+import { response } from '../setup/constants';
 
 describe('awsSecretsLoader', () => {
   it('should resolve(without args)', () => {
@@ -28,4 +29,12 @@ describe('awsSecretsLoader', () => {
     );
     expect(isResolved).not.toBeTruthy();
   });
+
+  it('should get proper info', async () => {
+    const loader = new awsSecretsLoader();
+    const result = await loader.resolve(
+      "aws-secrets(region='us-east-2'):secret-1-key-usage"
+    );
+    expect(result).toStrictEqual(response)
+  })
 });
