@@ -13,6 +13,7 @@ class DummyLoader extends Loader {
   }
 
   public canResolve(variable: string): boolean {
+    if(!variable) return false;
     return variable.split(':')[0] == this.startKeyWord;
   }
 }
@@ -43,6 +44,36 @@ const completeBaseRecord: Record<string, string> = {
   'B_Record': '${sourceB:${HELLO_SIMPLE}}',
   'Hello_Record': '${${SIMPLE}A:${A_Record}}'
 }
+
+const obscureVarNames = [
+  ':azAZ09_;(=),\\.-/', 
+  '=', 
+  '\\',  
+  '()', 
+  ')())))', 
+  'aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUxXyYzZ', 
+  '0123456789',
+  'return',
+  'undefined',
+  'throw',
+  'console.log(2);',
+  ';'
+];
+
+const invalidVarNames = [
+  '?',
+  '+', 
+  '$', 
+  '${???}', 
+  'H?ll?', 
+  '{', 
+  '{}',
+  'WITH SPACE',
+  ' ', 
+  'Ø',
+  '我',  
+  'يَّة'
+];
 
 describe('SecretsFoundry', () => {
   it('Should resolve standard vars', async () => {
@@ -80,8 +111,34 @@ describe('SecretsFoundry', () => {
       'B_Record': 'resolved_by_sourceB',
       'Hello_Record': 'resolved_by_HELLOA'
     });
-  }); 
+  });
+
+  it('Should parse obscure var names', async () => {
+    for (const envVar of obscureVarNames) {
+      const record: Record<string, string> = {
+        [envVar]: 'HELLO_WORLD',
+        'RESULT': `\${${envVar}}`
+      }
+      const response = await foundry.dotenvExpand(record);
+      expect(response).toStrictEqual({
+        [envVar]: 'HELLO_WORLD',
+        'RESULT': 'HELLO_WORLD'
+      })
+    }
+  });
   
+  it('Should not parse invalid var names', async () => {
+    for (const envVar of invalidVarNames) {
+      const record: Record<string, string> = {
+        [envVar]: 'HELLO_WORLD',
+        'RESULT': `\${${envVar}}`
+      }
+      const response = await foundry.dotenvExpand(record);
+      expect(response).toStrictEqual({
+        [envVar]: 'HELLO_WORLD',
+        'RESULT': `\${${envVar}}`
+      });
+    }
+  });
+
 });
-
-
