@@ -1,4 +1,6 @@
 import awsSSMLoader from '../../src/loaders/AwsSSMLoader';
+import { response } from '../setup/constants';
+
 
 describe('awsSSMLoader', () => {
   it('should resolve(without args)', () => {
@@ -60,4 +62,12 @@ describe('awsSSMLoader', () => {
     );
     expect(isResolved).not.toBeTruthy();
   });
+
+  it('should get proper info', async () => {
+    const loader = new awsSSMLoader();
+    const result = await loader.resolve(
+      "aws-ssm(region='us-east-2', decrypt='true'):ssm-key-uS1ge"
+    );
+    expect(result).toStrictEqual(response)
+  })
 });
