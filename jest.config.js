@@ -13,6 +13,6 @@ module.exports = {
     'jest-watch-typeahead/filename',
     'jest-watch-typeahead/testname',
   ],
-  setupFiles: ['./tests/setup/*.ts'],
+  setupFiles: ['./tests/setup/awsmock.ts'],
   silent: false,
 };

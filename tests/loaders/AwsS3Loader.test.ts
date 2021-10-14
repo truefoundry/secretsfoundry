@@ -1,4 +1,5 @@
 import awsS3Loader from '../../src/loaders/AwsS3Loader';
+import { response } from '../setup/constants';
 
 describe('AwsS3Loader', () => {
   it('should resolve(without args)', () => {
@@ -31,7 +32,9 @@ describe('AwsS3Loader', () => {
 
   it('should get proper info', async () => {
     const loader = new awsS3Loader();
-    const response = await loader.resolve("aws-s3(region='us-east-2'):python/testing")
-    expect(response).toStrictEqual("7h15#7357@5h0uld$p455")
+    const result = await loader.resolve(
+      "aws-s3(region='us-east-2'):python/testing"
+    );
+    expect(result).toStrictEqual(response)
   })
 });
