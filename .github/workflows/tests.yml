@@ -4,7 +4,7 @@ on:
     branches:
       - main
 jobs:
-  test:
+  Test:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -18,3 +18,12 @@ jobs:
         run: yarn
       - name: Run tests
         run: yarn jest --ci --verbose
+  Lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install modules
+        run: yarn
+      - name: Run Linter
+        run: yarn type-check
+  
