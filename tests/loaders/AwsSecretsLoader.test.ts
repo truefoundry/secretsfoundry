@@ -31,9 +31,15 @@ describe('awsSecretsLoader', () => {
 
   it('should resolve aws secrets', async () => {
     const loader = new awsSecretsLoader();
-    const result = await loader.resolve(
-      "aws-secrets(region='us-east-2'):secret-1-key-usage"
-    );
-    expect(result).toStrictEqual('secret-1-key-usage')
+    expect(
+      await loader.resolve(
+        "aws-secrets(region='us-east-2'):secret-1-key-usage"
+      )
+    ).toStrictEqual('secret-1-key-usage')
+    expect(
+      await loader.resolve(
+        "aws-secrets(region='us-east-1'):secret-2-key-usage"
+      )
+    ).toStrictEqual('secret-2-key-usage')
   })
 });

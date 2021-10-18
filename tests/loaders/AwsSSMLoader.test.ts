@@ -61,11 +61,17 @@ describe('awsSSMLoader', () => {
     expect(isResolved).not.toBeTruthy();
   });
 
-  it('should resolve aws secrets', async () => {
+  it('should resolve aws SSM', async () => {
     const loader = new awsSSMLoader();
-    const result = await loader.resolve(
-      "aws-ssm(region=us-east-2, decrypt=true):ssm-key-uS1ge"
-    );
-    expect(result).toStrictEqual('ssm-key-uS1ge-true')
+    expect(
+      await loader.resolve(
+        "aws-ssm(region=us-east-2, decrypt=true):ssm-key-uS1ge"
+      )
+    ).toStrictEqual('ssm-key-uS1ge-true')
+    expect(
+      await loader.resolve(
+        "aws-ssm(region=us-east-2, decrypt=false):ssm-key-uS1ge"
+      )
+    ).toStrictEqual('ssm-key-uS1ge-false')
   })
 });
