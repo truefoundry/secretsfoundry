@@ -33,7 +33,7 @@ export default class AwsSSMLoader extends Loader {
     // Validate decrypt param
     let decrypt = false;
     if ('decrypt' in args) {
-      const decryptArg = args.decrypt.replace(/'/g, '')
+      const decryptArg = args.decrypt
       if (decryptArg === 'true') {
         decrypt = true;
       } else if (decryptArg === 'false') {
