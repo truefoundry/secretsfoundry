@@ -3,10 +3,17 @@ import AWS from 'aws-sdk';
 
 /**
  * AWSSSMLoader loads the variable from AWS Parameter Store.
- * We get the AWS credentials from the environment variables
- * AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY. It also falls
- * back to looking up the credentials in local aws config directory
- * if it cannot find the variables set.
+ * This loader accepts pattern of the format
+ * aws-ssm(params):/key-to-param
+ *
+ * Requirements:
+ *
+ * AWS credentials from the environment variables
+ * AWS_ACCESS_KEY_ID
+ * AWS_SECRET_ACCESS_KEY.
+ *
+ * It also falls back to looking up the credentials in local
+ * aws config directory if it cannot find the variables set.
  *
  * It accepts two params:
  * @param region: AWS region to get the parameter from
