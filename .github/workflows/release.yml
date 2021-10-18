@@ -14,6 +14,8 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
       - name: Install modules
         run: yarn
+      - name: Run tests
+        run: yarn jest --ci --verbose
       # Publish to NPM registry
       - run: yarn publish
         env:
