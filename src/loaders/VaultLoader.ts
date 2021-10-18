@@ -2,20 +2,18 @@ import Loader from './loader';
 import nodeVault from 'node-vault';
 
 /**
- * VaultLoader loads the secret from HashiCorp's NodeVault
- * We get the credentials for the vault from the environment variables
- * The credentials required are as follows:
+ * VaultLoader loads the secret from HashiCorp's NodeVault.
+ * This loader accepts pattern of the format
+ * vault(params):/key-to-param
+ *
+ * Requirements:
+ * Vault credentials from environment variables
  * - VAULT_ROLE_ID
  * - VAULT_SECRET_ID
  * - VAULT_ENDPOINT_URL, can be left empty, if endpoint_url is passed as argument
- * 
- * You can also pass the following arguments:
- * endpoint_url: the url of the vault server, can be left empty if VAULT_ENDPOINT_URL is set 
- * 
- * It accepts one param:
- * path: the path to the secret in vault
- * 
- * Note: The vault server must be running
+ *
+ * @param endpoint_url: the url of the vault server, can be left empty
+ *                      if VAULT_ENDPOINT_URL is set
  */
 
 export default class VaultLoader extends Loader {
@@ -40,10 +38,12 @@ export default class VaultLoader extends Loader {
 
     if (args.endpoint_url) {
       vaultEndpoint = args.endpoint_url;
-    };
+    }
 
     if (vaultEndpoint.length === 0) {
-      throw new Error('Vault endpoint url is not passed through args, nor set in env');
+      throw new Error(
+        'Vault endpoint url is not passed through args, nor set in env'
+      );
     }
 
     const vault = nodeVault({

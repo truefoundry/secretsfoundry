@@ -22,33 +22,25 @@ export class SecretsFoundry {
       throw result.error;
     }
     try {
-      return await this.dotenvExpand(result.parsed);
+      return await this.resolveVariables(result.parsed);
     } catch (error) {
       console.error(error);
       throw new Error(error as string);
     }
   }
 
-  async resolveVariableValue(value: string) {
-    const loader = this.loaders.find((loader) => loader.canResolve(value));
-    if (loader) {
-      return await loader.resolve(value);
-    }
-    throw new Error(`${value} is not a valid loader`);
-  }
-
-  async dotenvExpand(
+  async resolveVariables(
     envVars: Record<string, string>
   ): Promise<Record<string, string>> {
     for (const key in envVars) {
-      let newValue = envVars[key];
-      let groups = [...newValue.matchAll(this.EXPAND_REGEX)];
+      let value = envVars[key];
+      let groups = [...value.matchAll(this.EXPAND_REGEX)];
       // Groups are the matches at a given level, since the regex is non-greedy
       // notice the ? mark for the content inside {}. It matches smallest first
       while (groups.length > 0) {
         for (const parts of groups) {
           // parts are the matching groups, parts[1] is the content of the braces
-          newValue = newValue.replace(
+          value = value.replace(
             parts[0],
             // eslint-disable-next-line no-await-in-loop
             await this.resolveVar(parts[1], envVars)
@@ -56,23 +48,35 @@ export class SecretsFoundry {
         }
         // The braces at current level are resolved, and the code then attempts to find
         // vars at a higher level.
-        groups = [...newValue.matchAll(this.EXPAND_REGEX)];
+        groups = [...value.matchAll(this.EXPAND_REGEX)];
       }
-      envVars[key] = newValue;
+      envVars[key] = value;
     }
     return envVars;
   }
 
+  // We first look for the variables in the environment variables.
+  // Then check for the variables defined earlier in the .env file
+  // Then check if any of the loaders can resolve the variable.
   async resolveVar(
     variable: string,
     envVars: Record<string, string>
   ): Promise<string> {
-    // process.env value 'wins' over .env file's value.
-    if (Object.prototype.hasOwnProperty.call(process.env, variable))
+    if (Object.prototype.hasOwnProperty.call(process.env, variable)) {
+      // check current env for definition.
       return process.env[variable] as string;
-    // check current env for difinition.
-    else if (envVars[variable]) return envVars[variable];
+    } else if (envVars[variable]) {
+      return envVars[variable];
+    }
     // pass it foundry to be resolved finally.
-    return await this.resolveVariableValue(variable);
+    return await this.getValueFromLoaders(variable);
+  }
+
+  async getValueFromLoaders(value: string) {
+    const loader = this.loaders.find((loader) => loader.canResolve(value));
+    if (loader) {
+      return await loader.resolve(value);
+    }
+    throw new Error(`No loader exists for: ${value}`);
   }
 }

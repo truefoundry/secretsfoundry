@@ -3,7 +3,8 @@
 export default abstract class Loader {
   /**
    * This function resolves the value of the input variable by contacting
-   * the secret manager store and getting the value
+   * the secretstore and getting the value. It will throw an exception if
+   * there is any error in fetching the value.
    * @param args
    */
   public abstract resolve(...args: string[]): Promise<string>;

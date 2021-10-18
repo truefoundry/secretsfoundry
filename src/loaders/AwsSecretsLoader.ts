@@ -4,12 +4,18 @@ import AWS from 'aws-sdk';
 
 /**
  * AwsSecretsLoader loads the secret from AWSSecretsManager.
- * We get the AWS credentials from the environment variables
- * AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY. It also falls
- * back to looking up the credentials in local aws config directory
- * if it cannot find the variables set.
+ * This loader accepts pattern of the format
+ * aws-secrets(params):/key-to-param
  *
- * It accepts two params:
+ * Requirements:
+ *
+ * AWS credentials from the environment variables
+ * AWS_ACCESS_KEY_ID
+ * AWS_SECRET_ACCESS_KEY.
+ *
+ * It also falls back to looking up the credentials in local
+ * aws config directory if it cannot find the variables set.
+ *
  * @param region: AWS region to get the parameter from
  */
 export default class AwsSecretsLoader extends Loader {
@@ -38,16 +44,12 @@ export default class AwsSecretsLoader extends Loader {
       client = new AWS.SecretsManager();
     }
     // get secret from AWS Secrets Manager
-    try {
-      const result = await client
-        .getSecretValue({ SecretId: secretName })
-        .promise();
-      if ('SecretString' in result) {
-        return result.SecretString as string;
-      }
-      throw new Error('No SecretString in the Secret: `${secretsVariable}`');
-    } catch (error) {
-      throw new Error(error as string);
+    const result = await client
+      .getSecretValue({ SecretId: secretName })
+      .promise();
+    if ('SecretString' in result) {
+      return result.SecretString as string;
     }
+    throw new Error('No SecretString in the Secret: `${secretsVariable}`');
   }
 }
