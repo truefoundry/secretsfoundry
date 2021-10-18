@@ -32,14 +32,15 @@ export default class AwsSSMLoader extends Loader {
     const args = this.getArgsFromStr(argsStr);
     // Validate decrypt param
     let decrypt = false;
-    if (!('decrypt' in args)) {
-      decrypt = false;
-    } else if (args.decrypt === 'true') {
-      decrypt = true;
-    } else if (args.decrypt === 'false') {
-      decrypt = false;
-    } else {
-      throw new Error('decrypt value has to be true or false');
+    if ('decrypt' in args) {
+      const decryptArg = args.decrypt
+      if (decryptArg === 'true') {
+        decrypt = true;
+      } else if (decryptArg === 'false') {
+        decrypt = false;
+      } else {
+        throw new Error('decrypt value has to be true or false');
+      }
     }
     let ssm: AWS.SSM;
     if (args.region) {

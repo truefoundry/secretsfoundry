@@ -28,4 +28,18 @@ describe('AwsS3Loader', () => {
     );
     expect(isResolved).not.toBeTruthy();
   });
+
+  it('should resolve aws S3', async () => {
+    const loader = new awsS3Loader();
+    expect(
+      await loader.resolve(
+        "aws-s3(region='us-east-2'):python/testing"
+      )
+    ).toStrictEqual('python-testing')
+    expect(
+      await loader.resolve(
+        "aws-s3(region='us-east-2'):javascript/testing"
+      )
+    ).toStrictEqual('javascript-testing')
+  })
 });
