@@ -63,7 +63,7 @@ export class SecretsFoundry {
     envVars: Record<string, string>
   ): Promise<string> {
     if (Object.prototype.hasOwnProperty.call(process.env, variable)) {
-      // check current env for difinition.
+      // check current env for definition.
       return process.env[variable] as string;
     } else if (envVars[variable]) {
       return envVars[variable];
