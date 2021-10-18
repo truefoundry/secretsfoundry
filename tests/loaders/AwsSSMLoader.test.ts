@@ -63,7 +63,7 @@ describe('awsSSMLoader', () => {
     expect(isResolved).not.toBeTruthy();
   });
 
-  it('should get proper info', async () => {
+  it('should resolve aws secrets', async () => {
     const loader = new awsSSMLoader();
     const result = await loader.resolve(
       "aws-ssm(region='us-east-2', decrypt='true'):ssm-key-uS1ge"

@@ -30,7 +30,7 @@ describe('awsSecretsLoader', () => {
     expect(isResolved).not.toBeTruthy();
   });
 
-  it('should get proper info', async () => {
+  it('should resolve aws secrets', async () => {
     const loader = new awsSecretsLoader();
     const result = await loader.resolve(
       "aws-secrets(region='us-east-2'):secret-1-key-usage"

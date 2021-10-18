@@ -30,7 +30,7 @@ describe('AwsS3Loader', () => {
     expect(isResolved).not.toBeTruthy();
   });
 
-  it('should get proper info', async () => {
+  it('should resolve aws secrets', async () => {
     const loader = new awsS3Loader();
     const result = await loader.resolve(
       "aws-s3(region='us-east-2'):python/testing"
