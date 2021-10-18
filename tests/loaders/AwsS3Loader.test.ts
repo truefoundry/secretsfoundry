@@ -1,5 +1,4 @@
 import awsS3Loader from '../../src/loaders/AwsS3Loader';
-import { response } from '../setup/constants';
 
 describe('AwsS3Loader', () => {
   it('should resolve(without args)', () => {
@@ -35,6 +34,6 @@ describe('AwsS3Loader', () => {
     const result = await loader.resolve(
       "aws-s3(region='us-east-2'):python/testing"
     );
-    expect(result).toStrictEqual(response)
+    expect(result).toStrictEqual('python-testing')
   })
 });
