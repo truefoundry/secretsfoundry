@@ -1,7 +1,7 @@
 # Table of contents
 
 * [Welcome 👋](README.md)
-* [Installation Guide](installation-guide.md)
+* [Getting Started](getting-started.md)
 * [Usage](usage.md)
 * [Secret Loaders](loaders/README.md)
   * [AWS Secrets Manager](loaders/secrets-loader.md)
