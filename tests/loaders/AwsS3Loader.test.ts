@@ -10,7 +10,7 @@ describe('AwsS3Loader', () => {
   it('should resolve(with args)', () => {
     const loader = new awsS3Loader();
     const isResolved = loader.canResolve(
-      "aws-s3(region=us-east-2):python/testing"
+      'aws-s3(region=us-east-2):python/testing'
     );
     expect(isResolved).toBeTruthy();
   });
@@ -24,7 +24,7 @@ describe('AwsS3Loader', () => {
   it('should not resolve(with args)', () => {
     const loader = new awsS3Loader();
     const isResolved = loader.canResolve(
-      "aws-s3(region=us-est-2):python-api;;key-words"
+      'aws-s3(region=us-est-2):python-api;;key-words'
     );
     expect(isResolved).not.toBeTruthy();
   });
@@ -33,12 +33,12 @@ describe('AwsS3Loader', () => {
     const loader = new awsS3Loader();
     expect(
       await loader.resolve(
-        "aws-s3(region=us-east-2):python/testing"
+        'aws-s3(region=us-east-2):python/testing'
       )
     ).toStrictEqual('python-testing')
     expect(
       await loader.resolve(
-        "aws-s3(region=us-east-2):javascript/testing"
+        'aws-s3(region=us-east-2):javascript/testing'
       )
     ).toStrictEqual('javascript-testing')
   })

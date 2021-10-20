@@ -10,7 +10,7 @@ describe('awsSSMLoader', () => {
   it('should resolve(with arg region)', () => {
     const loader = new awsSSMLoader();
     const isResolved = loader.canResolve(
-      "aws-ssm(region=us-east-2):ssm-key-uS1ge"
+      'aws-ssm(region=us-east-2):ssm-key-uS1ge'
     );
     expect(isResolved).toBeTruthy();
   });
@@ -18,7 +18,7 @@ describe('awsSSMLoader', () => {
   it('should resolve(with arg decrypt)', () => {
     const loader = new awsSSMLoader();
     const isResolved = loader.canResolve(
-      "aws-ssm(decrypt=true):ssm-key-uS1ge"
+      'aws-ssm(decrypt=true):ssm-key-uS1ge'
     );
     expect(isResolved).toBeTruthy();
   });
@@ -26,7 +26,7 @@ describe('awsSSMLoader', () => {
   it('should resolve(with args region and decrypt)', () => {
     const loader = new awsSSMLoader();
     const isResolved = loader.canResolve(
-      "aws-ssm(region=us-east-2,decrypt=true):ssm-key-uS1ge"
+      'aws-ssm(region=us-east-2,decrypt=true):ssm-key-uS1ge'
     );
     expect(isResolved).toBeTruthy();
   });
@@ -40,7 +40,7 @@ describe('awsSSMLoader', () => {
   it('should not resolve(with arg region)', () => {
     const loader = new awsSSMLoader();
     const isResolved = loader.canResolve(
-      "aws-ssm(region=asia-4):ssm-k@y-uS1ge"
+      'aws-ssm(region=asia-4):ssm-k@y-uS1ge'
     );
     expect(isResolved).not.toBeTruthy();
   });
@@ -48,7 +48,7 @@ describe('awsSSMLoader', () => {
   it('should not resolve(with arg decrypt)', () => {
     const loader = new awsSSMLoader();
     const isResolved = loader.canResolve(
-      "aws-ssm(decrypt=1):ssm;;-key-uS1ge"
+      'aws-ssm(decrypt=1):ssm;;-key-uS1ge'
     );
     expect(isResolved).not.toBeTruthy();
   });
@@ -56,7 +56,7 @@ describe('awsSSMLoader', () => {
   it('should not resolve(with both arguments)', () => {
     const loader = new awsSSMLoader();
     const isResolved = loader.canResolve(
-      "aws-ssm(region=us-east-2 decrypt=1)ssm-key-uS1ge"
+      'aws-ssm(region=us-east-2 decrypt=1)ssm-key-uS1ge'
     );
     expect(isResolved).not.toBeTruthy();
   });
@@ -65,12 +65,12 @@ describe('awsSSMLoader', () => {
     const loader = new awsSSMLoader();
     expect(
       await loader.resolve(
-        "aws-ssm(region=us-east-2,decrypt=true):ssm-key-uS1ge"
+        'aws-ssm(region=us-east-2,decrypt=true):ssm-key-uS1ge'
       )
     ).toStrictEqual('ssm-key-uS1ge-true')
     expect(
       await loader.resolve(
-        "aws-ssm(region=us-east-2,decrypt=false):ssm-key-uS1ge"
+        'aws-ssm(region=us-east-2,decrypt=false):ssm-key-uS1ge'
       )
     ).toStrictEqual('ssm-key-uS1ge-false')
   })
