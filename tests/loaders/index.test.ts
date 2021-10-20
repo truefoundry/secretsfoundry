@@ -5,10 +5,12 @@ class DummyLoader extends Loader {
     super();
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public async resolve(...args: string[]): Promise<string> {
-    return `test`;
+    return 'test';
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public canResolve(variable: string): boolean {
     return true;
   }

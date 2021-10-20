@@ -8,6 +8,7 @@ class DummyLoader extends Loader {
     this.startKeyWord = startKeyWord;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public async resolve(...args: string[]): Promise<string> {
     return `resolved_by_${this.startKeyWord}`;
   }
@@ -105,30 +106,42 @@ describe('SecretsFoundry', () => {
   });
 
   it('Should parse obscure var names', async () => {
-    for (const envVar of obscureVarNames) {
-      const record: Record<string, string> = {
-        [envVar]: 'HELLO_WORLD',
-        RESULT: `\${${envVar}}`,
-      };
-      const response = await foundry.resolveVariables(record);
-      expect(response).toStrictEqual({
-        [envVar]: 'HELLO_WORLD',
-        RESULT: 'HELLO_WORLD',
-      });
-    }
+    await Promise.all(
+      obscureVarNames.map(async envVar => {
+        const record: Record<string, string> = {
+          [envVar]: 'HELLO_WORLD',
+          RESULT: `\${${envVar}}`,
+        };
+        return foundry
+          .resolveVariables(record)
+          .then(response =>
+            expect(response).toStrictEqual({
+              [envVar]: 'HELLO_WORLD',
+              RESULT: 'HELLO_WORLD',
+            })
+          )
+        }
+      )
+    );
   });
 
   it('Should not parse invalid var names', async () => {
-    for (const envVar of invalidVarNames) {
-      const record: Record<string, string> = {
-        [envVar]: 'HELLO_WORLD',
-        RESULT: `\${${envVar}}`,
-      };
-      const response = await foundry.resolveVariables(record);
-      expect(response).toStrictEqual({
-        [envVar]: 'HELLO_WORLD',
-        RESULT: `\${${envVar}}`,
-      });
-    }
+    await Promise.all(
+      invalidVarNames.map(async envVar => {
+        const record: Record<string, string> = {
+          [envVar]: 'HELLO_WORLD',
+          RESULT: `\${${envVar}}`,
+        };
+        return foundry
+          .resolveVariables(record)
+          .then(response => 
+            expect(response).toStrictEqual({
+              [envVar]: 'HELLO_WORLD',
+              RESULT: `\${${envVar}}`,
+            })
+          )
+        }
+      )
+    );
   });
 });
