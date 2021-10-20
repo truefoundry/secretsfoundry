@@ -10,7 +10,7 @@ describe('awsSecretsLoader', () => {
   it('should resolve(with args)', () => {
     const loader = new awsSecretsLoader();
     const isResolved = loader.canResolve(
-      "aws-secrets(region='us-east-2'):secret-1-key-usage"
+      "aws-secrets(region=us-east-2):secret-1-key-usage"
     );
     expect(isResolved).toBeTruthy();
   });
@@ -24,7 +24,7 @@ describe('awsSecretsLoader', () => {
   it('should not resolve(with args)', () => {
     const loader = new awsSecretsLoader();
     const isResolved = loader.canResolve(
-      "aws-secrets(region='us-east-4'):secret;;-1-key-usage"
+      "aws-secrets(region=us-east-4):secret;;-1-key-usage"
     );
     expect(isResolved).not.toBeTruthy();
   });
@@ -33,12 +33,12 @@ describe('awsSecretsLoader', () => {
     const loader = new awsSecretsLoader();
     expect(
       await loader.resolve(
-        "aws-secrets(region='us-east-2'):secret-1-key-usage"
+        "aws-secrets(region=us-east-2):secret-1-key-usage"
       )
     ).toStrictEqual('secret-1-key-usage')
     expect(
       await loader.resolve(
-        "aws-secrets(region='us-east-1'):secret-2-key-usage"
+        "aws-secrets(region=us-east-1):secret-2-key-usage"
       )
     ).toStrictEqual('secret-2-key-usage')
   })
