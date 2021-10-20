@@ -20,7 +20,7 @@ import AWS from 'aws-sdk';
  * @param decrypt: Boolean to indicate whether to decrypt or not
  */
 export default class AwsSSMLoader extends Loader {
-  private static PATTERN = /^aws-ssm(\((.*)?\))?:([a-zA-Z0-9_.\-/]+)$/;
+  private static PATTERN = /^aws-ssm(\(([:a-zA-Z0-9_;(=),\\.\-/]*)?\))?:([a-zA-Z0-9_.\-/]+)$/;
 
   public canResolve(value: string): boolean {
     return value.match(AwsSSMLoader.PATTERN) !== null;

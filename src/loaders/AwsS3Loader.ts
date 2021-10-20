@@ -19,7 +19,7 @@ import AWS from 'aws-sdk';
  * @param bucket: Bucket name to get the parameter from
  */
 export default class AwsS3Loader extends Loader {
-  private static PATTERN = /^aws-s3(\((.*)?\))?:((.+?)\/(.+)$)/;
+  private static PATTERN = /^aws-s3(\(([:a-zA-Z0-9_;(=),\\.\-/]*)?\))?:(([:a-zA-Z0-9_;(=),\\.\-/]+?)\/(.+)$)/;
 
   public canResolve(value: string): boolean {
     return value.match(AwsS3Loader.PATTERN) !== null;
