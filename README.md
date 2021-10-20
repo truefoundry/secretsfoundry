@@ -1,5 +1,8 @@
 # Secretsfoundry
 
+[![npm](https://img.shields.io/npm/v/secretsfoundry?style=flat-square)](https://www.npmjs.com/package/secretsfoundry)
+[![GitHub](https://img.shields.io/github/license/innoavator/secretsfoundry?style=flat-square)](https://github.com/innoavator/secretsfoundry/blob/main/LICENSE.txt) [![Docs](https://img.shields.io/badge/docs-up%20to%20date-blue)](https://abhichoudhary06.gitbook.io/secretsfoundry/) ![Build status](https://img.shields.io/github/workflow/status/innoavator/secretsfoundry/Release?event=push&label=Release?style=flat-square)
+
 SecretsFoundry is a package to automatically fetch your environment variables
 from different sources and secret managers. You can write the path to secret key in .env and
 SecretsFoundry will automatically fetch it for you. It parses the `.env` or `.env.*` files

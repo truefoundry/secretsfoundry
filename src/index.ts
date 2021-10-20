@@ -3,10 +3,11 @@ import { Command } from 'commander';
 import { SecretsFoundry } from './SecretsFoundry';
 import { Loaders } from './loaders';
 import Utils, { Options } from './utils';
+import { version } from '../package.json';
 
 const program = new Command();
 program
-  .version('0.1.0', '-V, --version', 'output the current version')
+  .version(version, '-V, --version', 'output the current version')
   .command('run')
   .option('--stage <string>', 'Stage of the service', '')
   .option('-c, --command <string>', 'Single command to run')
