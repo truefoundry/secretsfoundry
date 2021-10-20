@@ -68,7 +68,7 @@ describe('GetScriptArgs:', () => {
     const args = Utils.getScriptArgs(script);
     const result = process.platform === 'win32'
       ? ['cmd', '/C', script]
-      : ['-c', script]
+      : ['sh', '-c', script]
     expect(args).toEqual(result);
   });
 });
