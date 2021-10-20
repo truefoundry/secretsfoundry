@@ -37,8 +37,8 @@
     ".": "./dist/SecretsFoundry.js"
   },
   "scripts": {
-    "dev": "node -r ts-node/register src/index.ts run --script 'node example.js'",
-    "type-check": "tsc --noEmit && eslint .",
+    "dev": "node -r ts-node/register src/index.ts run --script \"node example.js\"",
+    "type-check": "tsc -p tsconfig.eslint.json --noEmit && eslint .",
     "build": "npm run type-check && npm run build-ts",
     "build-ts": "tsc",
     "test": "jest --watch",
