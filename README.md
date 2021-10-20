@@ -23,9 +23,53 @@ SIMPLE = "simple"
 
 // Use the environment variables described earlier
 VARIABLE = ${SIMPLE}
+```
+
+> secretsfoundry run
+
+The output should be:
+
+```
+SIMPLE = "simple"
+VARIABLE = "simple"
+```
+
+Now lets add a parameter to AWS Parameter Store using:
+
+> aws ssm put-parameter --name /staging/example/server/GOOGLE_API_KEY --value google_api_key --type "String"
+
+Add the variable to .env:
+
+```js
+SIMPLE = "simple"
+
+// Use the environment variables described earlier
+VARIABLE = ${SIMPLE}
 
 // Use variable defined in aws parameter store
-AWS_SSM_VARIABLE = ${aws-ssm:/path/to/variable}
+GOOGLE_API_KEY = ${aws-ssm:/staging/example/server/GOOGLE_API_KEY}
+
+```
+
+> secretsfoundry run
+
+The output should be:
+
+```
+SIMPLE = "simple"
+VARIABLE = "simple"
+GOOGLE_API_KEY = google_api_key
+```
+
+You can similarily store your variables in AWS S3, AWS Secrets Manager and Hashicorp Vault.
+To use them as environment variables, you can simple use:
+
+```js
+
+SIMPLE = "simple"
+
+// Use the environment variables described earlier
+VARIABLE = ${SIMPLE}
 
 // Use variable defined in aws secrets manager
 AWS_SECRETS_SECRET = ${aws-secret:/path/to/secret}
@@ -35,6 +79,7 @@ AWS_S3_VALUE = ${aws-s3:bucket/key}
 
 // Use value from Hashicorp vault
 VAULT_VALUE = ${vault:/path/to/secret}
+
 ```
 
 - If you were earlier running your application using `node app.js`, use:
@@ -42,15 +87,6 @@ VAULT_VALUE = ${vault:/path/to/secret}
 `secretsfoundry run --script "node app.js"`
 
 `app.js` can now access all the variables using process.env
-
-```js
-SIMPLE = "hello"
-VARIABLE = "hello"
-AWS_SSM_VARIABLE = 'aws-ssm-variable'
-AWS_SECRETS_SECRET = 'aws-secret-value'
-AWS_S3_VALUE = 'aws-s3-value'
-VAULT_VALUE = 'vault-decrypted-value'
-```
 
 SecretsFoundry currently provides support for the following sources:
 
@@ -91,90 +127,8 @@ VAULT_VALUE = ${vault:/path/to/secret}
 
 ## Advanced Usage:
 
-Each of the secrets loaders can be customized with a few arguments in format:
+Refer to our [docs](https://github.com/innoavator/secretsfoundry) to see how to customise loaders with arguments and integrate with docker.
 
-`${provider(args):key_name}`
-
-### AWS Parameter Store
-
-SecretsFoundry relies on getting aws credentials via environment variables or from ~/.aws directory.
-It looks for the following environment variables:
-
-```js
-AWS_ACCESS_KEY_ID
-AWS_SECRET_ACCESS_KEY
-AWS_DEFAULT_REGION
-```
-
-Arguments (optional)
-
-- **region:** Region in which value is to be looked for. Should be a valid AWS region
-- **decrypt** If the value should be decrypted (default is false)
-
-You can customise aws-ssm provider using:
-`${aws-ssm(region=us-east-2,decrypt=true):/path/to/param`
-
-### AWS Secrets Manager
-
-AWS credentials are fetched in a similar way as AWS Parameter Store.
-
-Arguments (optional)
-- **region:** Region in which value is to be looked for.
-
-You can customise aws-secrets provider using:
-`${aws-secrets(region=us-east-2)`
-
-### AWS S3
-
-AWS credentials are fetched in a similar way as AWS Parameter Store
-
-Arguments (optional)
-- **region:** AWS Region to lookup the value
-
-You can customise aws-secrets provider using:
-`${aws-s3(region='us-east-2'):bucket/key`
-
-### Hashicorp vault
-
-VaultLoader loads the secret from HashiCorp's Vault. We get the credentials for the vault from the environment variables. The credentials required are as follows:
-```js
-VAULT_ROLE_ID
-VAULT_SECRET_ID
-VAULT_ENDPOINT_URL // can be left empty, if endpoint_url is passed as argument
-```
-
-Arguments (optional)
-- **endpoint_url**: the url of the vault server, can be left empty if `VAULT_ENDPOINT_URL` is set accordingly
-
-It accepts one parameter: 
-- **secret_name**: the path to the secret in vault
-
-You can customise the vault provider using:
-`${vault(endpoint_url=<url>):<secret_name>}`
-
-**NOTE**: NodeVault instace must be running, and the environment variables must be set.
-
-## Integrating with docker
-You can also use our package to inject variables on a container. 
-
-Here is an example Dockerfile, 
-
-```docker
-FROM node:latest  
-  
-COPY ./app ./app  
-  
-RUN npm install -g secretsfoundry  
-  
-WORKDIR app  
-  
-ENTRYPOINT ["secretsfoundry", "run", "-s", "node example.js"]
-```
-- The base image in this example, already has node installed. This is required as `secretsfoundry` is an npm package. In case, your base image is different, make sure to have `node` and `npm` installed in the image before proceeding to install `secretsfoundry`
-- Once we get the image ready, we are ready to install  `secretsfoundry` on our container. To install  `secretsfoundry`, run `npm install -g secretsfoundry`
-- Once that's done, we are ready to use `secretsfoundry`. In the example above, we are calling a sample `.js` file which is loaded onto the container. 
-
-Once built and run, the container will run `node example.js` with the injected `.env` file values
 # Contributing
 
 We love our contributors! Please read our [Contributing Document](CONTRIBUTING.md) to learn how you can start working on the Framework yourself.
