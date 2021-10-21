@@ -1,5 +1,7 @@
 import { SecretsFoundry } from '../src/SecretsFoundry';
 import Loader from '../src/loaders/loader';
+
+jest.mock('aws-sdk');
 class DummyLoader extends Loader {
   startKeyWord: string;
 
