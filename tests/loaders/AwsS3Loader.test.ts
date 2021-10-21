@@ -1,4 +1,5 @@
 import awsS3Loader from '../../src/loaders/AwsS3Loader';
+import '../setup/aws-sdk';
 
 describe('AwsS3Loader', () => {
   it('should resolve(without args)', () => {

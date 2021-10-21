@@ -1,8 +1,5 @@
 import vaultLoader from '../../src/loaders/VaultLoader';
-import nodeVault from 'node-vault';
 jest.mock('node-vault');
-
-console.log(nodeVault)
 
 describe('vaultLoader', () => {
   it('should resolve', () => {

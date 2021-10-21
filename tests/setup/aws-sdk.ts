@@ -1,5 +1,5 @@
-import AWSMock from 'aws-sdk-mock';
 import AWS from 'aws-sdk';
+import AWSMock from 'aws-sdk-mock';
 
 AWSMock.setSDKInstance(AWS);
 
@@ -31,3 +31,5 @@ AWSMock.mock('SSM', 'getParameter', (params: {
     }
   })
 })
+
+export default AWS;

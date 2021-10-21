@@ -1,4 +1,5 @@
 import awsSSMLoader from '../../src/loaders/AwsSSMLoader';
+import '../setup/aws-sdk';
 
 describe('awsSSMLoader', () => {
   it('should resolve(without args)', () => {
