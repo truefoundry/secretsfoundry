@@ -1,5 +1,6 @@
 import { SecretsFoundry } from '../src/SecretsFoundry';
 import Loader from '../src/loaders/loader';
+
 class DummyLoader extends Loader {
   startKeyWord: string;
 

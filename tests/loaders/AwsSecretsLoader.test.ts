@@ -1,4 +1,5 @@
 import awsSecretsLoader from '../../src/loaders/AwsSecretsLoader';
+import '../setup/aws-sdk';
 
 describe('awsSecretsLoader', () => {
   it('should resolve(without args)', () => {
