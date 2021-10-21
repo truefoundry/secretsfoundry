@@ -1,15 +1,21 @@
 import vaultLoader from '../../src/loaders/VaultLoader';
 
 describe('vaultLoader', () => {
-  it('should resolve', () => {
-    const loader = new vaultLoader();
-    const isResolved = loader.canResolve('vault:random-name');
-    expect(isResolved).toBeTruthy();
+  const loader = new vaultLoader();
+  const validValues = ['vault:random-name'];
+  it('should return true on canResolve', () => {
+    for (const value of validValues) {
+      const isResolved = loader.canResolve(value);
+      expect(isResolved).toBeTruthy();
+    }
   });
 
-  it('should not resolve', () => {
-    const loader = new vaultLoader();
-    const isResolved = loader.canResolve('vaut:random-name');
-    expect(isResolved).not.toBeTruthy();
+  const invalidValues = ['vaut:random-name'];
+
+  it('should return false on canResolve', () => {
+    for (const value of invalidValues) {
+      const isResolved = loader.canResolve(value);
+      expect(isResolved).not.toBeTruthy();
+    }
   });
 });

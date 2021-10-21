@@ -1,45 +1,46 @@
 import awsS3Loader from '../../src/loaders/AwsS3Loader';
 
 describe('AwsS3Loader', () => {
-  it('should resolve(without args)', () => {
-    const loader = new awsS3Loader();
-    const isResolved = loader.canResolve('aws-s3:python/testing');
-    expect(isResolved).toBeTruthy();
+  const loader = new awsS3Loader();
+  const validValues = [
+    'aws-s3:python/testing',
+    'aws-s3(region=us-east-2):python/testing',
+  ];
+
+  it('should return true on canResolve', () => {
+    for (const value of validValues) {
+      const isResolved = loader.canResolve(value);
+      expect(isResolved).toBeTruthy();
+    }
   });
 
-  it('should resolve(with args)', () => {
-    const loader = new awsS3Loader();
-    const isResolved = loader.canResolve(
-      'aws-s3(region=us-east-2):python/testing'
-    );
-    expect(isResolved).toBeTruthy();
+  const invalidValues = [
+    'aws-s3python-api-key-words',
+    'aws-s3(region=us-est-2):python-api;;key-words',
+  ];
+
+  it('should return false on canResolve', () => {
+    for (const value of invalidValues) {
+      const isResolved = loader.canResolve(value);
+      expect(isResolved).not.toBeTruthy();
+    }
   });
 
-  it('should not resolve(without args)', () => {
-    const loader = new awsS3Loader();
-    const isResolved = loader.canResolve('aws-s3python-api-key-words');
-    expect(isResolved).not.toBeTruthy();
+  it('should return required value on resolve', async () => {
+    const values = [
+      {
+        passedValue: 'aws-s3(region=us-east-2):python/testing',
+        expectedResult: 'python-testing',
+      },
+      {
+        passedValue: 'aws-s3(region=us-east-2):javascript/testing',
+        expectedResult: 'javascript-testing',
+      },
+    ];
+    for (const value of values) {
+      expect(await loader.resolve(value.passedValue)).toStrictEqual(
+        value.expectedResult
+      );
+    }
   });
-
-  it('should not resolve(with args)', () => {
-    const loader = new awsS3Loader();
-    const isResolved = loader.canResolve(
-      'aws-s3(region=us-est-2):python-api;;key-words'
-    );
-    expect(isResolved).not.toBeTruthy();
-  });
-
-  it('should resolve aws S3', async () => {
-    const loader = new awsS3Loader();
-    expect(
-      await loader.resolve(
-        'aws-s3(region=us-east-2):python/testing'
-      )
-    ).toStrictEqual('python-testing')
-    expect(
-      await loader.resolve(
-        'aws-s3(region=us-east-2):javascript/testing'
-      )
-    ).toStrictEqual('javascript-testing')
-  })
 });

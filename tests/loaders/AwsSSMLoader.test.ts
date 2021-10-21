@@ -1,77 +1,50 @@
 import awsSSMLoader from '../../src/loaders/AwsSSMLoader';
 
 describe('awsSSMLoader', () => {
-  it('should resolve(without args)', () => {
-    const loader = new awsSSMLoader();
-    const isResolved = loader.canResolve('aws-ssm:ssm-key-uS1ge');
-    expect(isResolved).toBeTruthy();
+  const loader = new awsSSMLoader();
+  const validValues = [
+    'aws-ssm:ssm-key-uS1ge',
+    'aws-ssm(region=us-east-2):ssm-key-uS1ge',
+    'aws-ssm(decrypt=true):ssm-key-uS1ge',
+    'aws-ssm(region=us-east-2,decrypt=true):ssm-key-uS1ge',
+  ];
+
+  it('should return true on canResolve', () => {
+    for (const value of validValues) {
+      const isResolved = loader.canResolve(value);
+      expect(isResolved).toBeTruthy();
+    }
   });
 
-  it('should resolve(with arg region)', () => {
-    const loader = new awsSSMLoader();
-    const isResolved = loader.canResolve(
-      'aws-ssm(region=us-east-2):ssm-key-uS1ge'
-    );
-    expect(isResolved).toBeTruthy();
+  const invalidValues = [
+    'aws-ss:ssm-key-uS1ge',
+    'aws-ssm(region=asia-4):ssm-k@y-uS1ge',
+    'aws-ssm(decrypt=1):ssm;;-key-uS1ge',
+    'aws-ssm(region=us-east-2 decrypt=1)ssm-key-uS1ge',
+  ];
+
+  it('should return false on canResolve', () => {
+    for (const value of invalidValues) {
+      const isResolved = loader.canResolve(value);
+      expect(isResolved).not.toBeTruthy();
+    }
   });
 
-  it('should resolve(with arg decrypt)', () => {
-    const loader = new awsSSMLoader();
-    const isResolved = loader.canResolve(
-      'aws-ssm(decrypt=true):ssm-key-uS1ge'
-    );
-    expect(isResolved).toBeTruthy();
+  it('should return required value on resolve', async () => {
+    const values = [
+      {
+        passedValue: 'aws-ssm(region=us-east-2,decrypt=true):ssm-key-uS1ge',
+        expectedResult: 'ssm-key-uS1ge-true',
+      },
+      {
+        passedValue: 'aws-ssm(region=us-east-2,decrypt=false):ssm-key-uS1ge',
+        expectedResult: 'ssm-key-uS1ge-false',
+      },
+    ];
+    for (const value of values) {
+      expect(await loader.resolve(value.passedValue)).toStrictEqual(
+        value.expectedResult
+      );
+    }
   });
-
-  it('should resolve(with args region and decrypt)', () => {
-    const loader = new awsSSMLoader();
-    const isResolved = loader.canResolve(
-      'aws-ssm(region=us-east-2,decrypt=true):ssm-key-uS1ge'
-    );
-    expect(isResolved).toBeTruthy();
-  });
-
-  it('should not resolve(without args)', () => {
-    const loader = new awsSSMLoader();
-    const isResolved = loader.canResolve('aws-ss:ssm-key-uS1ge');
-    expect(isResolved).not.toBeTruthy();
-  });
-
-  it('should not resolve(with arg region)', () => {
-    const loader = new awsSSMLoader();
-    const isResolved = loader.canResolve(
-      'aws-ssm(region=asia-4):ssm-k@y-uS1ge'
-    );
-    expect(isResolved).not.toBeTruthy();
-  });
-
-  it('should not resolve(with arg decrypt)', () => {
-    const loader = new awsSSMLoader();
-    const isResolved = loader.canResolve(
-      'aws-ssm(decrypt=1):ssm;;-key-uS1ge'
-    );
-    expect(isResolved).not.toBeTruthy();
-  });
-
-  it('should not resolve(with both arguments)', () => {
-    const loader = new awsSSMLoader();
-    const isResolved = loader.canResolve(
-      'aws-ssm(region=us-east-2 decrypt=1)ssm-key-uS1ge'
-    );
-    expect(isResolved).not.toBeTruthy();
-  });
-
-  it('should resolve aws SSM', async () => {
-    const loader = new awsSSMLoader();
-    expect(
-      await loader.resolve(
-        'aws-ssm(region=us-east-2,decrypt=true):ssm-key-uS1ge'
-      )
-    ).toStrictEqual('ssm-key-uS1ge-true')
-    expect(
-      await loader.resolve(
-        'aws-ssm(region=us-east-2,decrypt=false):ssm-key-uS1ge'
-      )
-    ).toStrictEqual('ssm-key-uS1ge-false')
-  })
 });
