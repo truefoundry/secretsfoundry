@@ -7,15 +7,8 @@ describe('awsSecretsLoader', () => {
     const validValues = [
       'aws-secrets:secret-1-key-usage',
       'aws-secrets(region=us-east-2):secret-1-key-usage',
-      'aws-secrets():aajksf12-asmc2',
-      'aws-secrets():9QMmV.-ssfIEOcg40n5sj-5z8-NZaNwcu4AxalEtxU1drm61NoFizkh8C-HjcrBG1vszB5PKlY5z-_06Vf6KVZ',
-      'aws-secrets():4-9Hr0udzQnV2C6jANpNWu_p0q8o7XV7Fye4dXr0MVD_0zrONh5QF6_.yLF_GJhD.RACbeq7O0b-ax90fgM6XnM-x4',
-      'aws-secrets:WU6n_krLYPWnko5Bo',
-      'aws-secrets:UaDSS7R3np02u_8xrE-4fxO_WLR',
-      'aws-secrets:AdQpQgzZMJayKVUngFN39gTcTyI6l1zLOc6Wc52EPTNcvO809J',
-      'aws-secrets():VQSuI9sS7ozT.3fWOv6f6boiqJ-VBG/s6Q-DnRG2txlSCvNBH/BN4ZsIpKemRR1/5eHqklQ9jCo7nlVXUs/',
-      'aws-secrets(BlHFoTZbyxjMpS)up=nNG-sEt==qjHS9=MVygdJMJGH2ROLDNAUOr(;,f_pfjmC8l7ZuhveF_3;nmn/5OVdFXR/4N0V7:LQT):Neg7f1jwNr5vdeUBaOUGm9pC.B2hkYF2ix4Mn5KjrgiAQLznjLQ1j5Fx/7N.YE9gxLbCbrHALqyrKglWKD1RgbKD/mpKfp/hMcFbb/',
-      'aws-secrets():9QMmV.-ssfIEOcg40n5sj-5z8-NZaNwc.u4Ax.alEtxU1drm61NoFizkh8C-HjcrBG1.vszB5PKlY5z/-_06Vf6KVZ/',
+      'aws-secrets():9QMmV.-ssfIEOcg40n5sj-5z8-NZaNwcu4/AxalEtxU1drm61NoFizkh8C-HjcrBG1vszB5PKlY5z-_06Vf6KVZ',
+      'aws-secrets(as)up=nNG-sEt==qjHS9=f(;,hveF_3;nmn//4N7:LQT):./7N.a/b',
     ];
     for (const value of validValues) {
       const isResolved = loader.canResolve(value);
