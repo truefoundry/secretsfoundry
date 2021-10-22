@@ -7,7 +7,6 @@ describe('awsSecretsLoader', () => {
     const validValues = [
       'aws-secrets:secret-1-key-usage',
       'aws-secrets(region=us-east-2):secret-1-key-usage',
-      'aws-secrets():9QMmV.-ssfIEOcg40n5sj-5z8-NZaNwcu4/AxalEtxU1drm61NoFizkh8C-HjcrBG1vszB5PKlY5z-_06Vf6KVZ',
       'aws-secrets(as)up=nNG-sEt==qjHS9=f(;,hveF_3;nmn//4N7:LQT):./7N.a/b',
     ];
     for (const value of validValues) {
