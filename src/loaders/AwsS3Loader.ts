@@ -19,7 +19,8 @@ import AWS from 'aws-sdk';
  * @param bucket: Bucket name to get the parameter from
  */
 export default class AwsS3Loader extends Loader {
-  private static PATTERN = /^aws-s3(\(([:a-zA-Z0-9_;(=),\\.\-/]*)?\))?:(([:a-zA-Z0-9_;(=),\\.\-/]+?)\/(.+)$)/;
+  private static PATTERN =
+    /^aws-s3(\(([:a-zA-Z0-9_;(=),\\.\-/]*)?\))?:(([:a-zA-Z0-9_;(=),\\.\-/]+?)\/(.+)$)/;
 
   public canResolve(value: string): boolean {
     return value.match(AwsS3Loader.PATTERN) !== null;
@@ -29,7 +30,7 @@ export default class AwsS3Loader extends Loader {
     const groups = s3Variable.match(AwsS3Loader.PATTERN);
     if (groups === null) {
       throw new Error(
-        'AwsSSMLoader cannot parse the variable name. This should never happen \
+        'AwsS3Loader cannot parse the variable name. This should never happen \
       since client is supposed to be calling canResolve first'
       );
     }
