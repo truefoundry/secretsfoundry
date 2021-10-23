@@ -20,6 +20,8 @@ describe('awsSSMLoader', () => {
 
   it('should return false on canResolve', () => {
     const invalidValues = [
+      '    ',
+      'aws-ssm:',
       'aws-ss:ssm-key-uS1ge',
       'aws-ssm(region=asia-4):ssm-k@y-uS1ge',
       'aws-ssm(decrypt=1):ssm;;-key-uS1ge',

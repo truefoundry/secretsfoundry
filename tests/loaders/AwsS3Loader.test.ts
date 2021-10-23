@@ -19,6 +19,8 @@ describe('AwsS3Loader', () => {
 
   it('should return false on canResolve', () => {
     const invalidValues = [
+      '    ',
+      'aws-s3:',
       'aws-s3python-api-key-words',
       'aws-s3(region=us-est-2):python-api;;key-words',
       'AWS-S3:random-name',
