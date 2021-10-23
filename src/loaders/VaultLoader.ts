@@ -17,7 +17,8 @@ import nodeVault from 'node-vault';
  */
 
 export default class VaultLoader extends Loader {
-  private static PATTERN = /^vault(\(([:a-zA-Z0-9_;(=),\\.\-/]*)?\))?:([a-zA-Z0-9_.\-/]+)/;
+  private static PATTERN =
+    /^vault(\(([:a-zA-Z0-9_;(=),\\.\-/]*)?\))?:([a-zA-Z0-9_.\-/]+)/;
 
   canResolve(value: string): boolean {
     return value.match(VaultLoader.PATTERN) !== null;
@@ -27,7 +28,7 @@ export default class VaultLoader extends Loader {
     const groups = vaultVariable.match(VaultLoader.PATTERN);
     if (groups === null) {
       throw new Error(
-        'AwsSSMLoader cannot parse the variable name. This should never happen \
+        'VaultLoader cannot parse the variable name. This should never happen \
       since client is supposed to be calling canResolve first'
       );
     }

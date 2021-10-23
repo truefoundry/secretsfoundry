@@ -19,7 +19,8 @@ import AWS from 'aws-sdk';
  * @param region: AWS region to get the parameter from
  */
 export default class AwsSecretsLoader extends Loader {
-  private static PATTERN = /^aws-secrets(\(([:a-zA-Z0-9_;(=),\\.\-/]*)?\))?:([a-zA-Z0-9_.\-/]+)$/;
+  private static PATTERN =
+    /^aws-secrets(\(([:a-zA-Z0-9_;(=),\\.\-/]*)?\))?:([a-zA-Z0-9_.\-/]+)$/;
 
   public canResolve(value: string): boolean {
     return value.match(AwsSecretsLoader.PATTERN) !== null;
@@ -29,7 +30,7 @@ export default class AwsSecretsLoader extends Loader {
     const groups = secretsVariable.match(AwsSecretsLoader.PATTERN);
     if (groups === null) {
       throw new Error(
-        'AwsSSMLoader cannot parse the variable name. This should never happen \
+        'AwsSecretsLoader cannot parse the variable name. This should never happen \
       since client is supposed to be calling canResolve first'
       );
     }
