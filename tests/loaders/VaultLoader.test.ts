@@ -17,6 +17,8 @@ describe('vaultLoader', () => {
 
   it('should return false on canResolve', () => {
     const invalidValues = [
+      '    ',
+      'vault:',
       'vaut:random-name',
       'vault(Rd,Ev9;D7@Hsl):EJ',
       'vault:{ln6QgudTKVnKpaSUo.}AfXxchiYCR7Qw3XAqz1sercLSmYaEbmFybWUdcTu0',
@@ -34,15 +36,11 @@ describe('vaultLoader', () => {
     process.env.ROLE_ID = 'Role';
     process.env.SECRET_ID = 'Secret';
     expect(
-      await loader.resolve(
-        'vault(endpoint_url=someEndpoint):random-name'
-      )
+      await loader.resolve('vault(endpoint_url=someEndpoint):random-name')
     ).toStrictEqual(JSON.stringify('Role-random-name'));
-    process.env.VAULT_ENDPOINT_URL = 'someEndpoint'
-    expect(
-      await loader.resolve(
-        'vault:random-name'
-      )
-    ).toStrictEqual(JSON.stringify('Role-random-name'))
-  })
+    process.env.VAULT_ENDPOINT_URL = 'someEndpoint';
+    expect(await loader.resolve('vault:random-name')).toStrictEqual(
+      JSON.stringify('Role-random-name')
+    );
+  });
 });

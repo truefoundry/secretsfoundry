@@ -18,6 +18,8 @@ describe('awsSecretsLoader', () => {
 
   it('should return false on canResolve', () => {
     const invalidValues = [
+      '    ',
+      'aws-secrets',
       'aws-secretssecret-1-key-usage',
       'aws-secrets(region=us-east-4):secret;;-1-key-usage',
       'aws-secrets():aajksf12-@asmc2',
