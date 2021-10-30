@@ -1,6 +1,6 @@
 import { SecretsFoundry } from '../src/SecretsFoundry';
 import Loader from '../src/loaders/loader';
-
+import { Loaders } from '../src/loaders';
 class DummyLoader extends Loader {
   startKeyWord: string;
 
@@ -145,4 +145,14 @@ describe('SecretsFoundry', () => {
       )
     );
   });
+
+  it('Should throw error and specify failing loader', async () => {
+    const value = 'vault():X90hmm8t_S';
+    const newFoundry = new SecretsFoundry(Loaders);
+    delete process.env.ROLE_ID;
+    delete process.env.SECRET_ID;
+    await expect(
+      newFoundry.getValueFromLoaders(value)
+    ).rejects.toEqual(new Error(`VaultLoader failed to resolve ${value}.\n\nError: Vault endpoint url is not passed through args, nor set in env`))
+  })
 });
