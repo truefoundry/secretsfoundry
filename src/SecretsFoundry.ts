@@ -75,7 +75,11 @@ export class SecretsFoundry {
   async getValueFromLoaders(value: string) {
     const loader = this.loaders.find((loader) => loader.canResolve(value));
     if (loader) {
-      return await loader.resolve(value);
+      try {
+        return await loader.resolve(value);
+      } catch (err) {
+        throw new Error(`${loader.constructor.name} failed to resolve ${value}.\n\n${err}`);
+      }
     }
     throw new Error(`No loader exists for: ${value}`);
   }
