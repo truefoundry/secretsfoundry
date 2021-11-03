@@ -1,9 +1,7 @@
 import dotenv from 'dotenv';
 import path from 'path';
 import Loader from './loaders/loader';
-import batchingTSort from 'batching-toposort';
-import _ from 'lodash';
-
+import { toposort } from "@n1ru4l/toposort";
 
 export class SecretsFoundry {
   EXPAND_REGEX = /\${([:a-zA-Z0-9_;(=),\\.\-/]+)?}/g;
@@ -37,7 +35,7 @@ export class SecretsFoundry {
   ): Array<string> {
     // create the dependency graph of variables
     // dag['a'] = ['b', 'c'] -> 'a' is a dependency for 'b' & 'c'
-    let dag: Record<string, Array<string>> = {};
+    const dag: Record<string, Array<string>> = {};
     for (const key in envVars) {
       // all nodes need to be part of the dag
       if (!dag[key]) dag[key] = [];
@@ -50,11 +48,16 @@ export class SecretsFoundry {
       }
     }
 
-    dag = _.pick(dag, _.keys(envVars));
+    const dependencyMap = new Map();
+    // Only include keys in graph which are unresolved.
+    // They are not expected to be a dependency for resolved vars anyway
+    for (const item of Object.keys(envVars)) {
+      dependencyMap.set(item, dag[item]);
+    }
 
     // the first batch contain variables with no dependency; return that
     try {
-      return batchingTSort(dag)[0];
+      return Array.from(toposort(new Map(dependencyMap))[0]);
     } catch (err) {
       if (err.message.includes('toposort only works on acyclic graphs'))
         throw new Error('Cyclic dependency detected amongst variables');
@@ -66,9 +69,9 @@ export class SecretsFoundry {
     envVars: Record<string, string>
   ): Promise<Record<string, string>> {
     // unresolvedVars stores all variables that are not resolved yet
-    const unresolvedVars = _.assign({}, envVars);
+    const unresolvedVars = Object.assign({}, envVars);
 
-    while (!_.isEmpty(unresolvedVars)) {
+    while (Object.keys(unresolvedVars).length) {
       // eslint-disable-next-line no-await-in-loop
       await Promise.all(this.getVariablesToResolveNext(unresolvedVars).map(async (key) => {
         let value = envVars[key];
