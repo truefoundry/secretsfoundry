@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 import path from 'path';
+import { toposort } from '@n1ru4l/toposort';
 import Loader from './loaders/loader';
-import { toposort } from "@n1ru4l/toposort";
 
 export class SecretsFoundry {
   EXPAND_REGEX = /\${([:a-zA-Z0-9_;(=),\\.\-/]+)?}/g;
@@ -59,7 +59,7 @@ export class SecretsFoundry {
     try {
       return Array.from(toposort(new Map(dependencyMap))[0]);
     } catch (err) {
-      if (err.message.includes('toposort only works on acyclic graphs'))
+      if ((err as Error).message.includes('toposort only works on acyclic graphs'))
         throw new Error('Cyclic dependency detected amongst variables');
       else throw err;
     }
