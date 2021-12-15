@@ -14,7 +14,4 @@ module.exports = {
     'jest-watch-typeahead/testname',
   ],
   silent: false,
-  moduleNameMapper: {
-    "^@n1ru4l/toposort$": "<rootDir>/node_modules/@n1ru4l/toposort/cjs/main.js"
-  }
 };
