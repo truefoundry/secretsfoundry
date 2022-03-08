@@ -75,7 +75,7 @@ SIMPLE = "simple"
 VARIABLE = ${SIMPLE}
 
 // Use variable defined in aws secrets manager
-AWS_SECRETS_SECRET = ${aws-secret:/path/to/secret}
+AWS_SECRETS_SECRET = ${aws-secrets:/path/to/secret}
 
 // Use value from S3
 AWS_S3_VALUE = ${aws-s3:bucket/key}
@@ -127,6 +127,25 @@ AWS_S3_VALUE = ${aws-s3:bucket/key}
 // Use value from Hashicorp vault
 VAULT_VALUE = ${vault:/path/to/secret}
 ```
+
+## Separate Loader Credentials
+
+Credentials for the loaders (AWS, Hashicorp Vault) are fetched from the environment variables. But if you want to use a different credential with SecretsFoundry than the application, you can use SF_\<key\>
+
+Example:
+```
+# used by SecretsFoundry to fetch secrets
+
+SF_AWS_ACCESS_KEY_ID = <your-access-key-id>
+SF_AWS_SECRET_ACCESS_KEY = <your-secret-access-key>
+
+# used by the application/script
+
+AWS_ACCESS_KEY_ID = ${aws-secrets:/dev/AWS_ACCESS_KEY_ID} 
+AWS_SECRET_ACCESS_KEY = ${aws-secrets:/dev/AWS_SECRET_ACCESS_KEY} # used by your application/script
+```
+You can find the list of credential keys that can be configured like this for each service at `LOADER_CREDENTIAL_KEYS` in this [file](src/utils.ts).
+
 
 ## Advanced Usage:
 
