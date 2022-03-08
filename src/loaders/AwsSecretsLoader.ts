@@ -39,15 +39,30 @@ export default class AwsSecretsLoader extends Loader {
     const secretName = groups[3]; // path to param
     const args = this.getArgsFromStr(argsStr);
     let client: AWS.SecretsManager;
-    if (args.region) {
-      client = new AWS.SecretsManager({ region: args.region });
+
+    let credentials: AWS.Credentials;
+    if (process.env.SF_AWS_ACCESS_KEY_ID && process.env.SF_AWS_SECRET_ACCESS_KEY) {
+      credentials = new AWS.Credentials({ accessKeyId: process.env.SF_AWS_ACCESS_KEY_ID, secretAccessKey: process.env.SF_AWS_SECRET_ACCESS_KEY });
+
+      if (args.region) {
+        client = new AWS.SecretsManager({ region: args.region, credentials: credentials });
+      } else {
+        client = new AWS.SecretsManager({ credentials: credentials });
+      }
     } else {
-      client = new AWS.SecretsManager();
+      if (args.region) {
+        client = new AWS.SecretsManager({ region: args.region });
+      } else {
+        client = new AWS.SecretsManager();
+      }
     }
+
+
     // get secret from AWS Secrets Manager
     const result = await client
       .getSecretValue({ SecretId: secretName })
       .promise();
+
     if ('SecretString' in result) {
       return result.SecretString as string;
     }

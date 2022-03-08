@@ -1,6 +1,7 @@
 import chalk from 'chalk';
 import fs from 'fs';
 import { spawn } from 'child_process';
+import AwsSecretsLoader from './loaders/AwsSecretsLoader'
 
 export interface Options {
   stage?: string;
@@ -10,6 +11,10 @@ export interface Options {
 }
 
 export default class Utils {
+  static LOADER_CREDENTIAL_KEYS = {
+    'AWS': ['AWS_ACCESS_KEY_ID', 'AWS_SECRET_ACCESS_KEY']
+  };
+
   /**
    * Executes a multi-command using shell.
    * @param command command to be executed
@@ -78,5 +83,30 @@ export default class Utils {
   }
   static runChildProcess(cmd: string, args: string[]): void {
     spawn(cmd, args, { stdio: 'inherit' });
+  }
+
+  static checkIfLoaderCredentialKey(key: string, value: string): string | null {
+    if (Utils.LOADER_CREDENTIAL_KEYS['AWS'].includes(key)) {
+
+      if (Utils.LOADER_CREDENTIAL_KEYS['AWS'].every((eachKey) => 'SF_' + eachKey in process.env)) {
+        return null;
+      }
+      if (new AwsSecretsLoader().canResolve(value)) {
+        return 'AWS';
+      }
+    }
+    return null;
+  }
+
+  static loadLoaderCredentials(vars: Record<string, string>) {
+    let service: keyof typeof Utils.LOADER_CREDENTIAL_KEYS;
+    for (service in Utils.LOADER_CREDENTIAL_KEYS) {
+
+      for (const currVar in vars) {
+        if (Utils.LOADER_CREDENTIAL_KEYS[service].map(key => 'SF_' + key).includes(currVar)) {
+          process.env[currVar] = vars[currVar];
+        }
+      }
+    }
   }
 }

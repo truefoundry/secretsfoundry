@@ -1,6 +1,7 @@
 import dotenv from 'dotenv';
 import path from 'path';
 import Loader from './loaders/loader';
+import Utils from './utils';
 
 export class SecretsFoundry {
   EXPAND_REGEX = /\${([:a-zA-Z0-9_;(=),\\.\-/]+)?}/g;
@@ -22,6 +23,7 @@ export class SecretsFoundry {
       throw result.error;
     }
     try {
+      Utils.loadLoaderCredentials(result.parsed);
       return await this.resolveVariables(result.parsed);
     } catch (error) {
       console.error(error);
@@ -37,9 +39,14 @@ export class SecretsFoundry {
       let groups = [...value.matchAll(this.EXPAND_REGEX)];
       // Groups are the matches at a given level, since the regex is non-greedy
       // notice the ? mark for the content inside {}. It matches smallest first
+
       while (groups.length > 0) {
         for (const parts of groups) {
           // parts are the matching groups, parts[1] is the content of the braces
+          let errorLoader = Utils.checkIfLoaderCredentialKey(key, parts[1]);
+          if (errorLoader) {
+            throw Error(`Failed to fetch ${key} because credentials required to fetch secret from ${errorLoader} are missing.`);
+          }
           value = value.replace(
             parts[0],
             // eslint-disable-next-line no-await-in-loop

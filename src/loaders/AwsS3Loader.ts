@@ -41,6 +41,24 @@ export default class AwsS3Loader extends Loader {
     const Key = groups[5]; // path to file
 
     let s3: AWS.S3;
+
+    let credentials: AWS.Credentials;
+    if (process.env.SF_AWS_ACCESS_KEY_ID && process.env.SF_AWS_SECRET_ACCESS_KEY) {
+      credentials = new AWS.Credentials({ accessKeyId: process.env.SF_AWS_ACCESS_KEY_ID, secretAccessKey: process.env.SF_AWS_SECRET_ACCESS_KEY });
+
+      if (args.region) {
+        s3 = new AWS.S3({ region: args.region, credentials: credentials });
+      } else {
+        s3 = new AWS.S3({ credentials: credentials });
+      }
+    } else {
+      if (args.region) {
+        s3 = new AWS.S3({ region: args.region });
+      } else {
+        s3 = new AWS.S3();
+      }
+    }
+
     if (args.region) {
       s3 = new AWS.S3({ region: args.region });
     } else {

@@ -50,11 +50,30 @@ export default class AwsSSMLoader extends Loader {
       }
     }
     let ssm: AWS.SSM;
+
+    let credentials: AWS.Credentials;
+    if (process.env.SF_AWS_ACCESS_KEY_ID && process.env.SF_AWS_SECRET_ACCESS_KEY) {
+      credentials = new AWS.Credentials({ accessKeyId: process.env.SF_AWS_ACCESS_KEY_ID, secretAccessKey: process.env.SF_AWS_SECRET_ACCESS_KEY });
+
+      if (args.region) {
+        ssm = new AWS.SSM({ region: args.region, credentials: credentials });
+      } else {
+        ssm = new AWS.SSM({ credentials: credentials });
+      }
+    } else {
+      if (args.region) {
+        ssm = new AWS.SSM({ region: args.region });
+      } else {
+        ssm = new AWS.SSM();
+      }
+    }
+
     if (args.region) {
       ssm = new AWS.SSM({ region: args.region });
     } else {
       ssm = new AWS.SSM();
     }
+
     const data = await ssm
       .getParameter({
         Name: paramName,
