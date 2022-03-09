@@ -7,6 +7,8 @@ export interface Options {
   command?: string;
   script?: string;
   path?: string;
+  input?: string;
+  output?: string;
 }
 
 export default class Utils {
