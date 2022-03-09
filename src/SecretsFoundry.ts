@@ -1,5 +1,6 @@
 import { readFileSync } from 'fs';
 import dotenv from 'dotenv';
+import path from 'path';
 import Loader from './loaders/loader';
 import { parse } from 'yaml'
 import { flatten } from 'flat';
@@ -35,7 +36,7 @@ export class SecretsFoundry {
       result = flatten(JSON.parse(readFileSync(envPath).toString()));
     }
     else {
-      result = dotenv.parse(readFileSync(envPath));
+      result = dotenv.parse(readFileSync(path.join(configDir, envPath)));
     }
 
     try {

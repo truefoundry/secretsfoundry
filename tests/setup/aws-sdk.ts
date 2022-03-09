@@ -7,7 +7,7 @@ AWSMock.mock('S3', 'getObject', (params: {
   Bucket: string,
   Key: string
 }, callback) => {
-  return callback(null, {
+  return callback(undefined, {
     ContentType: 'text',
     Body: `${params.Bucket}-${params.Key}`
   });
@@ -16,7 +16,7 @@ AWSMock.mock('S3', 'getObject', (params: {
 AWSMock.mock('SecretsManager', 'getSecretValue', (params: {
   SecretId: string
 }, callback) => {
-  return callback(null, {
+  return callback(undefined, {
     SecretString: params.SecretId
   })
 })
@@ -25,7 +25,7 @@ AWSMock.mock('SSM', 'getParameter', (params: {
   Name: string,
   WithDecryption: boolean
 }, callback) => {
-  return callback(null, {
+  return callback(undefined, {
     Parameter: {
       Value: `${params.Name}-${String(params.WithDecryption)}`
     }
