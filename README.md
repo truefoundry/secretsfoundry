@@ -91,6 +91,10 @@ VAULT_VALUE = ${vault:/path/to/secret}
 
 `app.js` can now access all the variables using process.env
 
+- You can read variables from a specific file (.env/JSON/YAML) using the `input` flag. Fetched variables can be written to a file (JSON/YAML) specified using `output`.
+
+`secretsfoundry run --input unresolved.json --output resolved.yaml`
+
 SecretsFoundry currently provides support for the following sources:
 
 1. AWS Parameter Store
