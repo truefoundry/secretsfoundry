@@ -79,9 +79,9 @@ describe('getArgsFromStr', () => {
       },
       {
         passedValue:
-          "s3=VRx,rm4nf/)4rmgi VRCMg+XY?F'S43P&)e!H7]^Y0Mu,0&z&^SPoutAB)t[:",
+          's3=VRx,rm4nf/)4rmgi VRCMg+XY?F\'S43P&)e!H7]^Y0Mu,0&z&^SPoutAB)t[:',
         expectedResult: {
-          s3: "VRx,rm4nf/)4rmgi VRCMg+XY?F'S43P&)e!H7]^Y0Mu,0&z&^SPoutAB)t[:",
+          s3: 'VRx,rm4nf/)4rmgi VRCMg+XY?F\'S43P&)e!H7]^Y0Mu,0&z&^SPoutAB)t[:',
         },
       },
     ];

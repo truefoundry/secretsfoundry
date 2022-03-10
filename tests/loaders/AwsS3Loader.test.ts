@@ -8,8 +8,8 @@ describe('AwsS3Loader', () => {
     const validValues = [
       'aws-s3:python/testing',
       'aws-s3(region=us-east-2):python/testing',
-      "aws-s3:=VRx,rm4nf/)4rmgi VRCMg+XY?F'S43P&)e!H7]^Y0Mu,0&z&^SPoutAB)t[:",
-      "aws-s3(;V=E.()f):a/J[#>Nt~$a=&.ZSc;TY%*[@1}^>F%5-'!$FPD]>}AEE{='b`~rLNF)",
+      'aws-s3:=VRx,rm4nf/)4rmgi VRCMg+XY?F\'S43P&)e!H7]^Y0Mu,0&z&^SPoutAB)t[:',
+      'aws-s3(;V=E.()f):a/J[#>Nt~$a=&.ZSc;TY%*[@1}^>F%5-\'!$FPD]>}AEE{=\'b`~rLNF)',
     ];
     for (const value of validValues) {
       const isResolved = loader.canResolve(value);
@@ -45,14 +45,14 @@ describe('AwsS3Loader', () => {
       },
       {
         passedValue:
-          "aws-s3:=VRx,rm4nf/)4rmgi VRCMg+XY?F'S43P&)e!H7]^Y0Mu,0&z&^SPoutAB)t[:",
+          'aws-s3:=VRx,rm4nf/)4rmgi VRCMg+XY?F\'S43P&)e!H7]^Y0Mu,0&z&^SPoutAB)t[:',
         expectedResult:
-          "=VRx,rm4nf-)4rmgi VRCMg+XY?F'S43P&)e!H7]^Y0Mu,0&z&^SPoutAB)t[:",
+          '=VRx,rm4nf-)4rmgi VRCMg+XY?F\'S43P&)e!H7]^Y0Mu,0&z&^SPoutAB)t[:',
       },
       {
         passedValue:
-          "aws-s3(dIrSDoASYMdac2U_JMzYjp-pl8):co/vVd^RG9:('FvF5t$*M K:[h[+wmUpN?8<ZO'x(!@*t.S:",
-        expectedResult: "co-vVd^RG9:('FvF5t$*M K:[h[+wmUpN?8<ZO'x(!@*t.S:",
+          'aws-s3(dIrSDoASYMdac2U_JMzYjp-pl8):co/vVd^RG9:(\'FvF5t$*M K:[h[+wmUpN?8<ZO\'x(!@*t.S:',
+        expectedResult: 'co-vVd^RG9:(\'FvF5t$*M K:[h[+wmUpN?8<ZO\'x(!@*t.S:',
       },
     ];
     for (const value of values) {

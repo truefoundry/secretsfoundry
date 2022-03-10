@@ -1,6 +1,9 @@
+import { readFileSync } from 'fs';
 import dotenv from 'dotenv';
 import path from 'path';
 import Loader from './loaders/loader';
+import { parse } from 'yaml'
+import { flatten } from 'flat';
 
 export class SecretsFoundry {
   EXPAND_REGEX = /\${([:a-zA-Z0-9_;(=),\\.\-/]+)?}/g;
@@ -15,14 +18,29 @@ export class SecretsFoundry {
    * @param configDir Path to directory which contains the .env files. Defaults to .
    * @returns Object/dict containing key and corresponding populated variable value
    */
-  public async extractValues(stage: string = '', configDir: string = '.') {
-    const envPath = '.env' + (stage ? `.${stage}` : '');
-    const result = dotenv.config({ path: path.join(configDir, envPath) });
-    if (result.error || !result.parsed) {
-      throw result.error;
+  public async extractValues(stage: string = '', configDir: string = '.', inputPath: string | null = null) {
+    let envPath: string;
+
+    if (inputPath) {
+      envPath = inputPath;
+    } else {
+      envPath = '.env' + (stage ? `.${stage}` : '');
     }
+
+    let result: Record<string, string>;
+
+    if (envPath.endsWith('.yaml')) {
+      result = flatten(parse(readFileSync(envPath).toString()));
+    }
+    else if (envPath.endsWith('.json')) {
+      result = flatten(JSON.parse(readFileSync(envPath).toString()));
+    }
+    else {
+      result = dotenv.parse(readFileSync(path.join(configDir, envPath)));
+    }
+
     try {
-      return await this.resolveVariables(result.parsed);
+      return await this.resolveVariables(result);
     } catch (error) {
       console.error(error);
       throw new Error(error as string);
@@ -33,6 +51,10 @@ export class SecretsFoundry {
     envVars: Record<string, string>
   ): Promise<Record<string, string>> {
     for (const key in envVars) {
+      // null will resolve to null
+      if (!envVars[key]) {
+        continue;
+      }
       let value = envVars[key];
       let groups = [...value.matchAll(this.EXPAND_REGEX)];
       // Groups are the matches at a given level, since the regex is non-greedy
