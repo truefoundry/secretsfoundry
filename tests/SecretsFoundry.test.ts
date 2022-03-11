@@ -1,6 +1,7 @@
 import { SecretsFoundry } from '../src/SecretsFoundry';
 import Loader from '../src/loaders/loader';
 import { Loaders } from '../src/loaders';
+import path from 'path';
 class DummyLoader extends Loader {
   startKeyWord: string;
 
@@ -121,7 +122,7 @@ describe('SecretsFoundry', () => {
               RESULT: 'HELLO_WORLD',
             })
           )
-        }
+      }
       )
     );
   });
@@ -135,13 +136,13 @@ describe('SecretsFoundry', () => {
         };
         return foundry
           .resolveVariables(record)
-          .then(response => 
+          .then(response =>
             expect(response).toStrictEqual({
               [envVar]: 'HELLO_WORLD',
               RESULT: `\${${envVar}}`,
             })
           )
-        }
+      }
       )
     );
   });
@@ -154,5 +155,14 @@ describe('SecretsFoundry', () => {
     await expect(
       newFoundry.getValueFromLoaders(value)
     ).rejects.toEqual(new Error(`VaultLoader failed to resolve ${value}.\n\nError: Vault endpoint url is not passed through args, nor set in env`))
+  })
+
+  it('Should resolve YAML file correctly', async () => {
+    return foundry
+      .extractValues('dev', '.', path.join(__dirname, 'resources/test.yaml'))
+      .then(response => {
+        expect(response['kind']).toEqual('resolved_by_sourceA')
+        expect(response['metadata.name']).toEqual('resolved_by_sourceA_name');
+      })
   })
 });
