@@ -52,10 +52,10 @@ export class SecretsFoundry {
   ): Promise<Record<string, string>> {
     for (const key in envVars) {
       // null will resolve to null
-      if (!envVars[key]) {
+      if (!envVars[key] || typeof(envVars[key]) !== 'string' || typeof(envVars[key]) !== 'object') {
         continue;
       }
-      let value = envVars[key].toString();
+      let value = envVars[key];
       let groups = [...value.matchAll(this.EXPAND_REGEX)];
       // Groups are the matches at a given level, since the regex is non-greedy
       // notice the ? mark for the content inside {}. It matches smallest first
