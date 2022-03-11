@@ -55,7 +55,7 @@ export class SecretsFoundry {
       if (!envVars[key]) {
         continue;
       }
-      let value = envVars[key];
+      let value = envVars[key].toString();
       let groups = [...value.matchAll(this.EXPAND_REGEX)];
       // Groups are the matches at a given level, since the regex is non-greedy
       // notice the ? mark for the content inside {}. It matches smallest first
