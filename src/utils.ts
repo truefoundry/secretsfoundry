@@ -89,11 +89,11 @@ export default class Utils {
   }
 
   static convertToEnv (object: Record<string, string>) {
-    let envFile = ''
+    let envFileLines = [];
     for (const key of Object.keys(object)) {
-        envFile += `${key}=${object[key]}\n`
+      envFileLines.push(`${key}=${object[key]}`)
     }
-    return envFile
+    return envFileLines.join('\n')
 }
 
   static formatResultByType(result: Record<string, string>, format: string = 'env'): string {

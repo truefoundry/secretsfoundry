@@ -9,7 +9,7 @@ import { Loaders } from './loaders';
 import Utils, { Options } from './utils';
 import { version } from '../package.json';
 
-const SUPPORTED_FORMATS = ['yaml', 'json']
+const SUPPORTED_FORMATS = ['yaml', 'json', 'env']
 
 const program = new Command();
 program
@@ -45,7 +45,7 @@ program
 
       if (options.output) {
         if (!SUPPORTED_FORMATS.includes(options.output)) {
-          throw Error(`Currently supported output formats: ${SUPPORTED_FORMATS.join(', ')}`)
+          throw Error(`Unsupported output format. Supported output formats: ${SUPPORTED_FORMATS.join(', ')}`)
         }
         console.log(Utils.formatResultByType(result, options.output));
       }
