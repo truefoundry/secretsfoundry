@@ -89,7 +89,7 @@ export default class Utils {
   }
 
   static convertToEnv (object: Record<string, string>) {
-    let envFileLines = [];
+    const envFileLines = [];
     for (const key of Object.keys(object)) {
       envFileLines.push(`${key}=${object[key]}`)
     }

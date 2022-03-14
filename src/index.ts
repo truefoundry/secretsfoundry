@@ -1,8 +1,5 @@
 #!/usr/bin/env node
 import { Command } from 'commander';
-import { writeFileSync } from 'fs';
-import { unflatten } from 'flat';
-import { stringify } from 'yaml';
 
 import { SecretsFoundry } from './SecretsFoundry';
 import { Loaders } from './loaders';
