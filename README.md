@@ -75,7 +75,7 @@ SIMPLE = "simple"
 VARIABLE = ${SIMPLE}
 
 // Use variable defined in aws secrets manager
-AWS_SECRETS_SECRET = ${aws-secret:/path/to/secret}
+AWS_SECRETS_SECRET = ${aws-secrets:/path/to/secret}
 
 // Use value from S3
 AWS_S3_VALUE = ${aws-s3:bucket/key}
