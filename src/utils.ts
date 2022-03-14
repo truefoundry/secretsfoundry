@@ -1,6 +1,8 @@
 import chalk from 'chalk';
 import fs from 'fs';
 import { spawn } from 'child_process';
+import { unflatten } from 'flat';
+import { stringify } from 'yaml';
 
 export interface Options {
   stage?: string;
@@ -80,5 +82,31 @@ export default class Utils {
   }
   static runChildProcess(cmd: string, args: string[]): void {
     spawn(cmd, args, { stdio: 'inherit' });
+  }
+
+  static getFileFormat(filename: string): string | undefined {
+    return filename.split('.').pop();
+  }
+
+  static convertToEnv (object: Record<string, string>) {
+    let envFile = ''
+    for (const key of Object.keys(object)) {
+        envFile += `${key}=${object[key]}\n`
+    }
+    return envFile
+}
+
+  static formatResultByType(result: Record<string, string>, format: string = 'env'): string {
+    switch (format) {
+      case ('json'): {
+        return JSON.stringify(unflatten(result));
+      }
+      case ('yaml'): {
+        return stringify(unflatten(result));
+      }
+      default: {
+        return Utils.convertToEnv(result);
+      }
+    }
   }
 }

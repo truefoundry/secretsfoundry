@@ -4,6 +4,7 @@ import path from 'path';
 import Loader from './loaders/loader';
 import { parse } from 'yaml'
 import { flatten } from 'flat';
+import Utils from './utils';
 
 export class SecretsFoundry {
   EXPAND_REGEX = /\${([:a-zA-Z0-9_;(=),\\.\-/]+)?}/g;
@@ -29,14 +30,18 @@ export class SecretsFoundry {
 
     let result: Record<string, string>;
 
-    if (envPath.endsWith('.yaml')) {
-      result = flatten(parse(readFileSync(envPath).toString()));
-    }
-    else if (envPath.endsWith('.json')) {
-      result = flatten(JSON.parse(readFileSync(envPath).toString()));
-    }
-    else {
-      result = dotenv.parse(readFileSync(path.join(configDir, envPath)));
+    switch (Utils.getFileFormat(envPath)) {
+      case('yaml'): {
+        result = flatten(parse(readFileSync(envPath).toString()));
+        break;
+      }
+      case('json'): {
+        result = flatten(JSON.parse(readFileSync(envPath).toString()));
+        break;
+      }
+      default: {
+        result = dotenv.parse(readFileSync(path.join(configDir, envPath)));
+      }
     }
 
     try {
