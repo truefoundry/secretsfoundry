@@ -1,14 +1,12 @@
 #!/usr/bin/env node
 import { Command } from 'commander';
-import { writeFileSync } from 'fs';
-import { unflatten } from 'flat';
-import { stringify } from 'yaml';
 
 import { SecretsFoundry } from './SecretsFoundry';
 import { Loaders } from './loaders';
 import Utils, { Options } from './utils';
 import { version } from '../package.json';
 
+const SUPPORTED_FORMATS = ['yaml', 'json', 'env']
 
 const program = new Command();
 program
@@ -38,19 +36,15 @@ program
       if (!options.command && !options.script && !options.output) {
         // if the user doesn't provide a command, a script or output file, we will just log the result from parsing
         // the .env file
-        console.log(JSON.stringify(result, null, 2));
+        console.log(Utils.formatResultByType(result, Utils.getFileFormat(options.input || '.env')))
         return;
       }
 
       if (options.output) {
-        if (options.output.endsWith('.json')) {
-          writeFileSync(options.output, JSON.stringify(unflatten(result)));
+        if (!SUPPORTED_FORMATS.includes(options.output)) {
+          throw Error(`Unsupported output format. Supported output formats: ${SUPPORTED_FORMATS.join(', ')}`)
         }
-        else if (options.output.endsWith('.yaml')) {
-          writeFileSync(options.output, stringify(unflatten(result)));
-        } else {
-          throw new Error('Output file need to be YAML or JSON')
-        }
+        console.log(Utils.formatResultByType(result, options.output));
       }
 
       for (const key in result) {
