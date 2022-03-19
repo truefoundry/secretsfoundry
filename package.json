@@ -1,6 +1,6 @@
 {
   "name": "secretsfoundry",
-  "version": "0.1.6",
+  "version": "0.1.8",
   "description": "Package to manage your environment variables and secrets",
   "author": "Abhishek CHoudhary <abhichoudhary06@gmail.com>",
   "license": "MIT",
@@ -11,7 +11,7 @@
     "url": "https://github.com/innoavator/secretsfoundry"
   },
   "bin": {
-    "secretsfoundry": "./dist/index.js"
+    "secretsfoundry": "./dist/src/index.js"
   },
   "keywords": [
     "dotenv",
@@ -29,12 +29,12 @@
   "engines": {
     "node": ">=12"
   },
-  "main": "./dist/index.js",
+  "main": "./dist/src/index.js",
   "files": [
     "dist/*"
   ],
   "exports": {
-    ".": "./dist/SecretsFoundry.js"
+    ".": "./dist/src/SecretsFoundry.js"
   },
   "scripts": {
     "dev": "node -r ts-node/register src/index.ts run --script \"node example.js\"",
