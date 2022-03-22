@@ -101,6 +101,7 @@ export default class Utils {
       case ('json'): {
         return JSON.stringify(unflatten(result));
       }
+      case ('yml'):
       case ('yaml'): {
         return stringify(unflatten(result));
       }

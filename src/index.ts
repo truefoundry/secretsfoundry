@@ -6,7 +6,7 @@ import { Loaders } from './loaders';
 import Utils, { Options } from './utils';
 import { version } from '../package.json';
 
-const SUPPORTED_FORMATS = ['yaml', 'json', 'env']
+const SUPPORTED_FORMATS = ['yaml', 'json', 'env', 'yml']
 
 const program = new Command();
 program
