@@ -113,12 +113,4 @@ export default class Utils {
       }
     }
   }
-
-  static setFailSilentlyFlag(options: Options) {
-    process.env.SECRETS_FOUNDRY_FAIL_SILENTLY = (+(options.failSilently === true)).toString();
-  }
-
-  static failSilently() {
-    return process.env.SECRETS_FOUNDRY_FAIL_SILENTLY === '1';
-  }
 }

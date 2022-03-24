@@ -19,7 +19,11 @@ export class SecretsFoundry {
    * @param configDir Path to directory which contains the .env files. Defaults to .
    * @returns Object/dict containing key and corresponding populated variable value
    */
-  public async extractValues(stage: string = '', configDir: string = '.', inputPath: string | null = null) {
+  public async extractValues(stage: string = '',
+    configDir: string = '.',
+    inputPath: string | null = null,
+    failSilently = false
+  ) {
     let envPath: string;
 
     if (inputPath) {
@@ -46,7 +50,7 @@ export class SecretsFoundry {
     }
 
     try {
-      return await this.resolveVariables(result);
+      return await this.resolveVariables(result, failSilently);
     } catch (error) {
       console.error(error);
       throw new Error(error as string);
@@ -54,7 +58,8 @@ export class SecretsFoundry {
   }
 
   async resolveVariables(
-    envVars: Record<string, string>
+    envVars: Record<string, string>,
+    failSilently: boolean = false
   ): Promise<Record<string, string>> {
     for (const key in envVars) {
       try {
@@ -82,7 +87,7 @@ export class SecretsFoundry {
         }
         envVars[key] = value;
       } catch (error) {
-        if (error instanceof UnresolvedSecretError && Utils.failSilently()) {
+        if (error instanceof UnresolvedSecretError && failSilently) {
           continue;
         }
         throw error;

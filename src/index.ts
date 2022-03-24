@@ -27,14 +27,14 @@ program
   )
   .action(async (options: Options) => {
     Utils.validateInput(options);
-    Utils.setFailSilentlyFlag(options);
 
     const secretsFoundry = new SecretsFoundry(Loaders);
     try {
       const result = await secretsFoundry.extractValues(
         options.stage,
         options.path,
-        options.input
+        options.input,
+        options.failSilently
       );
       if (!options.command && !options.script && !options.output) {
         // if the user doesn't provide a command, a script or output file, we will just log the result from parsing
