@@ -17,6 +17,7 @@ program
   .option('-o, --output <string>', 'Output file to write resolved variables (json/yaml)')
   .option('-c, --command <string>', 'Single command to run')
   .option('-s, --script <string>', 'Multiple Commands to run like cd ~/ && ls')
+  .option('--fail-silently', 'Fail silently if a secret is not found')
   .option(
     '-p, --path <string>',
     'Path to the config directory, that holds the .env files. Defaults to current directory'
@@ -26,6 +27,8 @@ program
   )
   .action(async (options: Options) => {
     Utils.validateInput(options);
+    Utils.setFailSilentlyFlag(options);
+
     const secretsFoundry = new SecretsFoundry(Loaders);
     try {
       const result = await secretsFoundry.extractValues(

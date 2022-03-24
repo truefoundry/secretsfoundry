@@ -32,11 +32,11 @@ export class SecretsFoundry {
 
     switch (Utils.getFileFormat(envPath)) {
       case ('yml'):
-      case('yaml'): {
+      case ('yaml'): {
         result = flatten(parse(readFileSync(envPath).toString()));
         break;
       }
-      case('json'): {
+      case ('json'): {
         result = flatten(JSON.parse(readFileSync(envPath).toString()));
         break;
       }
@@ -58,7 +58,7 @@ export class SecretsFoundry {
   ): Promise<Record<string, string>> {
     for (const key in envVars) {
       // null will resolve to null
-      if (!envVars[key] || typeof(envVars[key]) !== "string") {
+      if (!envVars[key] || typeof (envVars[key]) !== "string") {
         continue;
       }
 
@@ -107,6 +107,9 @@ export class SecretsFoundry {
       try {
         return await loader.resolve(value);
       } catch (err) {
+        if (Utils.failSilently()) {
+          return '';
+        }
         throw new Error(`${loader.constructor.name} failed to resolve ${value}.\n\n${err}`);
       }
     }

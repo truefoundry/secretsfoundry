@@ -11,6 +11,7 @@ export interface Options {
   path?: string;
   input?: string;
   output?: string;
+  failSilently?: boolean;
 }
 
 export default class Utils {
@@ -109,5 +110,13 @@ export default class Utils {
         return Utils.convertToEnv(result);
       }
     }
+  }
+
+  static setFailSilentlyFlag(options: Options) {
+    process.env.SECRETS_FOUNDRY_FAIL_SILENTLY = (+(options.failSilently === true)).toString();
+  }
+
+  static failSilently() {
+    return process.env.SECRETS_FOUNDRY_FAIL_SILENTLY === '1';
   }
 }
