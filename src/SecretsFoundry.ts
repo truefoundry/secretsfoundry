@@ -31,6 +31,7 @@ export class SecretsFoundry {
     let result: Record<string, string>;
 
     switch (Utils.getFileFormat(envPath)) {
+      case ('yml'):
       case('yaml'): {
         result = flatten(parse(readFileSync(envPath).toString()));
         break;
