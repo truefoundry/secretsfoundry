@@ -14,6 +14,8 @@ export interface Options {
   failSilently?: boolean;
 }
 
+export class UnresolvedSecretError extends Error {};
+
 export default class Utils {
   /**
    * Executes a multi-command using shell.
