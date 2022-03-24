@@ -11,7 +11,10 @@ export interface Options {
   path?: string;
   input?: string;
   output?: string;
+  failSilently?: boolean;
 }
+
+export class UnresolvedSecretError extends Error {};
 
 export default class Utils {
   /**

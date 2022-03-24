@@ -17,6 +17,7 @@ program
   .option('-o, --output <string>', 'Output file to write resolved variables (json/yaml)')
   .option('-c, --command <string>', 'Single command to run')
   .option('-s, --script <string>', 'Multiple Commands to run like cd ~/ && ls')
+  .option('--fail-silently', 'Fail silently if a secret is not found, leaving the secret value as is')
   .option(
     '-p, --path <string>',
     'Path to the config directory, that holds the .env files. Defaults to current directory'
@@ -26,12 +27,14 @@ program
   )
   .action(async (options: Options) => {
     Utils.validateInput(options);
+
     const secretsFoundry = new SecretsFoundry(Loaders);
     try {
       const result = await secretsFoundry.extractValues(
         options.stage,
         options.path,
-        options.input
+        options.input,
+        options.failSilently
       );
       if (!options.command && !options.script && !options.output) {
         // if the user doesn't provide a command, a script or output file, we will just log the result from parsing
