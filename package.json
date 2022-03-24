@@ -1,6 +1,6 @@
 {
   "name": "secretsfoundry",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "description": "Package to manage your environment variables and secrets",
   "author": "Abhishek CHoudhary <abhichoudhary06@gmail.com>",
   "license": "MIT",
