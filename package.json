@@ -43,7 +43,7 @@
     "build-ts": "tsc",
     "test": "jest --watch",
     "coverage": "jest --coverage",
-    "publish": "npm run build && npm publish"
+    "publish-to-npm": "npm run build && npm publish"
   },
   "publishConfig": {
     "access": "public"
