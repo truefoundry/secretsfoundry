@@ -17,6 +17,6 @@ jobs:
       - name: Run tests
         run: yarn jest --ci --verbose
       # Publish to NPM registry
-      - run: yarn publish
+      - run: npm run publish-to-npm
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
