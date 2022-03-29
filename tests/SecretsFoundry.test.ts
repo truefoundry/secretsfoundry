@@ -1,7 +1,8 @@
-import { DELIMITER, SecretsFoundry } from '../src/SecretsFoundry';
+import { SecretsFoundry } from '../src/SecretsFoundry';
 import Loader from '../src/loaders/loader';
 import { Loaders } from '../src/loaders';
 import path from 'path';
+import { DELIMITER } from '../src/utils';
 class DummyLoader extends Loader {
   startKeyWord: string;
 

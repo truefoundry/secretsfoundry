@@ -3,7 +3,6 @@ import fs from 'fs';
 import { spawn } from 'child_process';
 import { unflatten } from 'flat';
 import { stringify } from 'yaml';
-import { DELIMITER } from './SecretsFoundry';
 
 export interface Options {
   stage?: string;
@@ -119,3 +118,5 @@ export default class Utils {
     }
   }
 }
+
+export const DELIMITER = "->";

@@ -4,7 +4,7 @@ import path from 'path';
 import Loader from './loaders/loader';
 import { parse } from 'yaml'
 import { flatten } from 'flat';
-import Utils, { UnresolvedSecretError } from './utils';
+import Utils, { DELIMITER, UnresolvedSecretError } from './utils';
 
 export class SecretsFoundry {
   EXPAND_REGEX = /\${([:a-zA-Z0-9_;(=),\\.\->/]+)?}/g;
@@ -129,5 +129,3 @@ export class SecretsFoundry {
     throw new Error(`No loader exists for: ${value}`);
   }
 }
-
-export const DELIMITER = "->";
