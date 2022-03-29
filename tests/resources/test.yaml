@@ -4,7 +4,7 @@ metadata:
   name: '${kind}_name'
   labels:
     app: nginx
-    kubernetes.io/name: '${metadata::name}'
+    kubernetes.io/name: '${metadata->name}'
 spec:
   replicas: 2
   selector:
