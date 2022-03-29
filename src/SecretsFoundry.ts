@@ -4,10 +4,10 @@ import path from 'path';
 import Loader from './loaders/loader';
 import { parse } from 'yaml'
 import { flatten } from 'flat';
-import Utils, { UnresolvedSecretError } from './utils';
+import Utils, { DELIMITER, UnresolvedSecretError } from './utils';
 
 export class SecretsFoundry {
-  EXPAND_REGEX = /\${([:a-zA-Z0-9_;(=),\\.\-/]+)?}/g;
+  EXPAND_REGEX = /\${([:a-zA-Z0-9_;(=),\\.\->/]+)?}/g;
   private loaders: Loader[];
 
   constructor(loaders: Loader[]) {
@@ -37,11 +37,15 @@ export class SecretsFoundry {
     switch (Utils.getFileFormat(envPath)) {
       case ('yml'):
       case ('yaml'): {
-        result = flatten(parse(readFileSync(envPath).toString()));
+        result = flatten(parse(readFileSync(envPath).toString()), {
+          delimiter: DELIMITER
+        });
         break;
       }
       case ('json'): {
-        result = flatten(JSON.parse(readFileSync(envPath).toString()));
+        result = flatten(JSON.parse(readFileSync(envPath).toString()), {
+          delimiter: DELIMITER
+        });
         break;
       }
       default: {

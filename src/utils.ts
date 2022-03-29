@@ -102,11 +102,15 @@ export default class Utils {
   static formatResultByType(result: Record<string, string>, format: string = 'env'): string {
     switch (format) {
       case ('json'): {
-        return JSON.stringify(unflatten(result));
+        return JSON.stringify(unflatten(result, {
+          delimiter: DELIMITER
+        }));
       }
       case ('yml'):
       case ('yaml'): {
-        return stringify(unflatten(result));
+        return stringify(unflatten(result, {
+          delimiter: DELIMITER
+        }));
       }
       default: {
         return Utils.convertToEnv(result);
@@ -114,3 +118,5 @@ export default class Utils {
     }
   }
 }
+
+export const DELIMITER = "->";
