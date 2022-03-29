@@ -11,7 +11,7 @@
     "url": "https://github.com/innoavator/secretsfoundry"
   },
   "bin": {
-    "secretsfoundry": "./dist/src/index.js"
+    "secretsfoundry": "./dist/index.js"
   },
   "keywords": [
     "dotenv",
@@ -29,12 +29,12 @@
   "engines": {
     "node": ">=12"
   },
-  "main": "./dist/src/index.js",
+  "main": "./dist/index.js",
   "files": [
     "dist/*"
   ],
   "exports": {
-    ".": "./dist/src/SecretsFoundry.js"
+    ".": "./dist/SecretsFoundry.js"
   },
   "scripts": {
     "dev": "node -r ts-node/register src/index.ts run --script \"node example.js\"",
