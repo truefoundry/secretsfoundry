@@ -130,4 +130,4 @@ export class SecretsFoundry {
   }
 }
 
-export const DELIMITER = "::";
+export const DELIMITER = "->";
