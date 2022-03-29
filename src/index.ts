@@ -4,13 +4,11 @@ import { Command } from 'commander';
 import { SecretsFoundry } from './SecretsFoundry';
 import { Loaders } from './loaders';
 import Utils, { Options } from './utils';
-import { version } from '../package.json';
 
 const SUPPORTED_FORMATS = ['yaml', 'json', 'env', 'yml']
 
 const program = new Command();
 program
-  .version(version, '-V, --version', 'output the current version')
   .command('run')
   .option('--stage <string>', 'Stage of the service', '')
   .option('-i, --input <string>', 'Input file containing variables (.env/json/yaml)')
