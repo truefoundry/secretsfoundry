@@ -37,11 +37,15 @@ export class SecretsFoundry {
     switch (Utils.getFileFormat(envPath)) {
       case ('yml'):
       case ('yaml'): {
-        result = flatten(parse(readFileSync(envPath).toString()));
+        result = flatten(parse(readFileSync(envPath).toString()), {
+          delimiter: DELIMITER
+        });
         break;
       }
       case ('json'): {
-        result = flatten(JSON.parse(readFileSync(envPath).toString()));
+        result = flatten(JSON.parse(readFileSync(envPath).toString()), {
+          delimiter: DELIMITER
+        });
         break;
       }
       default: {
@@ -125,3 +129,5 @@ export class SecretsFoundry {
     throw new Error(`No loader exists for: ${value}`);
   }
 }
+
+export const DELIMITER = "::";

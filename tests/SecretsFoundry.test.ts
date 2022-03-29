@@ -1,4 +1,4 @@
-import { SecretsFoundry } from '../src/SecretsFoundry';
+import { DELIMITER, SecretsFoundry } from '../src/SecretsFoundry';
 import Loader from '../src/loaders/loader';
 import { Loaders } from '../src/loaders';
 import path from 'path';
@@ -161,8 +161,9 @@ describe('SecretsFoundry', () => {
     return foundry
       .extractValues('dev', '.', path.join(__dirname, 'resources/test.yaml'))
       .then(response => {
-        expect(response['kind']).toEqual('resolved_by_sourceA')
-        expect(response['metadata.name']).toEqual('resolved_by_sourceA_name');
+        expect(response['kind']).toEqual('resolved_by_sourceA');
+        expect(response[`metadata${DELIMITER}name`]).toEqual('resolved_by_sourceA_name');
+        expect(response[`metadata${DELIMITER}labels${DELIMITER}kubernetes.io/name`]).toEqual('resolved_by_sourceA_name')
       })
   })
 });
