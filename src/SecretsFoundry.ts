@@ -37,11 +37,19 @@ export class SecretsFoundry {
     switch (Utils.getFileFormat(envPath)) {
       case ('yml'):
       case ('yaml'): {
-        result = flatten(parse(readFileSync(envPath).toString()));
+        result = flatten(parse(readFileSync(envPath).toString()), {
+          transformKey: key => {
+            return Buffer.from(key).toString("base64");
+          }
+        });
         break;
       }
       case ('json'): {
-        result = flatten(JSON.parse(readFileSync(envPath).toString()));
+        result = flatten(JSON.parse(readFileSync(envPath).toString()), {
+          transformKey: key => {
+            return Buffer.from(key).toString("base64");
+          }
+        });
         break;
       }
       default: {

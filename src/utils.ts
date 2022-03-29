@@ -102,11 +102,19 @@ export default class Utils {
   static formatResultByType(result: Record<string, string>, format: string = 'env'): string {
     switch (format) {
       case ('json'): {
-        return JSON.stringify(unflatten(result));
+        return JSON.stringify(unflatten(result, {
+          transformKey: key => {
+            return Buffer.from(key, "base64").toString();
+          }
+        }));
       }
       case ('yml'):
       case ('yaml'): {
-        return stringify(unflatten(result));
+        return stringify(unflatten(result, {
+          transformKey: key => {
+            return Buffer.from(key, "base64").toString();
+          }
+        }));
       }
       default: {
         return Utils.convertToEnv(result);
