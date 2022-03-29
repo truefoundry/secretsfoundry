@@ -38,17 +38,13 @@ export class SecretsFoundry {
       case ('yml'):
       case ('yaml'): {
         result = flatten(parse(readFileSync(envPath).toString()), {
-          transformKey: key => {
-            return Buffer.from(key).toString("base64");
-          }
+          transformKey: Utils.transformStrToBase64
         });
         break;
       }
       case ('json'): {
         result = flatten(JSON.parse(readFileSync(envPath).toString()), {
-          transformKey: key => {
-            return Buffer.from(key).toString("base64");
-          }
+          transformKey: Utils.transformStrToBase64
         });
         break;
       }

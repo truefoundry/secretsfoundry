@@ -103,22 +103,26 @@ export default class Utils {
     switch (format) {
       case ('json'): {
         return JSON.stringify(unflatten(result, {
-          transformKey: key => {
-            return Buffer.from(key, "base64").toString();
-          }
+          transformKey: this.transformStrFromBase64
         }));
       }
       case ('yml'):
       case ('yaml'): {
         return stringify(unflatten(result, {
-          transformKey: key => {
-            return Buffer.from(key, "base64").toString();
-          }
+          transformKey: this.transformStrFromBase64
         }));
       }
       default: {
         return Utils.convertToEnv(result);
       }
     }
+  }
+
+  static transformStrToBase64(str: string) {
+    return Buffer.from(str).toString("base64");
+  }
+
+  static transformStrFromBase64(str: string) {
+    return Buffer.from(str, "base64").toString();
   }
 }
