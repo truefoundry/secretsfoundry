@@ -38,7 +38,7 @@ export default class GoogleSecretsLoader extends Loader {
     const client = new SecretManagerServiceClient();
     const [secret] = await client.accessSecretVersion({
       name: secretName,
-    }, );
+    });
     return secret.payload?.data?.toString() as string;
   }
 }
