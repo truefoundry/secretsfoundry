@@ -50,7 +50,7 @@ describe('ValidatesInput:', () => {
     mockExit.mockRestore();
   });
 
-  it('should fail(folder doesn\'t exist )', () => {
+  it("should fail(folder doesn't exist )", () => {
     const mockExit = jest.spyOn(process, 'exit').mockImplementation((code) => {
       throw new Error('process.exit: ' + code);
     });
@@ -66,9 +66,10 @@ describe('GetScriptArgs:', () => {
   it('should pass', () => {
     const script = 'npm i && npm --version';
     const args = Utils.getScriptArgs(script);
-    const result = process.platform === 'win32'
-      ? ['cmd', '/C', script]
-      : ['sh', '-c', script]
+    const result =
+      process.platform === 'win32'
+        ? ['cmd', '/C', script]
+        : ['sh', '-c', script];
     expect(args).toEqual(result);
   });
 });
