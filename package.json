@@ -73,6 +73,7 @@
     "dotenv": "^10.0.0",
     "flat": "^5.0.2",
     "node-vault": "^0.9.22",
+    "secretsfoundry": "^0.1.15",
     "yaml": "^1.10.2"
   }
 }
