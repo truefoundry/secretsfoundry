@@ -56,8 +56,7 @@ program
     } catch (err) {
       if(err instanceof UnresolvedSecretError){
         console.error("Secret not found: \n"+"\t"+err.message);
-      }
-      else{
+      } else{
         console.error(err);
       }
       process.exit();
