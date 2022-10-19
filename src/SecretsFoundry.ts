@@ -129,7 +129,7 @@ export class SecretsFoundry {
       try {
         return await loader.resolve(value);
       } catch (err) {
-        throw new UnresolvedSecretError(`${loader.constructor.name} failed to resolve ${value}.\n\t${err}`);
+        throw new UnresolvedSecretError(`${loader.constructor.name} failed to resolve ${value}.\n\n${err}`);
       }
     }
     throw new Error(`No loader exists for: ${value}`);
