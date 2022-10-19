@@ -3,7 +3,7 @@ import { Command } from 'commander';
 
 import { SecretsFoundry } from './SecretsFoundry';
 import { Loaders } from './loaders';
-import Utils, { Options } from './utils';
+import Utils, { Options, UnresolvedSecretError } from './utils';
 import pjson = require('./../package.json');
 
 const SUPPORTED_FORMATS = ['yaml', 'json', 'env', 'yml']
@@ -54,8 +54,13 @@ program
         process.env[key] = result[key] as string;
       }
     } catch (err) {
-      console.error(err);
-      process.exit();
+      if(err instanceof UnresolvedSecretError){
+        console.error("Secret not found: \n"+"\t"+err.message);
+      }
+      else{
+        console.error(err);
+        process.exit();
+      }
     }
 
     let args: string[] = [];
