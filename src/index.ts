@@ -59,8 +59,8 @@ program
       }
       else{
         console.error(err);
-        process.exit();
       }
+      process.exit();
     }
 
     let args: string[] = [];
