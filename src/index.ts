@@ -4,11 +4,13 @@ import { Command } from 'commander';
 import { SecretsFoundry } from './SecretsFoundry';
 import { Loaders } from './loaders';
 import Utils, { Options } from './utils';
+import packageJson = require('./../package.json');
 
 const SUPPORTED_FORMATS = ['yaml', 'json', 'env', 'yml']
 
 const program = new Command();
 program
+  .version(packageJson.version)
   .command('run')
   .option('--stage <string>', 'Stage of the service', '')
   .option('-i, --input <string>', 'Input file containing variables (.env/json/yaml)')
