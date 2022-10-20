@@ -57,7 +57,7 @@ export class SecretsFoundry {
       return await this.resolveVariables(result, failSilently);
     } catch (error) {
       // if error instace of unresolved secret error throw it without logging
-      if(error instanceof UnresolvedSecretError){
+      if (error instanceof UnresolvedSecretError) {
         throw error;
       } else{
         console.error(error);
