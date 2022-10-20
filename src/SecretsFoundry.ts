@@ -56,8 +56,13 @@ export class SecretsFoundry {
     try {
       return await this.resolveVariables(result, failSilently);
     } catch (error) {
-      console.error(error);
-      throw new Error(error as string);
+      // if error instace of unresolved secret error throw it without logging
+      if (error instanceof UnresolvedSecretError) {
+        throw error;
+      } else {
+        console.error(error);
+        throw new Error(error as string);
+      }
     }
   }
 
@@ -92,6 +97,7 @@ export class SecretsFoundry {
         envVars[key] = value;
       } catch (error) {
         if (error instanceof UnresolvedSecretError && failSilently) {
+          console.error("Secret not found\n"+error.message);
           continue;
         }
         throw error;
