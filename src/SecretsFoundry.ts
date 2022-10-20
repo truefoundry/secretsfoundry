@@ -59,7 +59,7 @@ export class SecretsFoundry {
       // if error instace of unresolved secret error throw it without logging
       if (error instanceof UnresolvedSecretError) {
         throw error;
-      } else{
+      } else {
         console.error(error);
         throw new Error(error as string);
       }
