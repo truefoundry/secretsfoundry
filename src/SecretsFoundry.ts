@@ -5,6 +5,7 @@ import Loader from './loaders/loader';
 import { parse } from 'yaml'
 import { flatten } from 'flat';
 import Utils, { DELIMITER, UnresolvedSecretError } from './utils';
+// import * as fs from 'fs';
 
 export class SecretsFoundry {
   EXPAND_REGEX = /\${([:a-zA-Z0-9_;(=),\\.\->/]+)?}/g;
@@ -40,6 +41,7 @@ export class SecretsFoundry {
         result = flatten(parse(readFileSync(envPath).toString()), {
           delimiter: DELIMITER
         });
+        // fs.readFileSync('foo.txt','utf8');
         break;
       }
       case ('json'): {
@@ -70,9 +72,11 @@ export class SecretsFoundry {
     envVars: Record<string, string>,
     failSilently: boolean = false
   ): Promise<Record<string, string>> {
+    // console.log(envVars);
     for (const key in envVars) {
       try {
         // null will resolve to null
+        console.log(key);
         if (!envVars[key] || typeof (envVars[key]) !== "string") {
           continue;
         }
@@ -84,11 +88,24 @@ export class SecretsFoundry {
         while (groups.length > 0) {
           for (const parts of groups) {
             // parts are the matching groups, parts[1] is the content of the braces
-            value = value.replace(
-              parts[0],
-              // eslint-disable-next-line no-await-in-loop
-              await this.resolveVar(parts[1], envVars)
-            );
+            try{
+              value = value.replace(
+                parts[0],
+                // eslint-disable-next-line no-await-in-loop
+                await this.resolveVar(parts[1], envVars)
+              );
+            }
+            catch(error){
+              value = value.replace(parts[0],'null');
+              console.log("skip");
+              if (error instanceof UnresolvedSecretError && failSilently) {
+                console.log(key)
+                console.error("Secret not found\n"+error.message);
+                continue;
+              }
+              throw error;
+              // throw error;
+            }
           }
           // The braces at current level are resolved, and the code then attempts to find
           // vars at a higher level.
@@ -97,6 +114,7 @@ export class SecretsFoundry {
         envVars[key] = value;
       } catch (error) {
         if (error instanceof UnresolvedSecretError && failSilently) {
+          console.log(key)
           console.error("Secret not found\n"+error.message);
           continue;
         }
