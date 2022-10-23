@@ -37,9 +37,10 @@
     ".": "./dist/SecretsFoundry.js"
   },
   "scripts": {
+    "generate-version": "genversion --es6 src/version.js",
     "dev": "node -r ts-node/register src/index.ts run --script \"node example.js\"",
     "type-check": "tsc -p tsconfig.eslint.json --noEmit && eslint .",
-    "build": "npm run type-check && npm run build-ts",
+    "build": "npm run generate-version && npm run type-check && npm run build-ts",
     "build-ts": "tsc",
     "test": "jest --watch",
     "coverage": "jest --coverage",
@@ -57,6 +58,7 @@
     "eslint": "^7.26.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-jest": "^24.3.6",
+    "genversion": "^3.1.1",
     "jest": "^27.0.6",
     "jest-watch-typeahead": "^0.6.4",
     "prettier": "^2.3.2",
