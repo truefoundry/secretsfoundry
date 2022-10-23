@@ -5,7 +5,6 @@ import Loader from './loaders/loader';
 import { parse } from 'yaml'
 import { flatten } from 'flat';
 import Utils, { DELIMITER, UnresolvedSecretError } from './utils';
-// import * as fs from 'fs';
 
 export class SecretsFoundry {
   EXPAND_REGEX = /\${([:a-zA-Z0-9_;(=),\\.\->/]+)?}/g;
@@ -41,7 +40,6 @@ export class SecretsFoundry {
         result = flatten(parse(readFileSync(envPath).toString()), {
           delimiter: DELIMITER
         });
-        // fs.readFileSync('foo.txt','utf8');
         break;
       }
       case ('json'): {
@@ -72,11 +70,9 @@ export class SecretsFoundry {
     envVars: Record<string, string>,
     failSilently: boolean = false
   ): Promise<Record<string, string>> {
-    // console.log(envVars);
     for (const key in envVars) {
       try {
         // null will resolve to null
-        console.log(key);
         if (!envVars[key] || typeof (envVars[key]) !== "string") {
           continue;
         }
@@ -96,15 +92,12 @@ export class SecretsFoundry {
               );
             }
             catch(error){
-              value = value.replace(parts[0],'null');
-              console.log("skip");
+              value = value.replace(parts[0],parts[1]);
               if (error instanceof UnresolvedSecretError && failSilently) {
-                console.log(key)
                 console.error("Secret not found\n"+error.message);
                 continue;
               }
               throw error;
-              // throw error;
             }
           }
           // The braces at current level are resolved, and the code then attempts to find
@@ -114,8 +107,7 @@ export class SecretsFoundry {
         envVars[key] = value;
       } catch (error) {
         if (error instanceof UnresolvedSecretError && failSilently) {
-          console.log(key)
-          console.error("Secret not found\n"+error.message);
+          console.error('Secret not found\n'+error.message);
           continue;
         }
         throw error;
