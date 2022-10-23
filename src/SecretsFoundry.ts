@@ -84,11 +84,21 @@ export class SecretsFoundry {
         while (groups.length > 0) {
           for (const parts of groups) {
             // parts are the matching groups, parts[1] is the content of the braces
-            value = value.replace(
-              parts[0],
-              // eslint-disable-next-line no-await-in-loop
-              await this.resolveVar(parts[1], envVars)
-            );
+            try{
+              value = value.replace(
+                parts[0],
+                // eslint-disable-next-line no-await-in-loop
+                await this.resolveVar(parts[1], envVars)
+              );
+            }
+            catch(error){
+              value = value.replace(parts[0],parts[1]);
+              if (error instanceof UnresolvedSecretError && failSilently) {
+                console.error("Secret not found\n"+error.message);
+                continue;
+              }
+              throw error;
+            }
           }
           // The braces at current level are resolved, and the code then attempts to find
           // vars at a higher level.
@@ -97,7 +107,7 @@ export class SecretsFoundry {
         envVars[key] = value;
       } catch (error) {
         if (error instanceof UnresolvedSecretError && failSilently) {
-          console.error("Secret not found\n"+error.message);
+          console.error('Secret not found\n'+error.message);
           continue;
         }
         throw error;
