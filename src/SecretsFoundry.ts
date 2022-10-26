@@ -8,6 +8,7 @@ import Utils, { DELIMITER, UnresolvedSecretError } from './utils';
 
 export class SecretsFoundry {
   EXPAND_REGEX = /\${([:a-zA-Z0-9_;(=),\\.\->/]+)?}/g;
+  CONST_NOT_FOUND = 'value_not_found';
   private loaders: Loader[];
 
   constructor(loaders: Loader[]) {
@@ -92,7 +93,7 @@ export class SecretsFoundry {
               );
             }
             catch(error){
-              value = value.replace(parts[0],parts[1]);
+              value = value.replace(parts[0],this.CONST_NOT_FOUND);
               if (error instanceof UnresolvedSecretError && failSilently) {
                 console.error("Secret not found\n"+error.message);
                 continue;
