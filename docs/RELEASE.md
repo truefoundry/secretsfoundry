@@ -13,6 +13,6 @@ vx.y.z
    * Go to 'Releases' tab
    * Create new draft
    * Select tag and binaries(if  needed)
-       1. generate linux installer: `pkg -t node17-linux-x64 dist/src/index.js -o secretsfoundry-{version}-linux-x64`
+       1. generate linux installer: `pkg -t node17-linux-x64 dist/index.js -o secretsfoundry-{version}-linux-x64`
    * Release
 
