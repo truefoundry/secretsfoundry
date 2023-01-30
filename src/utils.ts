@@ -1,6 +1,6 @@
 import chalk from 'chalk';
 import fs from 'fs';
-import { spawn } from 'child_process';
+import { ChildProcess, spawn } from 'child_process';
 import { unflatten } from 'flat';
 import { stringify } from 'yaml';
 
@@ -83,8 +83,10 @@ export default class Utils {
 
     return true;
   }
-  static runChildProcess(cmd: string, args: string[]): void {
-    spawn(cmd, args, { stdio: 'inherit' });
+  static runChildProcess(cmd: string, args: string[]): ChildProcess {
+    return spawn(cmd, args, { stdio: 'inherit' }).on('exit', (code) => {
+      process.exit(code || undefined)
+    });;
   }
 
   static getFileFormat(filename: string): string | undefined {
