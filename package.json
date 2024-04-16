@@ -74,7 +74,7 @@
     "commander": "^8.2.0",
     "dotenv": "^10.0.0",
     "flat": "^5.0.2",
-    "node-vault": "^0.9.22",
+    "node-vault": "^0.10.2",
     "yaml": "^2.2.2"
   }
 }
