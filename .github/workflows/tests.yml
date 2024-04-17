@@ -6,6 +6,8 @@ on:
     paths:
       - 'src/**'
       - 'tests/**'
+      - 'package.json'
+      - 'package-lock.json'
 jobs:
   Test:
     runs-on: ${{ matrix.os }}
@@ -13,10 +15,13 @@ jobs:
       matrix:
         os: [macOS-latest, windows-latest, ubuntu-latest]
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - name: Check out repository code
+        uses: actions/checkout@v3
+      # Setup .npmrc file to publish to npm
+      - uses: actions/setup-node@v4
         with:
-          node-version: '14'
+          node-version: 20.12.1
+          registry-url: 'https://registry.npmjs.org'
       - name: Install modules
         run: yarn
       - name: Run tests
@@ -24,7 +29,8 @@ jobs:
   Lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - name: Check out repository code
+        uses: actions/checkout@v3
       - name: Install modules
         run: yarn
       - name: Run Linter
