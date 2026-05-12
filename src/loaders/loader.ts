@@ -21,8 +21,13 @@ export default abstract class Loader {
     if (argsStr) {
       const args = argsStr.trim().split(',');
       for (const arg of args) {
-        const keyValue = arg.trim().split('=');
-        argsMap[keyValue[0]] = keyValue[1];
+        const trimmed = arg.trim();
+        const eq = trimmed.indexOf('=');
+        if (eq === -1) {
+          argsMap[trimmed] = undefined as unknown as string;
+        } else {
+          argsMap[trimmed.slice(0, eq)] = trimmed.slice(eq + 1);
+        }
       }
     }
     return argsMap;

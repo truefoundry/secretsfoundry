@@ -12,3 +12,6 @@ coverage/*
 **/*.config.js
 
 example.js
+
+# Jest setup: plain JS, not part of TypeScript project
+tests/setup/slow-buffer-shim.js

@@ -4,6 +4,7 @@ module.exports = {
   coverageProvider: 'v8',
   preset: 'ts-jest',
   clearMocks: true,
+  setupFiles: ['<rootDir>/tests/setup/slow-buffer-shim.js'],
   testEnvironment: 'node',
   roots: ['<rootDir>/'],
   moduleFileExtensions: ['ts', 'js'],

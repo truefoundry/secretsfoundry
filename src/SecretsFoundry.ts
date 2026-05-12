@@ -7,7 +7,7 @@ import { flatten } from 'flat';
 import Utils, { DELIMITER, UnresolvedSecretError } from './utils';
 
 export class SecretsFoundry {
-  EXPAND_REGEX = /\${([:a-zA-Z0-9_;(=),\\.\->/]+)?}/g;
+  EXPAND_REGEX = /\${([:a-zA-Z0-9_|;(=),\\.\->/]+)?}/g;
   CONST_NOT_FOUND = 'value_not_found';
   private loaders: Loader[];
 
