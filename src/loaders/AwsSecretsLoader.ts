@@ -51,6 +51,6 @@ export default class AwsSecretsLoader extends Loader {
     if ('SecretString' in result) {
       return result.SecretString as string;
     }
-    throw new Error('No SecretString in the Secret: `${secretsVariable}`');
+    throw new Error(`No SecretString in the Secret: ${secretsVariable}`);
   }
 }
