@@ -65,11 +65,21 @@ describe('ValidatesInput:', () => {
 describe('GetScriptArgs:', () => {
   it('should pass', () => {
     const script = 'npm i && npm --version';
-    const args = Utils.getScriptArgs(script);
-    const result =
-      process.platform === 'win32'
-        ? ['cmd', '/C', script]
-        : ['sh', '-c', script];
-    expect(args).toEqual(result);
+    const prev = process.env.SHELL;
+    delete process.env.SHELL;
+    try {
+      const args = Utils.getScriptArgs(script);
+      const result =
+        process.platform === 'win32'
+          ? ['cmd', '/C', script]
+          : ['sh', '-c', script];
+      expect(args).toEqual(result);
+    } finally {
+      if (prev === undefined) {
+        delete process.env.SHELL;
+      } else {
+        process.env.SHELL = prev;
+      }
+    }
   });
 });

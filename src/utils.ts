@@ -46,7 +46,9 @@ export default class Utils {
     args = ['sh', '-c', script];
     const envShell = process.env.SHELL as string;
     for (const shell of shells) {
-      if (shell.endsWith(envShell)) {
+      // Compare the basename suffix of $SHELL (e.g. /bin/zsh) against
+      // the known-shell suffix list (e.g. /zsh), not the other way around.
+      if (envShell && envShell.endsWith(shell)) {
         args[0] = envShell;
       }
     }
@@ -93,10 +95,19 @@ export default class Utils {
     return filename.split('.').pop();
   }
 
+  static escapeEnvValue(value: string): string {
+    // Leave simple values unquoted; quote anything that would break .env
+    // parsing or inject additional KEY=value lines (newlines, spaces, etc.).
+    if (/^[A-Za-z0-9_./:@+=,-]*$/.test(value)) {
+      return value;
+    }
+    return JSON.stringify(value);
+  }
+
   static convertToEnv (object: Record<string, string>) {
     const envFileLines = [];
     for (const key of Object.keys(object)) {
-      envFileLines.push(`${key}=${object[key]}`)
+      envFileLines.push(`${key}=${this.escapeEnvValue(object[key])}`)
     }
     return envFileLines.join('\n')
 }
